@@ -8,11 +8,11 @@ Currently this is alpha stage, so not works well.
 ```
 (setq wiki-setting
 	  (moinrpc-create-wiki-setting
-		"wooridle"
-		"https://wiki.wooridle.net/?action=xmlrpc2"
+		"<your wiki name>"
+		"<your moinmoin xml-rpc endpoint>"
 		"<username here>"))
 
-(moinrpc-create-page-buffer wiki-setting "FrontPage")
+(moinrpc-create-page-buffer wiki-setting "<pagename>")
 ```
 
 Then you can find a new buffer opened with FrontPage content. From here you can navigate 
