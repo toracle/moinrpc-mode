@@ -1,11 +1,10 @@
-# MoinRPC-mode
+* MoinRPC mode
 
 This mode enables to handle moinmoin wiki using Emacs.
 
-Currently this is alpha stage, so not works well.
+Currently this is in alpha stage, so not works well for now.
 
-
-```
+#+BEGIN_SRC elisp
 (setq wiki-setting
 	  (moinrpc-create-wiki-setting
 		"<your wiki name>"
@@ -13,23 +12,24 @@ Currently this is alpha stage, so not works well.
 		"<username here>"))
 
 (moinrpc-create-page-buffer wiki-setting "<pagename>")
-```
+#+END_SRC
 
-Then you can find a new buffer opened with FrontPage content. From here you can navigate 
+You can find a new buffer opened with <pagename> content. From here you can navigate pages using C-x C-f.
 
 
-## Features
+** Features
 
  - Create or Edit wiki page
  - List of all pages
 
 
-## Keys
+** Keys
 
  - C-x C-f: Open page or create a new one (using Helm)
  - C-x C-s: Save page
 
-## Alternatives
+
+** Alternatives
 
 There are some other modes for moinmoin supports:
 
@@ -37,8 +37,8 @@ There are some other modes for moinmoin supports:
  - moinmoin-mode
 
 
-## To-do
+** To-do [2 /3]
 
- - C-c C-o to follow a WikiLink
- - Find reverse links of a page
- - User friendly wiki setting
+ - [X] C-c C-o to follow a WikiLink
+ - [X] Find reverse links of a page
+ - [ ] User friendly wiki setting
