@@ -57,19 +57,20 @@
     (when
 	(not (eq moinrpc-wiki-settings nil))
 	(progn
-	  (setq wiki-settings (assq-delete-all wiki-alias moinrpc-wiki-setings))
+	  (setq wiki-settings (assq-delete-all wiki-alias moinrpc-wiki-settings))
 	  (message (format "%S" wiki-settings))))
     (add-to-list 'wiki-settings (cons wiki-alias wiki-setting))
     (setq moinrpc-wiki-settings wiki-settings)
+    (setq moinrpc-current-wiki wiki-alias)
     (moinrpc-save-wiki-settings)))
 
 (defun moinrpc-save-wiki-settings ()
   (with-current-buffer
       (find-file-noselect moinrpc-settings-file)
     (erase-buffer)
-    (insert "(setq moinrpc-wiki-settings '")
-    (insert (format "%S" moinrpc-wiki-settings))
-    (insert ")")
+    (insert (format "(setq moinrpc-wiki-settings '%S)" moinrpc-wiki-settings))
+    (newline)
+    (insert (format "(setq moinrpc-current-wiki %S)" moinrpc-current-wiki))
     (save-buffer)
     t
     ))
@@ -114,8 +115,7 @@
     (setq response
 	  (xml-rpc-method-call url
 			       'system.multicall
-			       call-message
-))
+			       call-message))
     (moinrpc-check-xmlrpc-response response)
     (caar (cdr response))))
 
@@ -164,23 +164,23 @@ Specify WIKI-ALIAS with a PAGENAME."
   (set-text-properties 0 (length txt) nil txt)
   txt)
 
-(defun moinrpc-get-page-buffer (wiki pagename)
-  "Return buffer of PAGENAME."
-  (get-buffer (moinrpc-buffer-name pagename)))
-
 (defun moinrpc-create-page-buffer (wiki pagename)
   (with-current-buffer
       (get-buffer-create (moinrpc-buffer-name pagename))
     (erase-buffer)
-    (insert (moinrpc-get-page-content wiki pagename))
     (moinrpc-page-mode)
     (switch-to-buffer (current-buffer))
-    (set-buffer-modified-p nil)
     (make-variable-buffer-local 'current-wiki)
     (make-variable-buffer-local 'current-pagename)
     (setq current-wiki wiki)
     (setq current-pagename pagename)
     (current-buffer)))
+
+(defun moinrpc-fill-page-buffer-content (buffer)
+  (with-current-buffer
+      buffer
+    (insert (moinrpc-get-page-content current-wiki current-pagename))
+    (set-buffer-modified-p nil)))
 
 (defun moinrpc-create-list-buffer (wiki)
     (with-current-buffer
@@ -213,12 +213,15 @@ Specify WIKI-ALIAS with a PAGENAME."
 
 (defun moinrpc-get-or-create-page-buffer (pagename)
   (let
-      ((buffer-name (moinrpc-buffer-name pagename)))
+      ((buffer-name (moinrpc-buffer-name pagename))
+       (buffer nil))
     (if
 	(null (get-buffer buffer-name))
-	(moinrpc-create-page-buffer current-wiki pagename)
-      (moinrpc-get-page-buffer current-wiki pagename))
-    (switch-to-buffer buffer-name)))
+	(progn
+	  (setq buffer (moinrpc-create-page-buffer current-wiki pagename))
+	  (moinrpc-fill-page-buffer-content buffer))
+      (setq buffer (get-buffer (moinrpc-buffer-name pagename))))
+    (switch-to-buffer buffer)))
 
 (defun moinrpc-find-page ()
   (interactive)
@@ -241,11 +244,28 @@ Specify WIKI-ALIAS with a PAGENAME."
 		      (action . (("Open" . moinrpc-get-or-create-page-buffer))))
 		     ((name . "fallback")
 		      (dummy)
-		      (action . (("Create" . (lambda (pagename) (moinrpc-create-page-buffer current-wiki pagename)))))
-		     ))
+		      (action . (("Create" . (lambda (pagename) (progn
+								  (let
+								      ((buffer nil))
+								    (setq buffer (moinrpc-create-page-buffer current-wiki pagename))
+								    (moinrpc-fill-page-buffer-content buffer))))
+				  )))))
 	  :prompt "Find Page: "
 	  :buffer "*helm-moin-find-pages*"
 	  )))
+
+(defun moinrpc ()
+  (with-current-buffer
+      (get-buffer-create "*moinrpc*")
+    (read-only-mode -1)
+    (erase-buffer)
+    (insert "MoinRPC Wiki List")
+    (read-only-mode)
+    (moinrpc-page-mode)
+    (make-variable-buffer-local 'current-wiki)
+    (setq current-wiki (cdr (assoc moinrpc-current-wiki moinrpc-wiki-settings)))
+    (switch-to-buffer "*moinrpc*")
+  ))
 
 (define-derived-mode moinrpc-page-mode fundamental-mode
   (moinmoin-mode)
