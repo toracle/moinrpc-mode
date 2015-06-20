@@ -151,8 +151,11 @@ Specify WIKI-ALIAS with a PAGENAME."
 
 (defun moinrpc-get-list-content (wiki)
   "Return a list of all page names from WIKI."
-  (moinrpc-xml-rpc-multi-method-call wiki
-				  "getAllPages"))
+  (let
+      ((content nil))
+    (setq content (moinrpc-xml-rpc-multi-method-call wiki
+						     "getAllPages"))
+    (sort content 'string<)))
 
 ;; Buffer related
 
