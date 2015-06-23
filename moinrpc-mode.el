@@ -46,7 +46,7 @@
       ((wiki-alias (read-string "Wiki alias: "))
        (xmlrpc-endpoint (read-string "XML-RPC endpoint: "))
        (username (read-string "Username: ")))
-    (moinrpc-create-wiki-settings wiki-alias xmlrpc-endpoint username)))
+    (moinrpc-create-wiki-setting wiki-alias xmlrpc-endpoint username)))
 
 (defun moinrpc-add-wiki-setting-to-global (wiki-setting)
   (let
@@ -76,8 +76,23 @@
     ))
 
 (defun moinrpc-new-wiki-setting ()
+  (interactive)
   (moinrpc-add-wiki-setting-to-global (moinrpc-create-wiki-setting-i))
-  (moinrpc-save-wiki-settings))
+  (moinrpc-save-wiki-settings)
+  (moinrpc-main-page))
+
+(defun moinrpc-get-keys (list)
+  (let
+      ((i 0)
+       (size (list-length list))
+       (keys nil))
+    (while (< i size)
+      (let
+	  ((key nil))
+	(setq key (car (nth i list)))
+	(setq i (+ i 1))
+	(add-to-list 'keys key)))
+    keys))
 
 
 ;; Raw wiki-xmlrpc functions
@@ -156,6 +171,7 @@ Specify WIKI-ALIAS with a PAGENAME."
     (setq content (moinrpc-xml-rpc-multi-method-call wiki
 						     "getAllPages"))
     (sort content 'string<)))
+
 
 ;; Buffer related
 
@@ -257,17 +273,34 @@ Specify WIKI-ALIAS with a PAGENAME."
 	  :buffer "*helm-moinrpc-find-pages*"
 	  )))
 
-(defun moinrpc ()
+(defun moinrpc-helm-find-page (button)
+  (let
+      (
+       (wiki-alias (button-label button))
+       (current-wiki nil))
+    (setq current-wiki (cdr (assoc wiki-alias moinrpc-wiki-settings)))
+    (helm-moinrpc-find-page)))
+
+(defun moinrpc-main-page ()
+  (interactive)
   (with-current-buffer
       (get-buffer-create "*moinrpc*")
     (read-only-mode -1)
     (erase-buffer)
     (insert "MoinRPC Wiki List")
+    (newline)
+    (newline)
+    (dolist (wiki-alias (moinrpc-get-keys moinrpc-wiki-settings))
+      (insert " * ")
+      (insert-button wiki-alias 'follow-link "\C-m" 'action 'moinrpc-helm-find-page)
+      (newline)
+      )
     (read-only-mode)
-    (moinrpc-page-mode)
+    (moinrpc-main-mode)
     (make-variable-buffer-local 'current-wiki)
     (setq current-wiki (cdr (assoc moinrpc-current-wiki moinrpc-wiki-settings)))
     (switch-to-buffer "*moinrpc*")
+    t
   ))
 
 (define-derived-mode moinrpc-page-mode fundamental-mode
@@ -278,10 +311,11 @@ Specify WIKI-ALIAS with a PAGENAME."
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
   )
 
-(define-derived-mode moinrpc-mode fundamental-mode
+(define-derived-mode moinrpc-main-mode fundamental-mode
   (setq mode-name "moinrpc-mode")
-  (moinrpc-create-main-buffer)
-  (local-set-key (kbd "c") 'moinrpc-create-wiki-settings)
+  (local-set-key (kbd "n") 'moinrpc-new-wiki-setting)
+  (local-set-key (kbd "g") 'moinrpc-main-page)
+  (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
   )
 
 (provide 'moinrpc-mode)
