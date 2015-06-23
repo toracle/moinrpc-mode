@@ -254,7 +254,7 @@ Specify WIKI-ALIAS with a PAGENAME."
 								    (moinrpc-fill-page-buffer-content buffer))))
 				  )))))
 	  :prompt "Find Page: "
-	  :buffer "*helm-moin-find-pages*"
+	  :buffer "*helm-moinrpc-find-pages*"
 	  )))
 
 (defun moinrpc ()
