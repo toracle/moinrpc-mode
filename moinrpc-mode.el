@@ -130,6 +130,37 @@
     (helm-moinrpc-find-page)))
 
 
+(defun moinrpc-bracket-wikilink-p ()
+   (thing-at-point-looking-at "\\[\\[[^|]+?\\]\\]" 100))
+
+
+(defun moinrpc-wikilink-at-point ()
+  (let
+      ((wikilink-bracket nil)
+       (wikilink nil))
+    (when
+	(moinrpc-bracket-wikilink-p)
+      (setq wikilink-bracket (buffer-substring (match-beginning 0) (match-end 0)))
+      (setq wikilink (substring wikilink-bracket 2 -2)))))
+    
+
+(defun moinrpc-open-wikilink-at-point ()
+  (interactive)
+  (let
+      (
+       (wikilink (moinrpc-wikilink-at-point))
+       (pagename nil))
+    (when
+	wikilink
+      (if
+	  (or
+	   (s-starts-with? "/" wikilink)
+	   (s-starts-with? ".." wikilink))
+	  (setq pagename (format "%s%s" current-pagename wikilink))
+	(setq pagename wikilink))
+      (moinrpc-get-or-create-page-buffer pagename))))
+
+
 (defun moinrpc-main-page ()
   (interactive)
   (with-current-buffer
@@ -158,6 +189,7 @@
   (local-set-key (kbd "C-x C-s") 'moinrpc-save-current-buffer)
 ;  (local-set-key (kbd "C-x C-f") 'moinrpc-find-buffer)
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
+  (local-set-key (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)
   )
 
 (define-derived-mode moinrpc-main-mode fundamental-mode
