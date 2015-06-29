@@ -4,15 +4,9 @@ This mode enables to handle moinmoin wiki using Emacs.
 
 Currently this is in alpha stage, so not works well for now.
 
-#+BEGIN_SRC elisp
-(setq wiki-setting
-	  (moinrpc-create-wiki-setting
-		"<your wiki name>"
-		"<your moinmoin xml-rpc endpoint>"
-		"<username here>"))
+Press 'M-x' to open execute-extended-command and run 'moinrpc-main-page'. You will see moinrpc main page with no saved wiki settings.
 
-(moinrpc-create-page-buffer wiki-setting "<pagename>")
-#+END_SRC
+Press 'n' to create a new moinmoin wiki setting. After that, you will see a new moinmoin wiki link within moinrpc main page and with cliking the link, wiki page list will be opened.
 
 You can find a new buffer opened with <pagename> content. From here you can navigate pages using C-x C-f.
 
@@ -25,20 +19,27 @@ You can find a new buffer opened with <pagename> content. From here you can navi
 
 ** Keys
 
+Wiki main page
+
+ - n: create a new wiki setting
+ - Enter with a certain wiki setting: Open wiki page list
+
+Wiki page
+
  - C-x C-f: Open page or create a new one (using Helm)
  - C-x C-s: Save page
+ - C-c C-o: Follow a WikiLink (only works with bracket wikilink now)
 
 
 ** Alternatives
 
 There are some other modes for moinmoin supports:
 
- - moomin-el
- - moinmoin-mode
+ - moinmoin-mode: A minor mode which supports highlight moinmoin wiki syntax. moinrpc-mode uses this mode for syntax highlighting.
+ - moomin-el: A moinmoin wiki client using HTML parsing on moinmoin web page. moinrpc-mode uses XML-RPC instead of HTML parsing.
 
 
-** To-do [2 /3]
+** To-do [0/2]
 
- - [X] C-c C-o to follow a WikiLink
- - [X] Find reverse links of a page
+ - [ ] Find reverse links of a page
  - [ ] User friendly wiki setting
