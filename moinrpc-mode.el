@@ -1,7 +1,8 @@
 ;;; package --- moinmoin xml-rpc client
-;;; Commentary: 
+;;; Commentary:
+;;; some comment
 
-;;; Code: 
+;;; Code:
 
 (require 'xml-rpc)
 (require 'moinmoin-mode)
@@ -13,9 +14,6 @@
 
 
 ;; Variables
-
-(defvar moinrpc-buffer-prefix "*moin: ")
-(defvar moinrpc-buffer-postfix "*")
 
 (defvar moinrpc-wiki-settings nil)
 (defvar moinrpc-current-wiki nil)
@@ -32,6 +30,7 @@
   (load moinrpc-settings-file))
 
 (defun moinrpc-create-wiki-setting (wiki-alias xmlrpc-endpoint username)
+  "WIKI-ALIAS XMLRPC-ENDPOINT USERNAME."
   (let
       ((xmlrpc-api-token nil)
        (wiki-setting nil))
@@ -48,6 +47,7 @@
      (cons 'username username))))
 
 (defun moinrpc-create-wiki-setting-i ()
+  "."
   (interactive)
   (let
       ((wiki-alias (read-string "Wiki alias: "))
@@ -56,6 +56,7 @@
     (moinrpc-create-wiki-setting wiki-alias xmlrpc-endpoint username)))
 
 (defun moinrpc-add-wiki-setting-to-global (wiki-setting)
+  "WIKI-SETTING."
   (let
       ((wiki-alias (cdr (assoc 'wiki-alias wiki-setting)))
        (wiki-settings nil))
@@ -72,6 +73,7 @@
     (moinrpc-save-wiki-settings)))
 
 (defun moinrpc-save-wiki-settings ()
+  "."
   (with-current-buffer
       (find-file-noselect moinrpc-settings-file)
     (erase-buffer)
@@ -83,12 +85,14 @@
     ))
 
 (defun moinrpc-new-wiki-setting ()
+  "."
   (interactive)
   (moinrpc-add-wiki-setting-to-global (moinrpc-create-wiki-setting-i))
   (moinrpc-save-wiki-settings)
   (moinrpc-main-page))
 
 (defun moinrpc-get-keys (list)
+  "LIST."
   (let
       ((i 0)
        (size (list-length list))
@@ -102,6 +106,7 @@
     keys))
 
 (defun helm-moinrpc-find-page ()
+  "."
   (interactive)
   (let
       ((all-pages (moinrpc-get-list-content current-wiki)))
@@ -122,6 +127,7 @@
 	  )))
 
 (defun moinrpc-helm-find-page (button)
+  "BUTTON."
   (let
       (
        (wiki-alias (button-label button))
@@ -131,10 +137,12 @@
 
 
 (defun moinrpc-bracket-wikilink-p ()
-   (thing-at-point-looking-at "\\[\\[[^|]+?\\]\\]" 100))
+  "."
+  (thing-at-point-looking-at "\\[\\[[^|]+?\\]\\]" 100))
 
 
 (defun moinrpc-wikilink-at-point ()
+  "."
   (let
       ((wikilink-bracket nil)
        (wikilink nil))
@@ -145,6 +153,7 @@
     
 
 (defun moinrpc-open-wikilink-at-point ()
+  "."
   (interactive)
   (let
       (
@@ -162,6 +171,7 @@
 
 
 (defun moinrpc-main-page ()
+  "."
   (interactive)
   (with-current-buffer
       (get-buffer-create "*moinrpc*")
@@ -200,4 +210,4 @@
   )
 
 (provide 'moinrpc-mode)
-;;; moin.el ends here
+;;; moinrpc-mode.el ends here
