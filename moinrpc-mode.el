@@ -9,7 +9,6 @@
 (require 'thingatpt)
 (require 's)
 
-(require 'moinrpc-xmlrpc)
 (require 'moinrpc-buffer)
 
 
@@ -17,9 +16,6 @@
 
 (defvar moinrpc-wiki-settings nil)
 (defvar moinrpc-current-wiki nil)
-
-(defvar moinrpc-xmlrpc-api-token nil)
-
 
 ;;; Wiki setting
 
@@ -105,35 +101,6 @@
 	(add-to-list 'keys key)))
     keys))
 
-(defun helm-moinrpc-find-page ()
-  "."
-  (interactive)
-  (let
-      ((all-pages (moinrpc-get-list-content current-wiki)))
-    (helm :sources '(
-		     ((name . "All wiki pages")
-		      (candidates . all-pages)
-		      (action . (("Open" . moinrpc-get-or-create-page-buffer))))
-		     ((name . "fallback")
-		      (dummy)
-		      (action . (("Create" . (lambda (pagename) (progn
-								  (let
-								      ((buffer nil))
-								    (setq buffer (moinrpc-create-page-buffer current-wiki pagename))
-								    (moinrpc-fill-page-buffer-content buffer))))
-				  )))))
-	  :prompt "Find Page: "
-	  :buffer "*helm-moinrpc-find-pages*"
-	  )))
-
-(defun moinrpc-helm-find-page (button)
-  "BUTTON."
-  (let
-      (
-       (wiki-alias (button-label button))
-       (current-wiki nil))
-    (setq current-wiki (cdr (assoc wiki-alias moinrpc-wiki-settings)))
-    (helm-moinrpc-find-page)))
 
 
 (defun moinrpc-bracket-wikilink-p ()
@@ -187,13 +154,18 @@
       )
     (read-only-mode)
     (moinrpc-main-mode)
-    (make-variable-buffer-local 'current-wiki)
-    (setq current-wiki (cdr (assoc moinrpc-current-wiki moinrpc-wiki-settings)))
+    (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
+    (setq moinrpc-buffer-local-current-wiki (cdr (assoc moinrpc-current-wiki moinrpc-wiki-settings)))
     (switch-to-buffer "*moinrpc*")
     t
   ))
 
 (define-derived-mode moinrpc-page-mode fundamental-mode
+  (defvar moinrpc-buffer-local-current-wiki nil)
+  (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
+
+  (defvar moinrpc-buffer-local-current-pagename nil)
+  (make-variable-buffer-local 'moinrpc-buffer-local-current-pagename)
   (moinmoin-mode)
   (setq mode-name "moinrpc-page-mode")
   (local-set-key (kbd "C-x C-s") 'moinrpc-save-current-buffer)
@@ -203,6 +175,12 @@
   )
 
 (define-derived-mode moinrpc-main-mode fundamental-mode
+  (defvar moinrpc-buffer-local-current-wiki nil)
+  (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
+
+  (defvar moinrpc-buffer-local-current-pagename nil)
+  (make-variable-buffer-local 'moinrpc-buffer-local-current-pagename)
+
   (setq mode-name "moinrpc-mode")
   (local-set-key (kbd "n") 'moinrpc-new-wiki-setting)
   (local-set-key (kbd "g") 'moinrpc-main-page)

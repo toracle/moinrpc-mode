@@ -61,13 +61,13 @@
     
 (defun moinrpc-get-page-content (wiki pagename)
   "Return raw wiki content string of a page.
-Specify WIKI-ALIAS with a PAGENAME."
+Specify WIKI with a PAGENAME."
   (moinrpc-xml-rpc-multi-method-call wiki
 				  "getPage"
 				  pagename))
 
 (defun moinrpc-save-page-content (wiki pagename content)
-  "Save wiki content with a pagename."
+  "Save WIKI content with a PAGENAME."
   (moinrpc-xml-rpc-multi-method-call wiki
 				  "putPage"
 				  pagename
