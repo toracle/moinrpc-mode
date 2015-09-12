@@ -5,7 +5,7 @@
 ;;; Code:
 
 (require 'xml-rpc)
-(require 'moinmoin-mode)
+;(require 'moinmoin-mode)
 (require 'thingatpt)
 (require 's)
 
@@ -102,7 +102,6 @@
     keys))
 
 
-
 (defun moinrpc-bracket-wikilink-p ()
   "."
   (thing-at-point-looking-at "\\[\\[[^|]+?\\]\\]" 100))
@@ -149,7 +148,9 @@
     (newline)
     (dolist (wiki-alias (moinrpc-get-keys moinrpc-wiki-settings))
       (insert " * ")
-      (insert-button wiki-alias 'follow-link "\C-m" 'action 'moinrpc-helm-find-page)
+      (insert-button wiki-alias
+		     'follow-link "\C-m"
+		     'action 'moinrpc-helm-find-page)
       (newline)
       )
     (read-only-mode)
@@ -166,7 +167,7 @@
 
   (defvar moinrpc-buffer-local-current-pagename nil)
   (make-variable-buffer-local 'moinrpc-buffer-local-current-pagename)
-  (moinmoin-mode)
+;  (moinmoin-mode)
   (setq mode-name "moinrpc-page-mode")
   (local-set-key (kbd "C-x C-s") 'moinrpc-save-current-buffer)
 ;  (local-set-key (kbd "C-x C-f") 'moinrpc-find-buffer)

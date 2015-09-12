@@ -5,47 +5,28 @@
 
 ;; Buffer related
 
+(require 'moinrpc-common)
 (require 'moinrpc-xmlrpc)
 
-(defvar moinrpc-buffer-prefix "*moin: ")
-(defvar moinrpc-buffer-postfix "*")
-
-(defvar moinrpc-xmlrpc-content-provider
-  '((:initialize . nil)
-    (:get-page . moinrpc-get-page-content)
-    (:get-list . moinrpc-get-list-content)
-    (:save-page . moinrpc-save-page-content)))
-
-(defvar moinrpc-dummy-content-provider
-  '((:initialize . nil)
-    (:get-page . nil)
-    (:get-list . nil)
-    (:save-page . nil)))
-
-(defvar moinrpc-content-provider moinrpc-xmlrpc-content-provider)
-
-(defun moinrpc-buffer-name (pagename)
-  "Construct a buffer name of wiki PAGENAME."
-  (concat moinrpc-buffer-prefix pagename moinrpc-buffer-postfix))
-
-(defun moinrpc-strip-text-properties (txt)
-  "Remove all text properties of TXT."
-  (set-text-properties 0 (length txt) nil txt)
-  txt)
+(defun print-current-buffer-local (location)
+  "Print current buffer local var values of LOCATION for debug."
+  ; (message (format "%s: current-pagename=%s, current-wiki=%s" location moinrpc-buffer-local-current-pagename moinrpc-buffer-local-current-wiki)))
+  )
 
 (defun moinrpc-create-page-buffer (wiki pagename)
   "Create a buffer for a WIKI page which has a PAGENAME."
   (with-current-buffer
       (get-buffer-create (moinrpc-buffer-name pagename))
+    (moinrpc-page-mode)
+    (erase-buffer)
     (setq moinrpc-buffer-local-current-wiki wiki)
     (setq moinrpc-buffer-local-current-pagename pagename)
-    (erase-buffer)
-    (moinrpc-page-mode)
     (switch-to-buffer (current-buffer))
+    (print-current-buffer-local "create-page-buffer")
     (current-buffer)))
 
 (defun moinrpc-fill-page-buffer-content (buffer current-wiki current-pagename)
-  "Fill a BUFFER with content of CURRENT-WIKI CURRENT-PAGENAME."
+  "Fill a BUFFER with content from CURRENT-WIKI CURRENT-PAGENAME."
   (with-current-buffer
       buffer
     (let
@@ -53,7 +34,24 @@
 	 (content nil))
       (setq content (funcall get-page-function current-wiki current-pagename))
       (insert content)
+      (setq moinrpc-buffer-local-current-wiki current-wiki)
+      (setq moinrpc-buffer-local-current-pagename current-pagename)
+      (print-current-buffer-local "fill-page-buffer-content")
       (set-buffer-modified-p nil))))
+
+(defun moinrpc-get-or-create-page-buffer (pagename)
+  "Get a page buffer which have a PAGENAME or create one if there is not exist."
+  (let
+      ((buffer-name (moinrpc-buffer-name pagename))
+       (buffer nil))
+    (if
+	(not (setq buffer (get-buffer buffer-name)))
+	(progn
+	  (setq buffer (moinrpc-create-page-buffer moinrpc-buffer-local-current-wiki pagename))
+	  (moinrpc-fill-page-buffer-content buffer moinrpc-buffer-local-current-wiki pagename))
+      (setq buffer (get-buffer (moinrpc-buffer-name pagename))))
+      (print-current-buffer-local "get-or-create-page-buffer")
+    (switch-to-buffer buffer)))
 
 (defun moinrpc-create-list-buffer (wiki)
   "Create WIKI page list buffer."
@@ -69,16 +67,6 @@
       (read-only-mode)
       (current-buffer))))
 
-(defun moinrpc-create-main-buffer ()
-  "Create main page buffer.  List up wiki list."
-  (with-current-buffer
-      (get-buffer-create "*moinrpc*")
-    (switch-to-buffer (current-buffer))
-    (erase-buffer)
-    (insert (format "%S" moinrpc-wiki-settings))
-    (read-only-mode)
-  ))
-
 (defun moinrpc-save-current-buffer ()
   "Save current buffer to remote wiki."
   (interactive)
@@ -89,20 +77,19 @@
 	     moinrpc-buffer-local-current-pagename
 	     (moinrpc-strip-text-properties (buffer-string)))
     (set-buffer-modified-p nil)
+    (print-current-buffer-local "save-current-buffer")
     (current-buffer)))
 
-(defun moinrpc-get-or-create-page-buffer (pagename)
-  "Get a page buffer which have a PAGENAME or create one if there is not exist."
-  (let
-      ((buffer-name (moinrpc-buffer-name pagename))
-       (buffer nil))
-    (if
-	(null (get-buffer buffer-name))
-	(progn
-	  (setq buffer (moinrpc-create-page-buffer moinrpc-buffer-local-current-wiki pagename))
-	  (moinrpc-fill-page-buffer-content buffer moinrpc-buffer-local-current-wiki pagename))
-      (setq buffer (get-buffer (moinrpc-buffer-name pagename))))
-    (switch-to-buffer buffer)))
+(defun moinrpc-create-main-buffer ()
+  "Create main page buffer.  List up wiki list."
+  (with-current-buffer
+      (get-buffer-create "*moinrpc*")
+    (switch-to-buffer (current-buffer))
+    (erase-buffer)
+    (insert (format "%S" moinrpc-wiki-settings))
+    (read-only-mode)
+    (print-current-buffer-local "create-main-buffer")
+  ))
 
 (defun moinrpc-find-page ()
   "Find a page with name."
@@ -111,19 +98,13 @@
       ((pagename (read-string "Find page: ")))
     (moinrpc-get-or-create-page-buffer pagename)))
 
-(defun moinrpc-create-page-buffer-helm (pagename)
-  "Create a buffer for a wiki page of PAGENAME."
-  (let
-      ((buffer nil))
-    (setq buffer (moinrpc-create-page-buffer moinrpc-buffer-local-current-wiki pagename))
-    (moinrpc-fill-page-buffer-content buffer)))
-
 (defun helm-moinrpc-find-page ()
   "Find page using helm."
   (interactive)
   (let
       ((get-list-function (cdr (assoc :get-list moinrpc-content-provider)))
        (all-pages nil))
+    (print-current-buffer-local "helm-moinrpc-find-page")
     (setq all-pages (funcall get-list-function moinrpc-buffer-local-current-wiki))
     (helm :sources '(
 		     ((name . "All wiki pages")
@@ -131,7 +112,7 @@
 		      (action . (("Open" . moinrpc-get-or-create-page-buffer))))
 		     ((name . "fallback")
 		      (dummy)
-		      (action . (("Create" . moinrpc-create-page-buffer-helm)))))
+		      (action . (("Create" . moinrpc-get-or-create-page-buffer)))))
 	  :prompt "Find Page: "
 	  :buffer "*helm-moinrpc-find-pages*"
 	  )))
@@ -139,17 +120,10 @@
 (defun moinrpc-helm-find-page (button)
   "BUTTON."
   (let
-      (
-       (wiki-alias (button-label button))
-       (current-wiki nil))
+      ((wiki-alias (button-label button)))
     (setq moinrpc-buffer-local-current-wiki (cdr (assoc wiki-alias moinrpc-wiki-settings)))
+    (print-current-buffer-local "helm-find-page")
     (helm-moinrpc-find-page)))
-
-(defun helm-moinrpc-get-or-create-page-buffer (candidate)
-  "Get or create a page buffer which have a name equals to CANDIDATE."
-  (stringp candidate)
-  (moinrpc-get-or-create-page-buffer candidate)
-  )
 
 (provide 'moinrpc-buffer)
 ;;; moinrpc-buffer.el ends here
