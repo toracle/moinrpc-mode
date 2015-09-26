@@ -47,6 +47,6 @@ There are some other modes for moinmoin supports:
  - [X] ~C-c C-o~ to follow a WikiLink
  - [X] User friendly wiki setting
  - [ ] ~C-j~ to complete a helm candidate
- - [ ] Syntax highlighting (moinmoin-mode [[http://d.hatena.ne.jp/ymorimo/20070308/1173373043][includes error]])
+ - [ ] Syntax highlighting (already there is a nice moinmoin-mode but it [[http://d.hatena.ne.jp/ymorimo/20070308/1173373043][contains some error]])
  - [ ] Find reverse links of a page
  - [ ] ~C-c C-l~ to insert wiki link with helm page search
