@@ -18,7 +18,7 @@ actions_excluded.remove('xmlrpc')
 
 ** Getting Started
 
-Run ~M-x~ and type ~moinrpc-main-page~.
+Run ~M-x moinrpc-main-page~.
 
 Then you will see an empty main page. Next, type ~n~ to add a new wiki setting. Type your wiki name, XML-RPC endpoint url (typically ~<your wiki domain>?action=xmlrpc2~, [[https://moinmo.in/WikiRpc][number 2 means WikiRpc v2]]), username, password.
 
@@ -28,9 +28,7 @@ You can find configuration file on ~<emacs.d directory>/remote-moin~
 
 You can see a new wiki with a hyperlink is displayed on ~moinrpc-main-page~. Open any wiki page by clicking the wiki name. If you installed ~helm~, you can see all page list of your wiki for find-file.
 
-Edit a wiki page and use ~C-x C-s~ to save the page.
-
-You can find a new buffer opened with <pagename> content. From here you can navigate pages using ~C-x C-f~.
+Select a wikipage, then a new buffer will be opened with content. Edit the page and ~C-x C-s~ to save to wiki server. Run ~C-x C-f~ to open other wikipage.
 
 
 ** Features
