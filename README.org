@@ -2,7 +2,7 @@
 
 This mode enables to handle moinmoin wiki using Emacs.
 
-Currently this is in alpha stage, so not works well for now.
+Currently this is in alpha stage, so it can not works well for now.
 
 ** Prerequisite
 
