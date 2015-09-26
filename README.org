@@ -6,31 +6,19 @@ Currently this is in alpha stage, so not works well for now.
 
 ** Getting Started
 
-Run M-x and type moinrpc-main-page.
+Run ~M-x~ and type ~moinrpc-main-page~.
 
-Then you will see an empty main page. Next, type n to add a new wiki setting. Type your wiki name, xml-rpc endpoint url (typically <your wiki domain>?action=xmlrpc2), username, password.
+Then you will see an empty main page. Next, type n to add a new wiki setting. Type your wiki name, xml-rpc endpoint url (typically ~<your wiki domain>?action=xmlrpc2~), username, password.
 
 (This mode doesn't store your password but access token which is obtained from the server.)
 
-You can find configuration file on <emacs.d directory>/remote-moin
+You can find configuration file on ~<emacs.d directory>/remote-moin~
 
 You can see a new wiki with a hyperlink is displayed on moinrpc-main-page. Open any wiki page by clicking the wiki name. If you installed helm, you can see all page list of your wiki for find-file.
 
-Edit a wiki page and use C-x C-s to save the page.
+Edit a wiki page and use ~C-x C-s~ to save the page.
 
-
-
-#+BEGIN_SRC elisp
-(setq wiki-setting
-	  (moinrpc-create-wiki-setting
-		"<your wiki name>"
-		"<your moinmoin xml-rpc endpoint>"
-		"<username here>"))
-
-(moinrpc-create-page-buffer wiki-setting "<pagename>")
-#+END_SRC
-
-You can find a new buffer opened with <pagename> content. From here you can navigate pages using C-x C-f.
+You can find a new buffer opened with <pagename> content. From here you can navigate pages using ~C-x C-f~.
 
 
 ** Features
@@ -41,9 +29,9 @@ You can find a new buffer opened with <pagename> content. From here you can navi
 
 ** Keys
 
- - C-x C-f: Open page or create a new one (using Helm)
- - C-x C-s: Save page
- - C-c C-o: Open wikilink which is cursor on. Currently works for bracketed link.
+ - ~C-x C-f~: Open page or create a new one (using Helm)
+ - ~C-x C-s~: Save page
+ - ~C-c C-o~: Open wikilink which is cursor on. Currently works for bracketed link.
 
 
 ** Alternatives
@@ -54,10 +42,11 @@ There are some other modes for moinmoin supports:
  - moinmoin-mode
 
 
-** To-do [3 /4]
+** To-do [2/6]
 
- - [X] C-c C-o to follow a WikiLink
- - [X] Find reverse links of a page
+ - [X] ~C-c C-o~ to follow a WikiLink
  - [X] User friendly wiki setting
- - [ ] C-j to complete a helm candidate
- - [ ] Syntax highlighting
+ - [ ] ~C-j~ to complete a helm candidate
+ - [ ] Syntax highlighting (moinmoin-mode [[http://d.hatena.ne.jp/ymorimo/20070308/1173373043][includes error]])
+ - [ ] Find reverse links of a page
+ - [ ] ~C-c C-l~ to insert wiki link with helm page search
