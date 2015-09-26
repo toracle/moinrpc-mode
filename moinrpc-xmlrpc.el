@@ -9,20 +9,16 @@
 (defun moinrpc-check-xmlrpc-response (response wiki)
   (let
       ((response-status (car response)))
-    (if
-	(string= (car response-status) "SUCCESS")
-	(if
-	    (assoc "faultCode" response-status)
-	    (when
-		(= 1 (cdr (cdr (assoc "faultCode" response-status))))
-	      (when
-		  (string= "Invalid token." (cdr (assoc "faultString" response-status)))
+    (if (string= (car response-status) "SUCCESS")
+	(if (assoc "faultCode" response-status)
+	    (when (= 1 (cdr (cdr (assoc "faultCode" response-status))))
+	      (when (string= "Invalid token." (cdr (assoc "faultString" response-status)))
 		(moinrpc-get-auth-token wiki)
 		(moinrpc-save-wiki-settings))
 	      nil)
 	  nil)
-      t)))
-	
+      nil)))
+
 (defun moinrpc-encode-xml-rpc-multi-each-method (method-name &rest params)
   (list
    (cons "methodName" method-name)
