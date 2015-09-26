@@ -4,17 +4,22 @@ This mode enables to handle moinmoin wiki using Emacs.
 
 Currently this is in alpha stage, so not works well for now.
 
+** Prerequisite
+
+You should have a MoinMoin wiki and is configured to provide a XML-RPC endpoint action. XML-RPC action is disabled by default.
+
+
 ** Getting Started
 
 Run ~M-x~ and type ~moinrpc-main-page~.
 
-Then you will see an empty main page. Next, type n to add a new wiki setting. Type your wiki name, xml-rpc endpoint url (typically ~<your wiki domain>?action=xmlrpc2~), username, password.
+Then you will see an empty main page. Next, type ~n~ to add a new wiki setting. Type your wiki name, XML-RPC endpoint url (typically ~<your wiki domain>?action=xmlrpc2~), username, password.
 
-(This mode doesn't store your password but access token which is obtained from the server.)
+(This mode doesn't store your password but an access token which is issued by server.)
 
 You can find configuration file on ~<emacs.d directory>/remote-moin~
 
-You can see a new wiki with a hyperlink is displayed on moinrpc-main-page. Open any wiki page by clicking the wiki name. If you installed helm, you can see all page list of your wiki for find-file.
+You can see a new wiki with a hyperlink is displayed on ~moinrpc-main-page~. Open any wiki page by clicking the wiki name. If you installed ~helm~, you can see all page list of your wiki for find-file.
 
 Edit a wiki page and use ~C-x C-s~ to save the page.
 
@@ -31,7 +36,7 @@ You can find a new buffer opened with <pagename> content. From here you can navi
 
  - ~C-x C-f~: Open page or create a new one (using Helm)
  - ~C-x C-s~: Save page
- - ~C-c C-o~: Open wikilink which is cursor on. Currently works for bracketed link.
+ - ~C-c C-o~: Open a wikilink which is cursor on. Currently only works for bracketed link, not for camel case link.
 
 
 ** Alternatives
@@ -44,9 +49,9 @@ There are some other modes for moinmoin supports:
 
 ** To-do [2/6]
 
- - [X] ~C-c C-o~ to follow a WikiLink
+ - [X] ~C-c C-o~: follow a WikiLink
  - [X] User friendly wiki setting
  - [ ] ~C-j~ to complete a helm candidate
  - [ ] Syntax highlighting (already there is a nice moinmoin-mode but it [[http://d.hatena.ne.jp/ymorimo/20070308/1173373043][contains some error]])
  - [ ] Find reverse links of a page
- - [ ] ~C-c C-l~ to insert wiki link with helm page search
+ - [ ] ~C-c C-l~: insert wiki link with helm page search
