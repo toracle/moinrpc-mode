@@ -20,7 +20,7 @@ actions_excluded.remove('xmlrpc')
 
 Run ~M-x~ and type ~moinrpc-main-page~.
 
-Then you will see an empty main page. Next, type ~n~ to add a new wiki setting. Type your wiki name, XML-RPC endpoint url (typically ~<your wiki domain>?action=xmlrpc2~), username, password.
+Then you will see an empty main page. Next, type ~n~ to add a new wiki setting. Type your wiki name, XML-RPC endpoint url (typically ~<your wiki domain>?action=xmlrpc2~, [[https://moinmo.in/WikiRpc][number 2 means WikiRpc v2]]), username, password.
 
 (This mode doesn't store your password but an access token which is issued by server.)
 
