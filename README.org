@@ -6,7 +6,14 @@ Currently this is in alpha stage, so not works well for now.
 
 ** Prerequisite
 
-You should have a MoinMoin wiki and is configured to provide a XML-RPC endpoint action. XML-RPC action is disabled by default.
+MoinMoin XML-RPC action is disabled by default, so you should have a MoinMoin wiki and is configured to provide a XML-RPC endpoint action. (cf. [[https://moinmo.in/MoinAPI/Examples#xmlrpc][XML-RPC section of MoinMoin official site]])
+
+In short, just add below code on your LocalConfig class can be found in ~wikiconfig.py~ file.
+
+#+BEGIN_SRC python
+actions_excluded = multiconfig.DefaultConfig.actions_excluded[:]
+actions_excluded.remove('xmlrpc')
+#+END_SRC
 
 
 ** Getting Started
