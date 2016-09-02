@@ -1,12 +1,14 @@
 * MoinRPC mode
 
-This mode enables to handle moinmoin wiki using Emacs.
+This mode enables Emacs to communicate with moinmoin wiki.
 
-Currently this is in alpha stage, so it can not works well for now.
+Currently this is in alpha stage.
 
 ** Prerequisite
 
-MoinMoin XML-RPC action is disabled by default, so you should have a MoinMoin wiki and is configured to provide a XML-RPC endpoint action. (cf. [[https://moinmo.in/MoinAPI/Examples#xmlrpc][XML-RPC section of MoinMoin official site]])
+You must own a MoinMoin wiki server.
+
+MoinMoin Wiki XML-RPC action is disabled by default, so you should configure it to provide a XML-RPC endpoint action. (cf. [[https://moinmo.in/MoinAPI/Examples#xmlrpc][XML-RPC section of MoinMoin official site]])
 
 In short, just add below code on your LocalConfig class can be found in ~wikiconfig.py~ file.
 
