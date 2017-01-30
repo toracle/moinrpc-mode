@@ -101,7 +101,6 @@
 	(add-to-list 'keys key)))
     keys))
 
-
 (defun moinrpc-bracket-wikilink-p ()
   "."
   (thing-at-point-looking-at "\\[\\[[^|]+?\\]\\]" 100))
@@ -170,8 +169,8 @@
 ;  (moinmoin-mode)
   (setq mode-name "moinrpc-page-mode")
   (local-set-key (kbd "C-x C-s") 'moinrpc-save-current-buffer)
-;  (local-set-key (kbd "C-x C-f") 'moinrpc-find-buffer)
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
+  (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
   (local-set-key (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)
   )
 
@@ -183,10 +182,12 @@
   (make-variable-buffer-local 'moinrpc-buffer-local-current-pagename)
 
   (setq mode-name "moinrpc-mode")
-  (local-set-key (kbd "n") 'moinrpc-new-wiki-setting)
   (local-set-key (kbd "g") 'moinrpc-main-page)
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
-  )
+  (local-set-key (kbd "C-c C-n") 'moinrpc-new-wiki-setting)
+  (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
+  (local-set-key (kbd "<tab>") 'forward-button)
+  (local-set-key (kbd "<backtab>") 'backward-button))
 
 (provide 'moinrpc-mode)
 ;;; moinrpc-mode.el ends here
