@@ -56,13 +56,13 @@
   "Construct and encode multi method call type to WIKI with a METHOD-NAME and PARAMS."
   (list
    (moinrpc-encode-xml-rpc-multi-each-method "applyAuthToken"
-					     (cdr (assoc 'xmlrpc-api-token wiki)))
+					     (moinrpc-get-wiki-conf wiki 'xmlrpc-api-token))
    (apply 'moinrpc-encode-xml-rpc-multi-each-method method-name params)))
 
 (defun moinrpc-xml-rpc-multi-method-call (wiki method-name &rest params)
   "XML-RPC method call to WIKI with a METHOD-NAME and PARAMS."
   (let ((response nil)
-	(url (cdr (assoc 'xmlrpc-endpoint wiki)))
+	(url (moinrpc-get-wiki-conf wiki 'xmlrpc-endpoint ))
 	(call-message (apply 'moinrpc-encode-xml-rpc-multi-method
 			     wiki
 			     method-name
@@ -85,9 +85,9 @@
   "Prompt password and get access token of given WIKI using it."
   (let
       ((password (read-passwd "Password: ")))
-    (xml-rpc-method-call (cdr (assoc 'xmlrpc-endpoint wiki))
+    (xml-rpc-method-call (moinrpc-get-wiki-conf wiki 'xmlrpc-endpoint)
 			 'getAuthToken
-			 (cdr (assoc 'username wiki))
+			 (moinrpc-get-wiki-conf wiki 'username)
 			 password)))
     
 (defun moinrpc-get-page-content (wiki pagename)

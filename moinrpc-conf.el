@@ -1,4 +1,4 @@
-(defun moinrpc-make-wiki (wiki-alias &optional xmlrpc-endpoint username xmlrpc-api-token)
+(defun moinrpc-make-wiki-conf (wiki-alias &optional xmlrpc-endpoint username xmlrpc-api-token)
   (list (cons 'wiki-alias wiki-alias)
 	(cons 'xmlrpc-endpoint xmlrpc-endpoint)
 	(cons 'username username)

@@ -60,18 +60,22 @@
 						#'moinrpc-on-error-mockup)
 		 nil)))
 
-(ert-deftest moinrpc-make-wiki ()
-  (should (equal (moinrpc-make-wiki "testwiki")
+(ert-deftest moinrpc-encode-xml-rpc-multi-each-method ()
+  (should (equal (moinrpc-encode-xml-rpc-multi-each-method 'getPage "TestPage")
+		 '(("methodName" . getPage) ("params" . ["TestPage"])))))
+
+(ert-deftest moinrpc-make-wiki-conf ()
+  (should (equal (moinrpc-make-wiki-conf "testwiki")
 		 '((wiki-alias . "testwiki")
 		   (xmlrpc-endpoint . nil)
 		   (username . nil)
 		   (xmlrpc-api-token . nil))))
-  (should (equal (moinrpc-make-wiki "testwiki" "https://mywiki.com/xmlrpc2")
+  (should (equal (moinrpc-make-wiki-conf "testwiki" "https://mywiki.com/xmlrpc2")
 		 '((wiki-alias . "testwiki")
 		   (xmlrpc-endpoint . "https://mywiki.com/xmlrpc2")
 		   (username . nil)
 		   (xmlrpc-api-token . nil))))
-  (should (equal (moinrpc-make-wiki "testwiki" "https://mywiki.com/xmlrpc2" "testuser")
+  (should (equal (moinrpc-make-wiki-conf "testwiki" "https://mywiki.com/xmlrpc2" "testuser")
 		 '((wiki-alias . "testwiki")
 		   (xmlrpc-endpoint . "https://mywiki.com/xmlrpc2")
 		   (username . "testuser")
@@ -91,11 +95,3 @@
   (should (equal (moinrpc-get-wiki-conf *moinrpc-fixture-wiki-setting* 'xmlrpc-api-token)
 		 "testtoken")))
 
-
-
-;; (let ((wiki (moinrpc-make-wiki "wikiname")))
-;;   (moinrpc-set-wiki-conf wiki 'xmlrpc-endpoint "https://")
-;;   (moinrpc-set-wiki-conf wiki 'xmlrpc-api-token "fake-token"))
-
-
-;; (moinrpc-set-wiki *moinrpc-fixture-wiki-setting* 'xmlrpc-api-token "testtoken2")
