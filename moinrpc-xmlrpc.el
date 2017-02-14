@@ -35,10 +35,12 @@
     (moinrpc-error-cause-to-type fault-string)))
 
 (defun moinrpc-ask-token-and-save (response wiki)
+  "Get auth token of WIKI and save it to file."
   (moinrpc-get-auth-token wiki)
   (moinrpc-save-wiki-settings))
 
 (defun moinrpc-check-xmlrpc-response (response wiki on-error)
+  ""
   (if (moinrpc-response-valid-p response)
       (let ((error-type (moinrpc-response-error-type response)))
 	(case error-type
@@ -53,26 +55,25 @@
 (defun moinrpc-encode-xml-rpc-multi-method (wiki method-name &rest params)
   "Construct and encode multi method call type to WIKI with a METHOD-NAME and PARAMS."
   (list
-    (moinrpc-encode-xml-rpc-multi-each-method "applyAuthToken" (cdr (assoc 'xmlrpc-api-token wiki)))
-    (apply 'moinrpc-encode-xml-rpc-multi-each-method method-name params)))
+   (moinrpc-encode-xml-rpc-multi-each-method "applyAuthToken"
+					     (cdr (assoc 'xmlrpc-api-token wiki)))
+   (apply 'moinrpc-encode-xml-rpc-multi-each-method method-name params)))
 
 (defun moinrpc-xml-rpc-multi-method-call (wiki method-name &rest params)
   "XML-RPC method call to WIKI with a METHOD-NAME and PARAMS."
-  (let
-      ((response nil)
-       (url (cdr (assoc 'xmlrpc-endpoint wiki)))
-       (call-message (apply 'moinrpc-encode-xml-rpc-multi-method
-			    wiki
-			    method-name
-			    params)))
+  (let ((response nil)
+	(url (cdr (assoc 'xmlrpc-endpoint wiki)))
+	(call-message (apply 'moinrpc-encode-xml-rpc-multi-method
+			     wiki
+			     method-name
+			     params)))
     (setq response
 	  (xml-rpc-method-call url
 			       'system.multicall
 			       call-message))
 
-    (moinrpc-check-xmlrpc-response response wiki)
+    (moinrpc-check-xmlrpc-response response wiki #'moinrpc-ask-token-and-save)
     (caar (cdr response))))
-
 
 (defun moinrpc-set-auth-token-to-current (token wiki-setting)
   "Set access TOKEN to WIKI-SETTING."

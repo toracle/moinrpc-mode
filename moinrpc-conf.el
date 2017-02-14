@@ -11,3 +11,6 @@
 
 (defun moinrpc-get-wiki-conf (wiki key)
   (cdr (assoc key wiki)))
+
+(provide 'moinrpc-conf)
+
