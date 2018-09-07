@@ -160,8 +160,9 @@
     t
   ))
 
-(define-derived-mode moinrpc-page-mode fundamental-mode
+(define-derived-mode moinrpc-page-mode outline-mode
   (defvar moinrpc-buffer-local-current-wiki nil)
+  (setq outline-regexp "[=\f]+")
   (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
 
   (defvar moinrpc-buffer-local-current-pagename nil)
@@ -172,6 +173,7 @@
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
   (local-set-key (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)
+  (local-set-key (kbd "TAB") 'org-cycle)
   )
 
 (define-derived-mode moinrpc-main-mode fundamental-mode

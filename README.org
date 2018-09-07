@@ -41,9 +41,12 @@ Select a wikipage, then a new buffer will be opened with content. Edit the page 
 
 ** Keys
 
+ - ~C-c C-n~: Register a new wiki
+ - ~C-c C-f~: Open page or create a new one
  - ~C-x C-f~: Open page or create a new one (using Helm)
  - ~C-x C-s~: Save page
  - ~C-c C-o~: Open a wikilink which is cursor on. Currently only works for bracketed link, not for camel case link.
+ - ~TAB~: fold/unfold sub-tree headings
 
 
 ** Alternatives
@@ -62,3 +65,12 @@ There are some other modes for moinmoin supports:
  - [ ] Syntax highlighting (already there is a nice moinmoin-mode but it [[http://d.hatena.ne.jp/ymorimo/20070308/1173373043][contains some error]])
  - [ ] Find reverse links of a page
  - [ ] ~C-c C-l~: insert wiki link with helm page search
+
+
+** Change logs
+
+*** 2018-09-07
+
+ - Let moin-page-mode derived from outline-mode
+   - Now it recognizes wiki headings
+   - Tab key on a heading fold/unfold sub-tree
