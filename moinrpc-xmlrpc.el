@@ -3,6 +3,7 @@
 
 ;;; Code: 
 
+(require 'moinrpc-conf)
 
 ;; Raw wiki-xmlrpc functions
 
