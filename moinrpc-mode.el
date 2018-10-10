@@ -91,6 +91,7 @@
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
   (local-set-key (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)
+  (local-set-key (kbd "M-RET") 'org-meta-return)
   (local-set-key (kbd "TAB") 'org-cycle))
 
 
