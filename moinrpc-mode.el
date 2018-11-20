@@ -63,7 +63,7 @@
     (insert "MoinRPC Wiki List")
     (newline)
     (newline)
-    (dolist (wiki-alias (moinrpc-get-keys moinrpc-wiki-settings))
+    (dolist (wiki-alias (moinrpc-get-keys *moinrpc-wiki-settings*))
       (insert " * ")
       (insert-button wiki-alias
 		     'follow-link "\C-m"
@@ -72,7 +72,7 @@
     (read-only-mode)
     (moinrpc-main-mode)
     (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
-    (setq moinrpc-buffer-local-current-wiki (cdr (assoc moinrpc-current-wiki moinrpc-wiki-settings)))
+    (setq moinrpc-buffer-local-current-wiki (cdr (assoc *moinrpc-current-wiki* *moinrpc-wiki-settings*)))
     (switch-to-buffer "*moinrpc*")
     t
   ))

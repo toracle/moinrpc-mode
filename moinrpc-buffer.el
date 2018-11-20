@@ -79,7 +79,7 @@
   (with-current-buffer (get-buffer-create "*moinrpc*")
     (switch-to-buffer (current-buffer))
     (erase-buffer)
-    (insert (format "%S" moinrpc-wiki-settings))
+    (insert (format "%S" *moinrpc-wiki-settings*))
     (read-only-mode)
     (print-current-buffer-local "create-main-buffer")))
 
@@ -112,7 +112,7 @@
 (defun moinrpc-helm-find-page (button)
   "BUTTON."
   (let ((wiki-alias (button-label button)))
-    (setq moinrpc-buffer-local-current-wiki (cdr (assoc wiki-alias moinrpc-wiki-settings)))
+    (setq moinrpc-buffer-local-current-wiki (cdr (assoc wiki-alias *moinrpc-wiki-settings*)))
     (print-current-buffer-local "helm-find-page")
     (helm-moinrpc-find-page)))
 
