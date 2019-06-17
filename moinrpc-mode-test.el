@@ -31,7 +31,7 @@
 
 (ert-deftest moinrpc-get-keys ()
   (should (equal (moinrpc-get-keys '((key1 . value1) (key2 . value2) (key3 . value3)))
-		 '(key3 key2 key1))))
+                 '(key1 key2 key3))))
 
 
 (ert-deftest moinrpc-response-valid-p ()

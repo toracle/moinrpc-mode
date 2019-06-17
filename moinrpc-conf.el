@@ -73,16 +73,8 @@
     (moinrpc-save-wiki-settings)))
 
 
-(defun moinrpc-get-keys (list)
-  "LIST."
-  (let ((i 0)
-        (size (list-length list))
-        (keys nil))
-    (while (< i size)
-      (let ((key nil))
-	(setq key (car (nth i list)))
-	(setq i (+ i 1))
-	(add-to-list 'keys key)))
-    keys))
+(defun moinrpc-get-keys (alist)
+  "Returns keys of ALIST."
+  (mapcar 'car alist))
 
 (provide 'moinrpc-conf)
