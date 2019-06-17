@@ -1,26 +1,26 @@
 ;; Variables
 
-(defvar moinrpc-wiki-settings nil)
-(defvar moinrpc-current-wiki nil)
-(defvar moinrpc-settings-file (concat user-emacs-directory "remote-moin"))
+(defvar *moinrpc-wiki-settings* nil)
+(defvar *moinrpc-current-wiki* nil)
+(defvar *moinrpc-settings-file* (concat user-emacs-directory "remote-moin"))
 
-(when (file-readable-p moinrpc-settings-file)
-  (load moinrpc-settings-file))
+(when (file-readable-p *moinrpc-settings-file*)
+  (load *moinrpc-settings-file*))
 
 
 (defun moinrpc-save-wiki-settings ()
-  "."
-  (with-current-buffer (find-file-noselect moinrpc-settings-file)
+  "Save wiki settings to file."
+  (with-current-buffer (find-file-noselect *moinrpc-settings-file*)
     (erase-buffer)
-    (insert (format "(setq moinrpc-wiki-settings '%S)" moinrpc-wiki-settings))
+    (insert (format "(setq *moinrpc-wiki-settings* '%S)" *moinrpc-wiki-settings*))
     (newline)
-    (insert (format "(setq moinrpc-current-wiki %S)" moinrpc-current-wiki))
+    (insert (format "(setq *moinrpc-current-wiki* %S)" *moinrpc-current-wiki*))
     (save-buffer)
     t))
 
 
 (defun moinrpc-new-wiki-setting ()
-  "."
+  "Add a new wiki settings."
   (interactive)
   (moinrpc-add-wiki-setting-to-global (moinrpc-create-wiki-setting-i))
   (moinrpc-save-wiki-settings)
@@ -28,6 +28,7 @@
 
 
 (defun moinrpc-make-wiki-conf (wiki-alias &optional xmlrpc-endpoint username xmlrpc-api-token)
+  "Return new wiki settings data structure."
   (list (cons 'wiki-alias wiki-alias)
 	(cons 'xmlrpc-endpoint xmlrpc-endpoint)
 	(cons 'username username)
@@ -62,14 +63,14 @@
   "WIKI-SETTING."
   (let ((wiki-alias (cdr (assoc 'wiki-alias wiki-setting)))
         (wiki-settings nil))
-    (message (format "%S" moinrpc-wiki-settings))
+    (message (format "%S" *moinrpc-wiki-settings*))
     (message (format "%S" wiki-alias))
-    (when (not (eq moinrpc-wiki-settings nil))
-      (progn (setq wiki-settings (assq-delete-all wiki-alias moinrpc-wiki-settings))
+    (when (not (eq *moinrpc-wiki-settings* nil))
+      (progn (setq wiki-settings (assq-delete-all wiki-alias *moinrpc-wiki-settings*))
              (message (format "%S" wiki-settings))))
     (add-to-list 'wiki-settings (cons wiki-alias wiki-setting))
-    (setq moinrpc-wiki-settings wiki-settings)
-    (setq moinrpc-current-wiki wiki-alias)
+    (setq *moinrpc-wiki-settings* wiki-settings)
+    (setq *moinrpc-current-wiki* wiki-alias)
     (moinrpc-save-wiki-settings)))
 
 
