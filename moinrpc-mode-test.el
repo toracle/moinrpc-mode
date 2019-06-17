@@ -89,6 +89,11 @@
 		   (xmlrpc-api-token . nil)))))
 
 
+(ert-deftest moinrpc-get-wiki-conf ()
+  (should (equal (moinrpc-get-wiki-conf *moinrpc-fixture-wiki-setting* 'xmlrpc-api-token)
+		 "testtoken")))
+
+
 (ert-deftest moinrpc-set-wiki-conf ()
   (should
    (let ((wiki-setting (copy-list *moinrpc-fixture-wiki-setting*)))
@@ -100,6 +105,3 @@
 	      (username . "myuser"))))))
 
 
-(ert-deftest moinrpc-get-wiki-conf ()
-  (should (equal (moinrpc-get-wiki-conf *moinrpc-fixture-wiki-setting* 'xmlrpc-api-token)
-		 "testtoken")))
