@@ -54,7 +54,7 @@
 
 
 (defun moinrpc-main-page ()
-  "."
+  "Create a wiki list buffer."
   (interactive)
   (with-current-buffer
       (get-buffer-create "*moinrpc*")
