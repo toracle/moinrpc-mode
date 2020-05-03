@@ -3,6 +3,23 @@
 (require 'moinrpc-conf)
 
 
+(defun moinrpc-mock-get-page-content (wiki pagename)
+  t)
+
+
+(defun moinrpc-mock-save-page-content (wiki pagename content)
+  t)
+
+
+(defun moinrpc-mock-get-list-content (wiki)
+  t)
+
+
+(defvar moinrpc-mock-xmlrpc-content-provider
+  '((:get-page . moinrpc-mock-get-page-content)
+    (:get-list . moinrpc-mock-get-list-content)
+    (:save-page . moinrpc-mock-save-page-content)))
+
 (defvar *moinrpc-fixture-response-get-pages* nil)
 
 (defvar *moinrpc-fixture-response-error-not-found* nil)
@@ -16,7 +33,9 @@
 
 (defun my-fixture (body)
   (unwind-protect
-      (let ((*moinrpc-fixture-response-get-pages*
+      (let ((moinrpc-content-provider moinrpc-mock-xmlrpc-content-provider)
+
+            (*moinrpc-fixture-response-get-pages*
              '(("SUCCESS")
                (("Page1" "Page2" "Page3"))))
 
