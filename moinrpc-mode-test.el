@@ -15,7 +15,7 @@
   t)
 
 
-(defvar moinrpc-mock-xmlrpc-content-provider
+(defvar *moinrpc-mock-xmlrpc-content-provider*
   '((:get-page . moinrpc-mock-get-page-content)
     (:get-list . moinrpc-mock-get-list-content)
     (:save-page . moinrpc-mock-save-page-content)))
@@ -33,7 +33,7 @@
 
 (defun my-fixture (body)
   (unwind-protect
-      (let ((moinrpc-content-provider moinrpc-mock-xmlrpc-content-provider)
+      (let ((*moinrpc-content-provider* *moinrpc-mock-xmlrpc-content-provider*)
 
             (*moinrpc-fixture-response-get-pages*
              '(("SUCCESS")

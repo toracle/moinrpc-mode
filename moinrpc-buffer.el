@@ -27,7 +27,7 @@
 (defun moinrpc-fill-page-buffer-content (buffer current-wiki current-pagename)
   "Fill a BUFFER with content from CURRENT-WIKI CURRENT-PAGENAME."
   (with-current-buffer buffer
-    (let ((get-page-function (cdr (assoc :get-page moinrpc-content-provider)))
+    (let ((get-page-function (cdr (assoc :get-page *moinrpc-content-provider*)))
           (content nil))
       (setq content (funcall get-page-function current-wiki current-pagename))
       (insert content)
@@ -51,7 +51,7 @@
   "Create WIKI page list buffer."
   (with-current-buffer (get-buffer-create (moinrpc-buffer-name "List Pages"))
     (let ((list-function (cdr (assoc :list-page
-                                     moinrpc-content-provider))))
+                                     *moinrpc-content-provider*))))
       (read-only-mode -1)
       (erase-buffer)
       (setq moinrpc-buffer-local-current-wiki wiki)
@@ -65,7 +65,7 @@
   "Save current buffer to remote wiki."
   (interactive)
   (let ((save-page-function (cdr (assoc :save-page
-                                        moinrpc-content-provider))))
+                                        *moinrpc-content-provider*))))
     (funcall save-page-function
 	     moinrpc-buffer-local-current-wiki
 	     moinrpc-buffer-local-current-pagename
@@ -93,7 +93,7 @@
   "Find page using helm."
   (interactive)
   (let ((get-list-function (cdr (assoc :get-list
-                                       moinrpc-content-provider)))
+                                       *moinrpc-content-provider*)))
         (all-pages nil))
     (print-current-buffer-local "helm-moinrpc-find-page")
     (setq all-pages (funcall get-list-function
