@@ -3,33 +3,44 @@
 (require 'moinrpc-conf)
 
 
+(defvar *moinrpc-fixture-response-get-pages* nil)
+
+(defvar *moinrpc-fixture-response-error-not-found* nil)
+
+(defvar *moinrpc-fixture-response-error-invalid-token* nil)
+
+(defvar *moinrpc-fixture-wiki* nil)
+
+(defvar *moinrpc-fixture-wiki-setting* nil)
+
+
 (defun my-fixture (body)
   (unwind-protect
-      (progn (defvar *moinrpc-fixture-response-get-pages*
-               '(("SUCCESS")
-                 (("Page1" "Page2" "Page3"))))
+      (let ((*moinrpc-fixture-response-get-pages*
+             '(("SUCCESS")
+               (("Page1" "Page2" "Page3"))))
 
-             (defvar *moinrpc-fixture-response-error-not-found*
+             (*moinrpc-fixture-response-error-not-found*
                '(("SUCCESS")
                  (("faultCode" . 1) ("faultString" . "No such page was found."))))
 
-             (defvar *moinrpc-fixture-response-error-invalid-token*
+             (*moinrpc-fixture-response-error-invalid-token*
                '(("SUCCESS")
                  (("faultCode" . 1) ("faultString" . "Invalid token."))))
 
-             (defvar *moinrpc-fixture-wiki*
+             (*moinrpc-fixture-wiki*
                '(("testwiki"
                   (wiki-alias . "wooridle")
                   (xmlrpc-endpoint . "https://wiki.net/?action=xmlrpc2")
                   (xmlrpc-api-token . "testtoken")
                   (username . "myuser"))))
 
-             (defvar *moinrpc-fixture-wiki-setting*
+             (*moinrpc-fixture-wiki-setting*
                '((wiki-alias . "wooridle")
                  (xmlrpc-endpoint . "https://wiki.net/?action=xmlrpc2")
                  (xmlrpc-api-token . "testtoken")
                  (username . "myuser")))
-             (funcall body))))
+             (funcall body)))))
 
 
 (ert-deftest moinrpc-get-keys ()
