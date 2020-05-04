@@ -3,22 +3,8 @@
 (require 'moinrpc-conf)
 
 
-(defun moinrpc-mock-get-page-content (wiki pagename)
-  t)
+(defvar *moinrpc-fixture-xml-rpc-record* nil)
 
-
-(defun moinrpc-mock-save-page-content (wiki pagename content)
-  t)
-
-
-(defun moinrpc-mock-get-list-content (wiki)
-  t)
-
-
-(defvar *moinrpc-mock-xmlrpc-content-provider*
-  '((:get-page . moinrpc-mock-get-page-content)
-    (:get-list . moinrpc-mock-get-list-content)
-    (:save-page . moinrpc-mock-save-page-content)))
 
 (defvar *moinrpc-fixture-response-get-pages* nil)
 
@@ -31,9 +17,22 @@
 (defvar *moinrpc-fixture-wiki-setting* nil)
 
 
+(defun moinrpc-fixture-record-xml-rpc-response (response)
+  (setq *moinrpc-fixture-xml-rpc-record*
+        (-insert-at (length *moinrpc-fixture-xml-rpc-record*)
+                    response
+                    *moinrpc-fixture-xml-rpc-record*)))
+
+
+(defun moinrpc-mock-xml-rpc-method-call (url method &rest params)
+  (pop *moinrpc-fixture-xml-rpc-record*))
+
+
 (defun my-fixture (body)
   (unwind-protect
-      (let ((*moinrpc-content-provider* *moinrpc-mock-xmlrpc-content-provider*)
+      (let ((xml-rpc-method-call #'moinrpc-mock-xml-rpc-method-call)
+
+            (*moinrpc-fixture-xml-rpc-record* nil)
 
             (*moinrpc-fixture-response-get-pages*
              '(("SUCCESS")
