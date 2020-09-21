@@ -135,6 +135,40 @@
       (moinrpc-get-or-create-page-buffer pagename))))
 
 
+(defun moinrpc-wrap-title-level-1 ()
+  (interactive)
+  (moinrpc-wrap-title-level-n 1))
+
+
+(defun moinrpc-wrap-title-level-2 ()
+  (interactive)
+  (moinrpc-wrap-title-level-n 2))
+
+
+(defun moinrpc-wrap-title-level-3 ()
+  (interactive)
+  (moinrpc-wrap-title-level-n 3))
+
+
+(defun moinrpc-wrap-title-level-4 ()
+  (interactive)
+  (moinrpc-wrap-title-level-n 4))
+
+
+(defun moinrpc-wrap-title-level-n (level)
+  (let ((m (point-marker)))
+    (beginning-of-line)
+    (dotimes (_ level)
+             (insert "="))
+    (insert " ")
+    (end-of-line)
+    (insert " ")
+    (dotimes (_ level)
+             (insert "="))
+    (goto-char m)
+  ))
+
+
 (defun moinrpc-main-page ()
   "."
   (interactive)
@@ -174,6 +208,10 @@
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
   (local-set-key (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)
   (local-set-key (kbd "TAB") 'org-cycle)
+  (local-set-key (kbd "C-c t 1") 'moinrpc-wrap-title-level-1)
+  (local-set-key (kbd "C-c t 2") 'moinrpc-wrap-title-level-2)
+  (local-set-key (kbd "C-c t 3") 'moinrpc-wrap-title-level-3)
+  (local-set-key (kbd "C-c t 4") 'moinrpc-wrap-title-level-4)
   )
 
 (define-derived-mode moinrpc-main-mode fundamental-mode
