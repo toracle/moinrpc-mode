@@ -130,7 +130,7 @@
 	  (or
 	   (s-starts-with? "/" wikilink)
 	   (s-starts-with? ".." wikilink))
-	  (setq pagename (format "%s%s" current-pagename wikilink))
+	  (setq pagename (format "%s%s" moinrpc-buffer-local-current-pagename wikilink))
 	(setq pagename wikilink))
       (moinrpc-get-or-create-page-buffer pagename))))
 
