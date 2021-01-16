@@ -26,9 +26,13 @@
                                  username)))
 
 
+(defvar moinrpc-regex-bracket-wikilink
+  "\\[\\[[^|]+?\\]\\]")
+
+
 (defun moinrpc-bracket-wikilink-p ()
   "."
-  (thing-at-point-looking-at "\\[\\[[^|]+?\\]\\]" 100))
+  (thing-at-point-looking-at moinrpc-regex-bracket-wikilink 100))
 
 
 (defun moinrpc-wikilink-at-point ()
