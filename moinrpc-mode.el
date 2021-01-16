@@ -30,18 +30,38 @@
   "\\[\\[[^|]+?\\]\\]")
 
 
+(defvar moinrpc-regex-wikilink
+  "\\([A-Z][a-z]+\\)+?")
+
+
+(defun moinrpc-wikilink-p ()
+  "."
+  (thing-at-point-looking-at moinrpc-regex-wikilink
+                             100))
+
+
 (defun moinrpc-bracket-wikilink-p ()
   "."
-  (thing-at-point-looking-at moinrpc-regex-bracket-wikilink 100))
+  (thing-at-point-looking-at moinrpc-regex-bracket-wikilink
+                             100))
 
 
 (defun moinrpc-wikilink-at-point ()
   "."
-  (let ((wikilink-bracket nil)
-        (wikilink nil))
-    (when (moinrpc-bracket-wikilink-p)
-      (setq wikilink-bracket (buffer-substring (match-beginning 0) (match-end 0)))
-      (setq wikilink (substring wikilink-bracket 2 -2)))))
+  (cond ((moinrpc-bracket-wikilink-p)
+         (let ((wikilink-bracket (buffer-substring (match-beginning 0)
+                                                   (match-end 0))))
+           (substring wikilink-bracket 2 -2)))
+        ((moinrpc-wikilink-p)
+         (buffer-substring (match-beginning 0)
+                           (match-end 0)))))
+
+
+(defun moinrpc-rel-wikilink-to-abs (wikilink parent)
+  (if (or (s-starts-with? "/" wikilink)
+          (s-starts-with? ".." wikilink))
+      (format "%s%s" parent wikilink)
+    wikilink))
 
 
 (defun moinrpc-open-wikilink-at-point ()
@@ -50,11 +70,9 @@
   (let ((wikilink (moinrpc-wikilink-at-point))
         (pagename nil))
     (when wikilink
-      (if (or (s-starts-with? "/" wikilink)
-              (s-starts-with? ".." wikilink))
-	  (setq pagename (format "%s%s" current-pagename wikilink))
-	(setq pagename wikilink))
-      (moinrpc-get-or-create-page-buffer pagename))))
+      (moinrpc-get-or-create-page-buffer (moinrpc-rel-wikilink-to-abs
+                                          wikilink
+                                          moinrpc-buffer-local-current-pagename)))))
 
 
 (defun moinrpc-wrap-title-level-1 ()

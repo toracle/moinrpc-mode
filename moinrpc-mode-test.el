@@ -74,4 +74,28 @@
 (defun moinrpc-on-error-mockup (response wiki)
   nil)
 
+
+(ert-deftest moinrpc-regex-bracket-wikilink ()
+  (should (string-match-p moinrpc-regex-bracket-wikilink
+                          "[[MyWikiLink]]"))
+  (should (not (string-match-p moinrpc-regex-bracket-wikilink
+                               "MyWikiLink"))))
+
+
+(ert-deftest moinrpc-regex-wikilink ()
+  (should (string-match-p moinrpc-regex-wikilink
+                          "MyWikiLink"))
+  (should (string-match-p moinrpc-regex-wikilink
+                "MyWikiLink2")))
+
+
+(ert-deftest moinrpc-rel-wikilink-to-abs ()
+  (should (equal (moinrpc-rel-wikilink-to-abs "WikiLink" nil)
+                 "WikiLink"))
+  (should (equal (moinrpc-rel-wikilink-to-abs "..WikiLink" "Parent")
+                 "Parent..WikiLink"))
+  (should (equal (moinrpc-rel-wikilink-to-abs "/WikiLink" "Parent")
+                 "Parent/WikiLink")))
+
+
 (provide 'moinrpc-mode-test)
