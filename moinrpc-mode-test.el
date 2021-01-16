@@ -5,7 +5,6 @@
 
 (defvar *moinrpc-fixture-xml-rpc-record* nil)
 
-
 (defvar *moinrpc-fixture-response-get-pages* nil)
 
 (defvar *moinrpc-fixture-response-error-not-found* nil)
@@ -40,11 +39,13 @@
 
              (*moinrpc-fixture-response-error-not-found*
                '(("SUCCESS")
-                 (("faultCode" . 1) ("faultString" . "No such page was found."))))
+                 (("faultCode" . 1)
+                  ("faultString" . "No such page was found."))))
 
              (*moinrpc-fixture-response-error-invalid-token*
                '(("SUCCESS")
-                 (("faultCode" . 1) ("faultString" . "Invalid token."))))
+                 (("faultCode" . 1)
+                  ("faultString" . "Invalid token."))))
 
              (*moinrpc-fixture-wiki*
                '(("testwiki"
@@ -64,31 +65,44 @@
 (ert-deftest moinrpc-get-keys ()
   (my-fixture
    (lambda ()
-     (should (equal (moinrpc-get-keys '((key1 . value1) (key2 . value2) (key3 . value3)))
+     (should (equal (moinrpc-get-keys '((key1 . value1)
+                                        (key2 . value2)
+                                        (key3 . value3)))
                     '(key1 key2 key3))))))
 
 
 (ert-deftest moinrpc-response-valid-p ()
   (my-fixture
    (lambda ()
-     (should (equal (moinrpc-response-valid-p *moinrpc-fixture-response-get-pages*) t))
-     (should (equal (moinrpc-response-valid-p *moinrpc-fixture-response-error-not-found*) t)))))
+     (should (equal (moinrpc-response-valid-p
+                     *moinrpc-fixture-response-get-pages*) t))
+     (should (equal (moinrpc-response-valid-p
+                     *moinrpc-fixture-response-error-not-found*) t)))))
 
 
 (ert-deftest moinrpc-error-cause-to-type ()
   (my-fixture
    (lambda ()
-     (should (equal (moinrpc-error-cause-to-type "No such page was found.") :NOT-FOUND))
-     (should (equal (moinrpc-error-cause-to-type "Invalid token.") :INVALID-TOKEN))
-     (should (equal (moinrpc-error-cause-to-type "Unknown error.") nil)))))
+     (should (equal (moinrpc-error-cause-to-type "No such page was found.")
+                    :NOT-FOUND))
+     (should (equal (moinrpc-error-cause-to-type "Invalid token.")
+                    :INVALID-TOKEN))
+     (should (equal (moinrpc-error-cause-to-type "Unknown error.")
+                    nil)))))
 
 
 (ert-deftest moinrpc-response-error-type ()
   (my-fixture
    (lambda ()
-     (should (equal (moinrpc-response-error-type *moinrpc-fixture-response-error-not-found*) :NOT-FOUND))
-     (should (equal (moinrpc-response-error-type *moinrpc-fixture-response-error-invalid-token*) :INVALID-TOKEN))
-     (should (equal (moinrpc-response-error-type *moinrpc-fixture-response-get-pages*) nil)))))
+     (should (equal (moinrpc-response-error-type
+                     *moinrpc-fixture-response-error-not-found*)
+                    :NOT-FOUND))
+     (should (equal (moinrpc-response-error-type
+                     *moinrpc-fixture-response-error-invalid-token*)
+                    :INVALID-TOKEN))
+     (should (equal (moinrpc-response-error-type
+                     *moinrpc-fixture-response-get-pages*)
+                    nil)))))
 
 
 (defun moinrpc-on-error-mockup (response wiki)
@@ -98,13 +112,15 @@
 (ert-deftest moinrpc-check-xmlrpc-response ()
   (my-fixture
    (lambda ()
-     (should (equal (moinrpc-check-xmlrpc-response *moinrpc-fixture-response-get-pages*
-						   *moinrpc-fixture-wiki*
-						   nil)
+     (should (equal (moinrpc-check-xmlrpc-response
+                     *moinrpc-fixture-response-get-pages*
+		     *moinrpc-fixture-wiki*
+		     nil)
 		    t))
-     (should (equal (moinrpc-check-xmlrpc-response *moinrpc-fixture-response-error-invalid-token*
-						   *moinrpc-fixture-wiki*
-						   #'moinrpc-on-error-mockup)
+     (should (equal (moinrpc-check-xmlrpc-response
+                     *moinrpc-fixture-response-error-invalid-token*
+		     *moinrpc-fixture-wiki*
+		     #'moinrpc-on-error-mockup)
 		    nil)))))
 
 
@@ -118,17 +134,22 @@
 (ert-deftest moinrpc-make-wiki-conf ()
   (my-fixture
    (lambda ()
-     (should (equal (moinrpc-make-wiki-conf "testwiki")
+     (should (equal (moinrpc-make-wiki-conf
+                     "testwiki")
 		    '((wiki-alias . "testwiki")
 		      (xmlrpc-endpoint . nil)
 		      (username . nil)
 		      (xmlrpc-api-token . nil))))
-     (should (equal (moinrpc-make-wiki-conf "testwiki" "https://mywiki.com/xmlrpc2")
+     (should (equal (moinrpc-make-wiki-conf
+                     "testwiki"
+                     "https://mywiki.com/xmlrpc2")
 		    '((wiki-alias . "testwiki")
 		      (xmlrpc-endpoint . "https://mywiki.com/xmlrpc2")
 		      (username . nil)
 		      (xmlrpc-api-token . nil))))
-     (should (equal (moinrpc-make-wiki-conf "testwiki" "https://mywiki.com/xmlrpc2" "testuser")
+     (should (equal (moinrpc-make-wiki-conf
+                     "testwiki"
+                     "https://mywiki.com/xmlrpc2" "testuser")
 		    '((wiki-alias . "testwiki")
 		      (xmlrpc-endpoint . "https://mywiki.com/xmlrpc2")
 		      (username . "testuser")
@@ -138,7 +159,9 @@
 (ert-deftest moinrpc-get-wiki-conf ()
   (my-fixture
    (lambda ()
-     (should (equal (moinrpc-get-wiki-conf *moinrpc-fixture-wiki-setting* 'xmlrpc-api-token)
+     (should (equal (moinrpc-get-wiki-conf
+                     *moinrpc-fixture-wiki-setting*
+                     'xmlrpc-api-token)
 		    "testtoken")))))
 
 

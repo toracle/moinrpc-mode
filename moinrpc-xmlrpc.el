@@ -49,8 +49,9 @@
 	  (t t)))))
 
 (defun moinrpc-encode-xml-rpc-multi-each-method (method-name &rest params)
-  (list (cons "methodName" method-name)
-        (cons "params" (vconcat params))))
+  (list
+   (cons "methodName" method-name)
+   (cons "params" (vconcat params))))
 
 (defun moinrpc-encode-xml-rpc-multi-method (wiki method-name &rest params)
   "Construct and encode multi method call type to WIKI with a METHOD-NAME and PARAMS."
@@ -83,7 +84,8 @@
 
 (defun moinrpc-get-auth-token (wiki)
   "Prompt password and get access token of given WIKI using it."
-  (let ((password (read-passwd "Password: ")))
+  (let
+      ((password (read-passwd "Password: ")))
     (xml-rpc-method-call (moinrpc-get-wiki-conf wiki 'xmlrpc-endpoint)
 			 'getAuthToken
 			 (moinrpc-get-wiki-conf wiki 'username)
@@ -105,8 +107,9 @@ Specify WIKI with a PAGENAME."
 
 (defun moinrpc-get-list-content (wiki)
   "Return a list of all page names from WIKI."
-  (let* ((content (moinrpc-xml-rpc-multi-method-call wiki "getAllPages"))
-         (sorted-content (sort content 'string<)))
+  (let*
+      ((content (moinrpc-xml-rpc-multi-method-call wiki "getAllPages"))
+       (sorted-content (sort content 'string<)))
     sorted-content))
 
 (provide 'moinrpc-xmlrpc)
