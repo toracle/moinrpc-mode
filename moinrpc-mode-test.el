@@ -1,6 +1,7 @@
 (require 'moinrpc-mode)
 (require 'moinrpc-common)
 (require 'moinrpc-conf)
+(require 'moinrpc-test-fixtures)
 
 
 (defvar *moinrpc-fixture-xml-rpc-record* nil)
@@ -25,41 +26,6 @@
 
 (defun moinrpc-mock-xml-rpc-method-call (url method &rest params)
   (pop *moinrpc-fixture-xml-rpc-record*))
-
-
-(defun my-fixture (body)
-  (unwind-protect
-      (let ((xml-rpc-method-call #'moinrpc-mock-xml-rpc-method-call)
-
-            (*moinrpc-fixture-xml-rpc-record* nil)
-
-            (*moinrpc-fixture-response-get-pages*
-             '(("SUCCESS")
-               (("Page1" "Page2" "Page3"))))
-
-             (*moinrpc-fixture-response-error-not-found*
-               '(("SUCCESS")
-                 (("faultCode" . 1)
-                  ("faultString" . "No such page was found."))))
-
-             (*moinrpc-fixture-response-error-invalid-token*
-               '(("SUCCESS")
-                 (("faultCode" . 1)
-                  ("faultString" . "Invalid token."))))
-
-             (*moinrpc-fixture-wiki*
-               '(("testwiki"
-                  (wiki-alias . "wooridle")
-                  (xmlrpc-endpoint . "https://wiki.net/?action=xmlrpc2")
-                  (xmlrpc-api-token . "testtoken")
-                  (username . "myuser"))))
-
-             (*moinrpc-fixture-wiki-setting*
-               '((wiki-alias . "wooridle")
-                 (xmlrpc-endpoint . "https://wiki.net/?action=xmlrpc2")
-                 (xmlrpc-api-token . "testtoken")
-                 (username . "myuser")))
-             (funcall body)))))
 
 
 (ert-deftest moinrpc-get-keys ()
@@ -108,71 +74,4 @@
 (defun moinrpc-on-error-mockup (response wiki)
   nil)
 
-
-(ert-deftest moinrpc-check-xmlrpc-response ()
-  (my-fixture
-   (lambda ()
-     (should (equal (moinrpc-check-xmlrpc-response
-                     *moinrpc-fixture-response-get-pages*
-		     *moinrpc-fixture-wiki*
-		     nil)
-		    t))
-     (should (equal (moinrpc-check-xmlrpc-response
-                     *moinrpc-fixture-response-error-invalid-token*
-		     *moinrpc-fixture-wiki*
-		     #'moinrpc-on-error-mockup)
-		    nil)))))
-
-
-(ert-deftest moinrpc-encode-xml-rpc-multi-each-method ()
-  (my-fixture
-   (lambda ()
-     (should (equal (moinrpc-encode-xml-rpc-multi-each-method 'getPage "TestPage")
-		    '(("methodName" . getPage) ("params" . ["TestPage"])))))))
-
-
-(ert-deftest moinrpc-make-wiki-conf ()
-  (my-fixture
-   (lambda ()
-     (should (equal (moinrpc-make-wiki-conf
-                     "testwiki")
-		    '((wiki-alias . "testwiki")
-		      (xmlrpc-endpoint . nil)
-		      (username . nil)
-		      (xmlrpc-api-token . nil))))
-     (should (equal (moinrpc-make-wiki-conf
-                     "testwiki"
-                     "https://mywiki.com/xmlrpc2")
-		    '((wiki-alias . "testwiki")
-		      (xmlrpc-endpoint . "https://mywiki.com/xmlrpc2")
-		      (username . nil)
-		      (xmlrpc-api-token . nil))))
-     (should (equal (moinrpc-make-wiki-conf
-                     "testwiki"
-                     "https://mywiki.com/xmlrpc2" "testuser")
-		    '((wiki-alias . "testwiki")
-		      (xmlrpc-endpoint . "https://mywiki.com/xmlrpc2")
-		      (username . "testuser")
-		      (xmlrpc-api-token . nil)))))))
-
-
-(ert-deftest moinrpc-get-wiki-conf ()
-  (my-fixture
-   (lambda ()
-     (should (equal (moinrpc-get-wiki-conf
-                     *moinrpc-fixture-wiki-setting*
-                     'xmlrpc-api-token)
-		    "testtoken")))))
-
-
-(ert-deftest moinrpc-set-wiki-conf ()
-  (my-fixture
-   (lambda ()
-     (should
-      (let ((wiki-setting (copy-list *moinrpc-fixture-wiki-setting*)))
-        (moinrpc-set-wiki-conf wiki-setting 'xmlrpc-api-token "testtoken2")
-        (equal wiki-setting
-	       '((wiki-alias . "wooridle")
-	         (xmlrpc-endpoint . "https://wiki.net/?action=xmlrpc2")
-	         (xmlrpc-api-token . "testtoken2")
-	         (username . "myuser"))))))))
+(provide 'moinrpc-mode-test)

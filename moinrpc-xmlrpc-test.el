@@ -9,6 +9,28 @@
     (xmlrpc-api-token . "api-token")))
 
 
+(ert-deftest moinrpc-check-xmlrpc-response ()
+  (my-fixture
+   (lambda ()
+     (should (equal (moinrpc-check-xmlrpc-response
+                     *moinrpc-fixture-response-get-pages*
+		     *moinrpc-fixture-wiki*
+		     nil)
+		    t))
+     (should (equal (moinrpc-check-xmlrpc-response
+                     *moinrpc-fixture-response-error-invalid-token*
+		     *moinrpc-fixture-wiki*
+		     #'moinrpc-on-error-mockup)
+		    nil)))))
+
+
+(ert-deftest moinrpc-encode-xml-rpc-multi-each-method ()
+  (my-fixture
+   (lambda ()
+     (should (equal (moinrpc-encode-xml-rpc-multi-each-method 'getPage "TestPage")
+		    '(("methodName" . getPage) ("params" . ["TestPage"])))))))
+
+
 (defun dummy-xml-rpc-method-call (server-url method &rest params)
   (add-to-list '*moinrpc-xmlrpc-test-call-history*
                (list :server-url server-url
@@ -64,3 +86,5 @@
                                 ("params" . ["api-token"]))
                                (("methodName" . "getAllPages")
                                 ("params" . []))))))))))
+
+(provide 'moinrpc-xmlrpc-test)
