@@ -10,8 +10,11 @@
 
 (defun print-current-buffer-local (location)
   "Print current buffer local var values of LOCATION for debug."
-  ; (message (format "%s: current-pagename=%s, current-wiki=%s" location moinrpc-buffer-local-current-pagename moinrpc-buffer-local-current-wiki)))
-  )
+  (message (format "%s: current-pagename=%s, current-wiki=%s"
+                   location
+                   moinrpc-buffer-local-current-pagename
+                   moinrpc-buffer-local-current-wiki)))
+
 
 (defun moinrpc-create-page-buffer (wiki pagename)
   "Create a buffer for a WIKI page which has a PAGENAME."
@@ -88,6 +91,25 @@
     (set-buffer-modified-p nil)
     (print-current-buffer-local "save-current-buffer")
     (current-buffer)))
+
+
+(defun moinrpc-recent-changes ()
+  (interactive)
+  (with-current-buffer
+      (get-buffer-create (moinrpc-buffer-name "RecentChanges"))
+    (switch-to-buffer (current-buffer))
+    (setq moinrpc-buffer-local :recent-changes)
+    (moinrpc-list-mode)
+    (erase-buffer)
+    (insert (format "%S" moinrpc-buffer-local-current-wiki))
+    (print-current-buffer-local "create-recent-changes-buffer")
+    (let ((entries (moinrpc-get-recent-changes moinrpc-buffer-local-current-wiki)))
+      (dolist (entry entries)
+        (insert (format "name: %S" entry))
+        (newlines))
+      (read-only-mode))
+    (current-buffer)))
+
 
 (defun moinrpc-create-main-buffer ()
   "Create main page buffer.  List up wiki list."

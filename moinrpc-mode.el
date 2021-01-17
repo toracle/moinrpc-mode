@@ -155,6 +155,16 @@
   (local-set-key (kbd "TAB") 'org-cycle))
 
 
+(define-derived-mode moinrpc-list-mode fundamental-mode
+  (defvar moinrpc-buffer-local-current-wiki nil)
+  (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
+
+  (defvar moinrpc-buffer-local-current-list nil)
+  (make-variable-buffer-local 'moinrpc-buffer-local-current-list)
+
+  (setq mode-name "moinrpc-list-mode"))
+
+
 (define-derived-mode moinrpc-main-mode fundamental-mode
   (defvar moinrpc-buffer-local-current-wiki nil)
   (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
