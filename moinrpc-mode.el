@@ -127,20 +127,18 @@
       (newline))
     (read-only-mode)
     (moinrpc-main-mode)
-    (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
-    (setq moinrpc-buffer-local-current-wiki (cdr (assoc *moinrpc-current-wiki* *moinrpc-wiki-settings*)))
+    (setq-local moinrpc-buffer-local-current-wiki
+                (cdr (assoc *moinrpc-current-wiki* *moinrpc-wiki-settings*)))
     (switch-to-buffer "*moinrpc*")
     t
   ))
 
 
 (define-derived-mode moinrpc-page-mode outline-mode
-  (defvar moinrpc-buffer-local-current-wiki nil)
   (setq outline-regexp "[=\f]+")
-  (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
+  (setq-local moinrpc-buffer-local-current-wiki nil)
 
-  (defvar moinrpc-buffer-local-current-pagename nil)
-  (make-variable-buffer-local 'moinrpc-buffer-local-current-pagename)
+  (setq-local moinrpc-buffer-local-current-pagename nil)
 ;  (moinmoin-mode)
   (setq mode-name "moinrpc-page-mode")
   (local-set-key (kbd "C-x C-s") 'moinrpc-save-current-buffer)
@@ -156,23 +154,16 @@
 
 
 (define-derived-mode moinrpc-list-mode fundamental-mode
-  (defvar moinrpc-buffer-local-current-wiki nil)
-  (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
-
-  (defvar moinrpc-buffer-local-current-list nil)
-  (make-variable-buffer-local 'moinrpc-buffer-local-current-list)
-
+  (setq-local moinrpc-buffer-local-current-wiki nil)
+  (setq-local moinrpc-buffer-local-current-list nil)
   (setq mode-name "moinrpc-list-mode"))
 
 
 (define-derived-mode moinrpc-main-mode fundamental-mode
-  (defvar moinrpc-buffer-local-current-wiki nil)
-  (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
-
-  (defvar moinrpc-buffer-local-current-pagename nil)
-  (make-variable-buffer-local 'moinrpc-buffer-local-current-pagename)
-
+  (setq-local moinrpc-buffer-local-current-wiki nil)
+  (setq-local moinrpc-buffer-local-current-pagename nil)
   (setq mode-name "moinrpc-mode")
+
   (local-set-key (kbd "g") 'moinrpc-main-page)
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
   (local-set-key (kbd "C-c C-n") 'moinrpc-new-wiki-setting)

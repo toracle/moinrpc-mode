@@ -70,7 +70,7 @@
                                     *moinrpc-content-provider*))))
       (read-only-mode -1)
       (erase-buffer)
-      (setq moinrpc-buffer-local-current-wiki wiki)
+      (setq-local moinrpc-buffer-local-current-wiki wiki)
       (insert (mapconcat
                'concat
                (funcall list-function moinrpc-buffer-local-current-wiki)
