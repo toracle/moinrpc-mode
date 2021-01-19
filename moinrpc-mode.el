@@ -156,7 +156,10 @@
 (define-derived-mode moinrpc-list-mode fundamental-mode
   (setq-local moinrpc-buffer-local-current-wiki nil)
   (setq-local moinrpc-buffer-local-current-list nil)
-  (setq mode-name "moinrpc-list-mode"))
+  (setq mode-name "moinrpc-list-mode")
+
+  (local-set-key (kbd "<tab>") 'forward-button)
+  (local-set-key (kbd "<backtab>") 'backward-button))
 
 
 (define-derived-mode moinrpc-main-mode fundamental-mode
