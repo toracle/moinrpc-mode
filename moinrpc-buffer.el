@@ -110,8 +110,20 @@
       (setq-local moinrpc-buffer-local-current-wiki wiki)
       (let ((entries (moinrpc-get-recent-changes wiki)))
         (dolist (entry entries)
-          (insert (format "name: %S" entry))
-          (newline))
+          (let ((name (cdr (assoc "name" entry)))
+                (author (cdr (assoc "author" entry)))
+                (version (cdr (assoc "version" entry)))
+                (last-modified (cdr (assoc "lastModified" entry))))
+            (insert " * ")
+            (insert-button name
+                           'action '(lambda (overlay)
+                                      (moinrpc-get-or-create-page-buffer
+                                       (buffer-substring (overlay-start overlay)
+                                                         (overlay-end overlay)))))
+            (insert (format " by %s" author))
+            (insert (format " [v%s] " version))
+            (insert (format-time-string "%F %T" (cadr last-modified)))
+            (newline)))
         (read-only-mode))
       (current-buffer))))
 
