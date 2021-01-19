@@ -15,4 +15,5 @@ jobs:
     executor: emacs
     steps:
       - checkout
+      - run: "cask install"
       - run: "make test"
