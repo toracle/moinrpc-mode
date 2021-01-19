@@ -97,7 +97,7 @@
     (current-buffer)))
 
 
-(defun moinrpc-add-recent-changes-entry (name author version)
+(defun moinrpc-add-recent-changes-entry (name author version last-modified)
   (insert " * ")
   (insert-button name
                  'action '(lambda (overlay)
@@ -132,7 +132,10 @@
                 (version (cdr (assoc "version" entry)))
                 (last-modified (cdr (assoc "lastModified" entry))))
             (unless (equal prev-name name)
-              (moinrpc-add-recent-changes-entry name author version))
+              (moinrpc-add-recent-changes-entry name
+                                                author
+                                                version
+                                                last-modified))
             (setf prev-name name)))
         (goto-char 1)
         (read-only-mode))
