@@ -75,6 +75,11 @@ There are some other modes for moinmoin supports:
 
 ** Change logs
 
+*** Unreleased
+
+ - #2 add recent changes (#3)
+
+
 *** 2018-09-07
 
  - Let moin-page-mode derived from outline-mode
