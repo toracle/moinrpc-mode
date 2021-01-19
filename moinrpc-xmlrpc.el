@@ -9,7 +9,8 @@
 
 (defvar *moinrpc-error-causes*
   '(("No such page was found." . :NOT-FOUND)
-    ("Invalid token." . :INVALID-TOKEN)))
+    ("Invalid token." . :INVALID-TOKEN)
+    ("Empty token." . :EMPTY_TOKEN)))
 
 (defun moinrpc-error-cause-to-type (s)
   "Convert S to type."
@@ -111,6 +112,17 @@ Specify WIKI with a PAGENAME."
       ((content (moinrpc-xml-rpc-multi-method-call wiki "getAllPages"))
        (sorted-content (sort content 'string<)))
     sorted-content))
+
+
+(defun moinrpc-get-recent-changes (wiki &optional timestamp)
+  (let ((since timestamp))
+    (unless timestamp
+      (setq since (time-subtract (current-time) (* 3600 24 90))))
+    (moinrpc-xml-rpc-multi-method-call wiki
+                                       "getRecentChanges"
+                                       (format-time-string "%F"
+                                                           since))))
+
 
 (provide 'moinrpc-xmlrpc)
 ;;; moinrpc-xmlrpc.el ends here

@@ -1,4 +1,5 @@
 (require 'moinrpc-xmlrpc)
+(require 'moinrpc-test-fixtures)
 
 (defvar *moinrpc-xmlrpc-test-call-history* nil)
 
@@ -86,5 +87,20 @@
                                 ("params" . ["api-token"]))
                                (("methodName" . "getAllPages")
                                 ("params" . []))))))))))
+
+
+(ert-deftest moinrpc-get-recent-changes-fire-request ()
+  (with-dummy-xml-rpc-call
+   (moinrpc-get-recent-changes *fixture-wiki* 1610852783.2646885)
+   (should (equal *moinrpc-xmlrpc-test-call-history*
+                  '((:server-url
+                     "https://wiki.net/?action=xmlrpc2"
+                     :method
+                     system.multicall
+                     :params (((("methodName" . "applyAuthToken")
+                                ("params" . ["api-token"]))
+                               (("methodName" . "getRecentChanges")
+                                ("params" . ["2021-01-17"]))))))))))
+
 
 (provide 'moinrpc-xmlrpc-test)

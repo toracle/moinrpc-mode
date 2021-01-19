@@ -57,16 +57,16 @@ There are some other modes for moinmoin supports:
  - moinmoin-mode
 
 
-** To-do [2/6]
+** To-do [3/12]
 
  - [X] ~C-c C-o~: follow a WikiLink
  - [X] User friendly wiki setting
+ - [X] Recent changes
  - [ ] ~C-j~ to complete a helm candidate
  - [ ] Align table
  - [ ] Syntax highlighting (already there is a nice moinmoin-mode but it [[http://d.hatena.ne.jp/ymorimo/20070308/1173373043][contains some error]])
  - [ ] Find reverse links of a page
  - [ ] ~C-c C-l~: insert wiki link with helm page search
- - [ ] Recent changes
  - [ ] Search page
  - [ ] Conflict detection (compare local and remote page version before save and give diff when it conflicts)
  - [ ] Attachment handling (put, get, list, delete)
@@ -74,6 +74,11 @@ There are some other modes for moinmoin supports:
 
 
 ** Change logs
+
+*** Unreleased
+
+ - #2 add recent changes (#3)
+
 
 *** 2018-09-07
 
