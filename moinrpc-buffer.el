@@ -97,6 +97,19 @@
     (current-buffer)))
 
 
+(defun moinrpc-add-recent-changes-entry (name author version)
+  (insert " * ")
+  (insert-button name
+                 'action '(lambda (overlay)
+                            (moinrpc-get-or-create-page-buffer
+                             (buffer-substring (overlay-start overlay)
+                                               (overlay-end overlay)))))
+  (insert (format " by %s" author))
+  (insert (format " [v%s] " version))
+  (insert (format-time-string "%F %T" (cadr last-modified)))
+  (newline))
+
+
 (defun moinrpc-recent-changes ()
   (interactive)
   (let ((wiki moinrpc-buffer-local-current-wiki))
@@ -119,16 +132,7 @@
                 (version (cdr (assoc "version" entry)))
                 (last-modified (cdr (assoc "lastModified" entry))))
             (unless (equal prev-name name)
-              (insert " * ")
-              (insert-button name
-                             'action '(lambda (overlay)
-                                        (moinrpc-get-or-create-page-buffer
-                                         (buffer-substring (overlay-start overlay)
-                                                           (overlay-end overlay)))))
-              (insert (format " by %s" author))
-              (insert (format " [v%s] " version))
-              (insert (format-time-string "%F %T" (cadr last-modified)))
-              (newline))
+              (moinrpc-add-recent-changes-entry name author version))
             (setf prev-name name)))
         (goto-char 1)
         (read-only-mode))
