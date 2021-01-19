@@ -110,6 +110,9 @@
       (setq-local moinrpc-buffer-local-current-wiki wiki)
       (let ((entries (moinrpc-get-recent-changes wiki))
             (prev-name nil))
+        (insert "Recent Changes:")
+        (newline)
+        (newline)
         (dolist (entry entries)
           (let ((name (cdr (assoc "name" entry)))
                 (author (cdr (assoc "author" entry)))
@@ -127,6 +130,7 @@
               (insert (format-time-string "%F %T" (cadr last-modified)))
               (newline))
             (setf prev-name name)))
+        (goto-char 1)
         (read-only-mode))
       (current-buffer))))
 
