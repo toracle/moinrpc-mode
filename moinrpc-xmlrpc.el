@@ -124,5 +124,12 @@ Specify WIKI with a PAGENAME."
                                                            since))))
 
 
+(defun moinrpc-get-attachment-list (wiki pagename)
+  "Return attachment list of a page has a PAGENAME from WIKI."
+  (moinrpc-xml-rpc-multi-method-call wiki
+                                     "listAttachments"
+                                     pagename))
+
+
 (provide 'moinrpc-xmlrpc)
 ;;; moinrpc-xmlrpc.el ends here

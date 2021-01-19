@@ -103,4 +103,18 @@
                                 ("params" . ["2021-01-17"]))))))))))
 
 
+(ert-deftest moinrpc-list-attachments-should-fire-request ()
+  (with-dummy-xml-rpc-call
+   (moinrpc-list-attachments *fixture-wiki* "TestPage")
+   (should (equal *moinrpc-xmlrpc-test-call-history*
+                  '((:server-url
+                     "https://wiki.net/?action=xmlrpc2"
+                     :method
+                     system.multicall
+                     :params (((("methodName" . "applyAuthToken")
+                                ("params" . ["api-token"]))
+                               (("methodName" . "listAttachments")
+                                ("params" . ["TestPage"]))))))))))
+
+
 (provide 'moinrpc-xmlrpc-test)

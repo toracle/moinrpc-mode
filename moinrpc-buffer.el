@@ -142,6 +142,32 @@
       (current-buffer))))
 
 
+(defun moinrpc-list-attachment ()
+  (interactive)
+  (let ((wiki moinrpc-buffer-local-current-wiki)
+        (pagename moinrpc-buffer-local-current-pagename))
+    (with-current-buffer
+        (get-buffer-create (moinrpc-buffer-name (format "%s:attachments"
+                                                        pagename)))
+      (switch-to-buffer (current-buffer))
+      (setq-local moinrpc-buffer-local-list-type :attachment-lis)
+      (moinrpc-list-mode)
+      (erase-buffer)
+      (print-current-buffer-local "create-attachment-list-buffer")
+      (setq-local moinrpc-buffer-local-current-wiki wiki)
+      (setq-local moinrpc-buffer-local-current-pagename pagename)
+      (let ((entries (moinrpc-get-attachment-list wiki pagename)))
+        (insert "Attachment List:")
+        (newline)
+        (newline)
+        (dolist (entry entries)
+          (insert " * ")
+          (insert-button entry)
+          (newline)))
+      (goto-char 1)
+      (read-only-mode))))
+
+
 (defun moinrpc-create-main-buffer ()
   "Create main page buffer.  List up wiki list."
   (with-current-buffer
