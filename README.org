@@ -78,6 +78,9 @@ There are some other modes for moinmoin supports:
 
 *** Unreleased
 
+
+*** v1.0.1
+
  - #2 add recent changes (#3)
  - #4 add attachment management (#5)
 
