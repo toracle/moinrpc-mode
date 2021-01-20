@@ -9,7 +9,8 @@
 
 (defvar *moinrpc-error-causes*
   '(("No such page was found." . :NOT-FOUND)
-    ("Invalid token." . :INVALID-TOKEN)))
+    ("Invalid token." . :INVALID-TOKEN)
+    ("Empty token." . :EMPTY_TOKEN)))
 
 (defun moinrpc-error-cause-to-type (s)
   "Convert S to type."
@@ -44,9 +45,9 @@
   ""
   (if (moinrpc-response-valid-p response)
       (let ((error-type (moinrpc-response-error-type response)))
-	(case error-type
+	(pcase error-type
 	  (:INVALID-TOKEN (apply on-error response wiki))
-	  (t t)))))
+	  (_ t)))))
 
 (defun moinrpc-encode-xml-rpc-multi-each-method (method-name &rest params)
   (list
@@ -59,6 +60,11 @@
    (moinrpc-encode-xml-rpc-multi-each-method "applyAuthToken"
 					     (moinrpc-get-wiki-conf wiki 'xmlrpc-api-token))
    (apply 'moinrpc-encode-xml-rpc-multi-each-method method-name params)))
+
+
+(defun moinrpc-xmlrpc-unwrap-response (response)
+  (caar (cdr response)))
+
 
 (defun moinrpc-xml-rpc-multi-method-call (wiki method-name &rest params)
   "XML-RPC method call to WIKI with a METHOD-NAME and PARAMS."
@@ -74,7 +80,7 @@
 			       call-message))
 
     (moinrpc-check-xmlrpc-response response wiki #'moinrpc-ask-token-and-save)
-    (caar (cdr response))))
+    (moinrpc-xmlrpc-unwrap-response response)))
 
 (defun moinrpc-set-auth-token-to-current (token wiki-setting)
   "Set access TOKEN to WIKI-SETTING."
@@ -111,6 +117,41 @@ Specify WIKI with a PAGENAME."
       ((content (moinrpc-xml-rpc-multi-method-call wiki "getAllPages"))
        (sorted-content (sort content 'string<)))
     sorted-content))
+
+
+(defun moinrpc-get-recent-changes (wiki &optional timestamp)
+  (let ((since timestamp))
+    (unless timestamp
+      (setq since (time-subtract (current-time) (* 3600 24 90))))
+    (moinrpc-xml-rpc-multi-method-call wiki
+                                       "getRecentChanges"
+                                       (format-time-string "%F"
+                                                           since))))
+
+
+(defun moinrpc-get-attachment-list (wiki pagename)
+  "Return attachment list of a page has a PAGENAME from WIKI."
+  (moinrpc-xml-rpc-multi-method-call wiki
+                                     "listAttachments"
+                                     pagename))
+
+
+(defun moinrpc-put-attachment (wiki pagename name content)
+  "Add an attachment FILE to a page has a PAGENAME from WIKI."
+  (moinrpc-xml-rpc-multi-method-call wiki
+                                     "putAttachment"
+                                     pagename
+                                     name
+                                     (list :base64 content)))
+
+
+(defun moinrpc-xmlrpc-delete-attachment (wiki pagename name)
+  "Delete an attachment has NAME from a page has a PAGENAME from WIKI."
+  (moinrpc-xml-rpc-multi-method-call wiki
+                                     "deleteAttachment"
+                                     pagename
+                                     name))
+
 
 (provide 'moinrpc-xmlrpc)
 ;;; moinrpc-xmlrpc.el ends here

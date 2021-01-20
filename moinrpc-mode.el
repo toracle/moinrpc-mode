@@ -10,129 +10,69 @@
 (require 's)
 
 (require 'moinrpc-buffer)
+(require 'moinrpc-conf)
 
-
-;; Variables
-
-(defvar moinrpc-wiki-settings nil)
-(defvar moinrpc-current-wiki nil)
 
 ;;; Wiki setting
-
-(defvar moinrpc-settings-file (concat user-emacs-directory "remote-moin"))
-
-(when
-    (file-readable-p moinrpc-settings-file)
-  (load moinrpc-settings-file))
-
-(defun moinrpc-create-wiki-setting (wiki-alias xmlrpc-endpoint username)
-  "WIKI-ALIAS XMLRPC-ENDPOINT USERNAME."
-  (let
-      ((xmlrpc-api-token nil)
-       (wiki-setting nil))
-    (setq wiki-setting
-	  (list
-	   (cons 'wiki-alias wiki-alias)
-	   (cons 'xmlrpc-endpoint xmlrpc-endpoint)
-	   (cons 'username username)))
-    (setq xmlrpc-api-token (moinrpc-get-auth-token wiki-setting))
-    (list
-     (cons 'wiki-alias wiki-alias)
-     (cons 'xmlrpc-endpoint xmlrpc-endpoint)
-     (cons 'xmlrpc-api-token xmlrpc-api-token)
-     (cons 'username username))))
 
 (defun moinrpc-create-wiki-setting-i ()
   "."
   (interactive)
-  (let
-      ((wiki-alias (read-string "Wiki alias: "))
-       (xmlrpc-endpoint (read-string "XML-RPC endpoint: "))
-       (username (read-string "Username: ")))
-    (moinrpc-create-wiki-setting wiki-alias xmlrpc-endpoint username)))
+  (let* ((wiki-alias (read-string "Wiki alias: "))
+         (xmlrpc-endpoint (read-string "XML-RPC endpoint: "))
+         (username (read-string "Username: ")))
+    (moinrpc-create-wiki-setting wiki-alias
+                                 xmlrpc-endpoint
+                                 username)))
 
-(defun moinrpc-add-wiki-setting-to-global (wiki-setting)
-  "WIKI-SETTING."
-  (let
-      ((wiki-alias (cdr (assoc 'wiki-alias wiki-setting)))
-       (wiki-settings nil))
-    (message (format "%S" moinrpc-wiki-settings))
-    (message (format "%S" wiki-alias))
-    (when
-	(not (eq moinrpc-wiki-settings nil))
-	(progn
-	  (setq wiki-settings (assq-delete-all wiki-alias moinrpc-wiki-settings))
-	  (message (format "%S" wiki-settings))))
-    (add-to-list 'wiki-settings (cons wiki-alias wiki-setting))
-    (setq moinrpc-wiki-settings wiki-settings)
-    (setq moinrpc-current-wiki wiki-alias)
-    (moinrpc-save-wiki-settings)))
 
-(defun moinrpc-save-wiki-settings ()
+(defvar moinrpc-regex-bracket-wikilink
+  "\\[\\[[^|]+?\\]\\]")
+
+
+(defvar moinrpc-regex-wikilink
+  "\\([A-Z][a-z]+\\)+?")
+
+
+(defun moinrpc-wikilink-p ()
   "."
-  (with-current-buffer
-      (find-file-noselect moinrpc-settings-file)
-    (erase-buffer)
-    (insert (format "(setq moinrpc-wiki-settings '%S)" moinrpc-wiki-settings))
-    (newline)
-    (insert (format "(setq moinrpc-current-wiki %S)" moinrpc-current-wiki))
-    (save-buffer)
-    t
-    ))
+  (thing-at-point-looking-at moinrpc-regex-wikilink
+                             100))
 
-(defun moinrpc-new-wiki-setting ()
-  "."
-  (interactive)
-  (moinrpc-add-wiki-setting-to-global (moinrpc-create-wiki-setting-i))
-  (moinrpc-save-wiki-settings)
-  (moinrpc-main-page))
-
-(defun moinrpc-get-keys (list)
-  "LIST."
-  (let
-      ((i 0)
-       (size (list-length list))
-       (keys nil))
-    (while (< i size)
-      (let
-	  ((key nil))
-	(setq key (car (nth i list)))
-	(setq i (+ i 1))
-	(add-to-list 'keys key)))
-    keys))
 
 (defun moinrpc-bracket-wikilink-p ()
   "."
-  (thing-at-point-looking-at "\\[\\[[^|]+?\\]\\]" 100))
+  (thing-at-point-looking-at moinrpc-regex-bracket-wikilink
+                             100))
 
 
 (defun moinrpc-wikilink-at-point ()
   "."
-  (let
-      ((wikilink-bracket nil)
-       (wikilink nil))
-    (when
-	(moinrpc-bracket-wikilink-p)
-      (setq wikilink-bracket (buffer-substring (match-beginning 0) (match-end 0)))
-      (setq wikilink (substring wikilink-bracket 2 -2)))))
-    
+  (cond ((moinrpc-bracket-wikilink-p)
+         (let ((wikilink-bracket (buffer-substring (match-beginning 0)
+                                                   (match-end 0))))
+           (substring wikilink-bracket 2 -2)))
+        ((moinrpc-wikilink-p)
+         (buffer-substring (match-beginning 0)
+                           (match-end 0)))))
+
+
+(defun moinrpc-rel-wikilink-to-abs (wikilink parent)
+  (if (or (s-starts-with? "/" wikilink)
+          (s-starts-with? ".." wikilink))
+      (format "%s%s" parent wikilink)
+    wikilink))
+
 
 (defun moinrpc-open-wikilink-at-point ()
   "."
   (interactive)
-  (let
-      (
-       (wikilink (moinrpc-wikilink-at-point))
-       (pagename nil))
-    (when
-	wikilink
-      (if
-	  (or
-	   (s-starts-with? "/" wikilink)
-	   (s-starts-with? ".." wikilink))
-	  (setq pagename (format "%s%s" moinrpc-buffer-local-current-pagename wikilink))
-	(setq pagename wikilink))
-      (moinrpc-get-or-create-page-buffer pagename))))
+  (let ((wikilink (moinrpc-wikilink-at-point))
+        (pagename nil))
+    (when wikilink
+      (moinrpc-get-or-create-page-buffer (moinrpc-rel-wikilink-to-abs
+                                          wikilink
+                                          moinrpc-buffer-local-current-pagename)))))
 
 
 (defun moinrpc-wrap-title-level-1 ()
@@ -170,7 +110,7 @@
 
 
 (defun moinrpc-main-page ()
-  "."
+  "Create a wiki list buffer."
   (interactive)
   (with-current-buffer
       (get-buffer-create "*moinrpc*")
@@ -179,49 +119,59 @@
     (insert "MoinRPC Wiki List")
     (newline)
     (newline)
-    (dolist (wiki-alias (moinrpc-get-keys moinrpc-wiki-settings))
+    (dolist (wiki-alias (moinrpc-get-keys *moinrpc-wiki-settings*))
       (insert " * ")
       (insert-button wiki-alias
 		     'follow-link "\C-m"
 		     'action 'moinrpc-helm-find-page)
-      (newline)
-      )
+      (newline))
     (read-only-mode)
     (moinrpc-main-mode)
-    (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
-    (setq moinrpc-buffer-local-current-wiki (cdr (assoc moinrpc-current-wiki moinrpc-wiki-settings)))
+    (setq-local moinrpc-buffer-local-current-wiki
+                (cdr (assoc *moinrpc-current-wiki* *moinrpc-wiki-settings*)))
     (switch-to-buffer "*moinrpc*")
     t
   ))
 
-(define-derived-mode moinrpc-page-mode outline-mode
-  (defvar moinrpc-buffer-local-current-wiki nil)
-  (setq outline-regexp "[=\f]+")
-  (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
 
-  (defvar moinrpc-buffer-local-current-pagename nil)
-  (make-variable-buffer-local 'moinrpc-buffer-local-current-pagename)
-;  (moinmoin-mode)
+(define-derived-mode moinrpc-page-mode outline-mode
   (setq mode-name "moinrpc-page-mode")
+
+  (setq outline-regexp "[=\f]+")
+;  (moinmoin-mode)
   (local-set-key (kbd "C-x C-s") 'moinrpc-save-current-buffer)
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
   (local-set-key (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)
-  (local-set-key (kbd "TAB") 'org-cycle)
   (local-set-key (kbd "C-c t 1") 'moinrpc-wrap-title-level-1)
   (local-set-key (kbd "C-c t 2") 'moinrpc-wrap-title-level-2)
   (local-set-key (kbd "C-c t 3") 'moinrpc-wrap-title-level-3)
   (local-set-key (kbd "C-c t 4") 'moinrpc-wrap-title-level-4)
-  )
+  (local-set-key (kbd "M-RET") 'org-meta-return)
+  (local-set-key (kbd "TAB") 'org-cycle)
+  (local-set-key (kbd "C-c a") 'moinrpc-list-attachment))
+
+
+(define-derived-mode moinrpc-list-mode fundamental-mode
+  (setq mode-name "moinrpc-list-mode")
+
+  (local-set-key (kbd "<tab>") 'forward-button)
+  (local-set-key (kbd "<backtab>") 'backward-button))
+
+
+(define-derived-mode moinrpc-attachment-mode fundamental-mode
+  (setq mode-name "moinrpc-attachment-mode")
+
+  (local-set-key (kbd "<tab>") 'forward-button)
+  (local-set-key (kbd "<backtab>") 'backward-button)
+  (local-set-key (kbd "a") 'moinrpc-upload-attachment)
+  (local-set-key (kbd "d") 'moinrpc-delete-attachment)
+  (local-set-key (kbd "g") 'moinrpc-fill-list-attachment))
+
 
 (define-derived-mode moinrpc-main-mode fundamental-mode
-  (defvar moinrpc-buffer-local-current-wiki nil)
-  (make-variable-buffer-local 'moinrpc-buffer-local-current-wiki)
-
-  (defvar moinrpc-buffer-local-current-pagename nil)
-  (make-variable-buffer-local 'moinrpc-buffer-local-current-pagename)
-
   (setq mode-name "moinrpc-mode")
+
   (local-set-key (kbd "g") 'moinrpc-main-page)
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
   (local-set-key (kbd "C-c C-n") 'moinrpc-new-wiki-setting)

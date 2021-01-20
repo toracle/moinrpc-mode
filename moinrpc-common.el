@@ -7,12 +7,12 @@
 
 (defvar moinrpc-buffer-name-format "*moin: %s*")
 
-(defvar moinrpc-xmlrpc-content-provider
+(defvar *moinrpc-xmlrpc-content-provider*
   '((:get-page . moinrpc-get-page-content)
     (:get-list . moinrpc-get-list-content)
     (:save-page . moinrpc-save-page-content)))
 
-(defvar moinrpc-content-provider moinrpc-xmlrpc-content-provider)
+(defvar *moinrpc-content-provider* *moinrpc-xmlrpc-content-provider*)
 
 (defun moinrpc-buffer-name (pagename)
   "Construct a buffer name of wiki PAGENAME."

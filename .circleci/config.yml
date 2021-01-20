@@ -1,0 +1,19 @@
+version: 2.1
+executors:
+  emacs:
+    docker:
+      - image: silex/emacs:27-alpine-ci-cask
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
+
+jobs:
+  test:
+    executor: emacs
+    steps:
+      - checkout
+      - run: "cask install"
+      - run: "make test"
