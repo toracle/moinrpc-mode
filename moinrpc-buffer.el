@@ -142,21 +142,18 @@
       (current-buffer))))
 
 
-(defun moinrpc-list-attachment ()
+(defun moinrpc-fill-list-attachment ()
   (interactive)
   (let ((wiki moinrpc-buffer-local-current-wiki)
         (pagename moinrpc-buffer-local-current-pagename))
     (with-current-buffer
         (get-buffer-create (moinrpc-buffer-name (format "%s:attachments"
                                                         pagename)))
-      (switch-to-buffer (current-buffer))
-      (setq-local moinrpc-buffer-local-list-type :attachment-lis)
-      (moinrpc-list-mode)
+        (read-only-mode -1)
       (erase-buffer)
       (print-current-buffer-local "create-attachment-list-buffer")
-      (setq-local moinrpc-buffer-local-current-wiki wiki)
-      (setq-local moinrpc-buffer-local-current-pagename pagename)
-      (let ((entries (moinrpc-get-attachment-list wiki pagename)))
+      (let ((entries (moinrpc-get-attachment-list moinrpc-buffer-local-current-wiki
+                                                  moinrpc-buffer-local-current-pagename)))
         (insert "Attachment List:")
         (newline)
         (newline)
@@ -166,6 +163,40 @@
           (newline)))
       (goto-char 1)
       (read-only-mode))))
+
+
+(defun moinrpc-list-attachment ()
+  (interactive)
+  (let ((wiki moinrpc-buffer-local-current-wiki)
+        (pagename moinrpc-buffer-local-current-pagename))
+    (with-current-buffer
+        (get-buffer-create (moinrpc-buffer-name (format "%s:attachments"
+                                                        pagename)))
+      (switch-to-buffer (current-buffer))
+      (moinrpc-attachment-mode)
+      (setq-local moinrpc-buffer-local-list-type :attachment-list)
+      (setq-local moinrpc-buffer-local-current-wiki wiki)
+      (setq-local moinrpc-buffer-local-current-pagename pagename)
+      (moinrpc-fill-list-attachment))))
+
+
+(defun moinrpc-read-file-as-base64 (filename)
+  "Read a file from PATH and encode it to base64."
+  (with-temp-buffer
+    (insert-file-contents filename nil nil nil t)
+    (buffer-string)))
+
+
+(defun moinrpc-upload-attachment ()
+  (interactive)
+  (let* ((filename (read-file-name "Select a file to upload:"))
+         (name (file-name-nondirectory filename))
+         (content (moinrpc-read-file-as-base64 filename)))
+    (moinrpc-put-attachment moinrpc-buffer-local-current-wiki
+                            moinrpc-buffer-local-current-pagename
+                            name
+                            content)
+    (moinrpc-fill-list-attachment)))
 
 
 (defun moinrpc-create-main-buffer ()
