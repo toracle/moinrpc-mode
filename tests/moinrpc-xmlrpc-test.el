@@ -131,4 +131,18 @@
                                 ("params" . ["TestPage" "a.jpg" (:base64 "JPG content")]))))))))))
 
 
+(ert-deftest moinrpc-xmlrpc-delete-attachment-should-fire-request ()
+  (with-dummy-xml-rpc-call
+   (moinrpc-xmlrpc-delete-attachment *fixture-wiki* "TestPage" "a.jpg")
+   (should (equal *moinrpc-xmlrpc-test-call-history*
+                  '((:server-url
+                     "https://wiki.net/?action=xmlrpc2"
+                     :method
+                     system.multicall
+                     :params (((("methodName" . "applyAuthToken")
+                                ("params" . ["api-token"]))
+                               (("methodName" . "deleteAttachment")
+                                ("params" . ["TestPage" "a.jpg"]))))))))))
+
+
 (provide 'moinrpc-xmlrpc-test)
