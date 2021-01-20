@@ -45,9 +45,9 @@
   ""
   (if (moinrpc-response-valid-p response)
       (let ((error-type (moinrpc-response-error-type response)))
-	(case error-type
+	(pcase error-type
 	  (:INVALID-TOKEN (apply on-error response wiki))
-	  (t t)))))
+	  (_ t)))))
 
 (defun moinrpc-encode-xml-rpc-multi-each-method (method-name &rest params)
   (list
@@ -60,6 +60,11 @@
    (moinrpc-encode-xml-rpc-multi-each-method "applyAuthToken"
 					     (moinrpc-get-wiki-conf wiki 'xmlrpc-api-token))
    (apply 'moinrpc-encode-xml-rpc-multi-each-method method-name params)))
+
+
+(defun moinrpc-xmlrpc-unwrap-response (response)
+  (caar (cdr response)))
+
 
 (defun moinrpc-xml-rpc-multi-method-call (wiki method-name &rest params)
   "XML-RPC method call to WIKI with a METHOD-NAME and PARAMS."
@@ -75,7 +80,7 @@
 			       call-message))
 
     (moinrpc-check-xmlrpc-response response wiki #'moinrpc-ask-token-and-save)
-    (caar (cdr response))))
+    (moinrpc-xmlrpc-unwrap-response response)))
 
 (defun moinrpc-set-auth-token-to-current (token wiki-setting)
   "Set access TOKEN to WIKI-SETTING."
@@ -122,6 +127,30 @@ Specify WIKI with a PAGENAME."
                                        "getRecentChanges"
                                        (format-time-string "%F"
                                                            since))))
+
+
+(defun moinrpc-get-attachment-list (wiki pagename)
+  "Return attachment list of a page has a PAGENAME from WIKI."
+  (moinrpc-xml-rpc-multi-method-call wiki
+                                     "listAttachments"
+                                     pagename))
+
+
+(defun moinrpc-put-attachment (wiki pagename name content)
+  "Add an attachment FILE to a page has a PAGENAME from WIKI."
+  (moinrpc-xml-rpc-multi-method-call wiki
+                                     "putAttachment"
+                                     pagename
+                                     name
+                                     (list :base64 content)))
+
+
+(defun moinrpc-xmlrpc-delete-attachment (wiki pagename name)
+  "Delete an attachment has NAME from a page has a PAGENAME from WIKI."
+  (moinrpc-xml-rpc-multi-method-call wiki
+                                     "deleteAttachment"
+                                     pagename
+                                     name))
 
 
 (provide 'moinrpc-xmlrpc)

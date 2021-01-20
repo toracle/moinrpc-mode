@@ -57,12 +57,12 @@ There are some other modes for moinmoin supports:
  - moinmoin-mode
 
 
-** To-do [3/12]
+** To-do [4/13]
 
  - [X] ~C-c C-o~: follow a WikiLink
  - [X] User friendly wiki setting
  - [X] Recent changes
- - [ ] Attachment handling (put, get, list, delete)
+ - [X] Attachment handling (put, get, list, delete)
  - [ ] ~C-j~ to complete a helm candidate
  - [ ] Align table
  - [ ] Syntax highlighting (already there is a nice moinmoin-mode but it [[http://d.hatena.ne.jp/ymorimo/20070308/1173373043][contains some error]])
@@ -79,6 +79,7 @@ There are some other modes for moinmoin supports:
 *** Unreleased
 
  - #2 add recent changes (#3)
+ - #4 add attachment management (#5)
 
 
 *** 2018-09-07

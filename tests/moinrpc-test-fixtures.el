@@ -18,6 +18,11 @@
                  (("faultCode" . 1)
                   ("faultString" . "Invalid token."))))
 
+             (*moinrpc-fixture-response-error-no-attribute*
+              '(("SUCCESS")
+                (("faultCode" . 1)
+                 ("faultString" . "<type ’exceptions.AttributeError’>:’str’ object has no attribute ’data’"))))
+
              (*moinrpc-fixture-wiki*
                '(("testwiki"
                   (wiki-alias . "wooridle")

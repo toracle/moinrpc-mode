@@ -135,12 +135,10 @@
 
 
 (define-derived-mode moinrpc-page-mode outline-mode
-  (setq outline-regexp "[=\f]+")
-  (setq-local moinrpc-buffer-local-current-wiki nil)
-
-  (setq-local moinrpc-buffer-local-current-pagename nil)
-;  (moinmoin-mode)
   (setq mode-name "moinrpc-page-mode")
+
+  (setq outline-regexp "[=\f]+")
+;  (moinmoin-mode)
   (local-set-key (kbd "C-x C-s") 'moinrpc-save-current-buffer)
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
@@ -150,21 +148,28 @@
   (local-set-key (kbd "C-c t 3") 'moinrpc-wrap-title-level-3)
   (local-set-key (kbd "C-c t 4") 'moinrpc-wrap-title-level-4)
   (local-set-key (kbd "M-RET") 'org-meta-return)
-  (local-set-key (kbd "TAB") 'org-cycle))
+  (local-set-key (kbd "TAB") 'org-cycle)
+  (local-set-key (kbd "C-c a") 'moinrpc-list-attachment))
 
 
 (define-derived-mode moinrpc-list-mode fundamental-mode
-  (setq-local moinrpc-buffer-local-current-wiki nil)
-  (setq-local moinrpc-buffer-local-current-list nil)
   (setq mode-name "moinrpc-list-mode")
 
   (local-set-key (kbd "<tab>") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button))
 
 
+(define-derived-mode moinrpc-attachment-mode fundamental-mode
+  (setq mode-name "moinrpc-attachment-mode")
+
+  (local-set-key (kbd "<tab>") 'forward-button)
+  (local-set-key (kbd "<backtab>") 'backward-button)
+  (local-set-key (kbd "a") 'moinrpc-upload-attachment)
+  (local-set-key (kbd "d") 'moinrpc-delete-attachment)
+  (local-set-key (kbd "g") 'moinrpc-fill-list-attachment))
+
+
 (define-derived-mode moinrpc-main-mode fundamental-mode
-  (setq-local moinrpc-buffer-local-current-wiki nil)
-  (setq-local moinrpc-buffer-local-current-pagename nil)
   (setq mode-name "moinrpc-mode")
 
   (local-set-key (kbd "g") 'moinrpc-main-page)
