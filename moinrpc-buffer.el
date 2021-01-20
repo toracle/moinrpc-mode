@@ -199,6 +199,17 @@
     (moinrpc-fill-list-attachment)))
 
 
+(defun moinrpc-delete-attachment ()
+  (interactive)
+  (let* ((overlay (car (overlays-at (point))))
+         (name (buffer-substring (overlay-start overlay)
+                                 (overlay-end overlay))))
+    (moinrpc-xmlrpc-delete-attachment moinrpc-buffer-local-current-wiki
+                                      moinrpc-buffer-local-current-pagename
+                                      name)
+    (moinrpc-fill-list-attachment)))
+
+
 (defun moinrpc-create-main-buffer ()
   "Create main page buffer.  List up wiki list."
   (with-current-buffer

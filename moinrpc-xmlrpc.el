@@ -145,5 +145,13 @@ Specify WIKI with a PAGENAME."
                                      (list :base64 content)))
 
 
+(defun moinrpc-xmlrpc-delete-attachment (wiki pagename name)
+  "Delete an attachment has NAME from a page has a PAGENAME from WIKI."
+  (moinrpc-xml-rpc-multi-method-call wiki
+                                     "deleteAttachment"
+                                     pagename
+                                     name))
+
+
 (provide 'moinrpc-xmlrpc)
 ;;; moinrpc-xmlrpc.el ends here
