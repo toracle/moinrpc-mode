@@ -78,6 +78,8 @@ There are some other modes for moinmoin supports:
 
 *** Unreleased
 
+ - #6 refactor: remove unnecessary `*moinrpc-content-provider*` (#7)
+
 
 *** v1.0.1
 
