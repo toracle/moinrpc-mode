@@ -37,11 +37,7 @@
   (with-current-buffer
       buffer
     (let
-        ((get-page-function (cdr (assoc :get-page
-                                        *moinrpc-content-provider*)))
-         (content nil))
-      (setq content (funcall get-page-function
-                             current-wiki current-pagename))
+        ((content (moinrpc-get-page-content current-wiki current-pagename)))
       (insert content)
       (setq moinrpc-buffer-local-current-wiki current-wiki)
       (setq moinrpc-buffer-local-current-pagename current-pagename)
@@ -69,32 +65,25 @@
   "Create WIKI page list buffer."
   (with-current-buffer
       (get-buffer-create (moinrpc-buffer-name "List Pages"))
-    (let
-        ((list-function (cdr (assoc :list-page
-                                    *moinrpc-content-provider*))))
-      (read-only-mode -1)
-      (erase-buffer)
-      (setq-local moinrpc-buffer-local-current-wiki wiki)
-      (insert (mapconcat
-               'concat
-               (funcall list-function moinrpc-buffer-local-current-wiki)
-               "\n"))
-      (read-only-mode)
-      (current-buffer))))
+    (read-only-mode -1)
+    (erase-buffer)
+    (setq-local moinrpc-buffer-local-current-wiki wiki)
+    (insert (mapconcat
+             'concat
+             (moinrpc-get-list-content moinrpc-buffer-local-current-wiki)
+             "\n"))
+    (read-only-mode)
+    (current-buffer)))
 
 (defun moinrpc-save-current-buffer ()
   "Save current buffer to remote wiki."
   (interactive)
-  (let
-      ((save-page-function (cdr (assoc :save-page
-                                       *moinrpc-content-provider*))))
-    (funcall save-page-function
-	     moinrpc-buffer-local-current-wiki
-	     moinrpc-buffer-local-current-pagename
-	     (moinrpc-strip-text-properties (buffer-string)))
-    (set-buffer-modified-p nil)
-    (print-current-buffer-local "save-current-buffer")
-    (current-buffer)))
+  (moinrpc-save-page-content moinrpc-buffer-local-current-wiki
+                             moinrpc-buffer-local-current-pagename
+                             (moinrpc-strip-text-properties (buffer-string)))
+  (set-buffer-modified-p nil)
+  (print-current-buffer-local "save-current-buffer")
+  (current-buffer))
 
 
 (defun moinrpc-add-recent-changes-entry (name author version last-modified)
@@ -231,12 +220,8 @@
   "Find page using helm."
   (interactive)
   (let
-      ((get-list-function (cdr (assoc :get-list
-                                      *moinrpc-content-provider*)))
-       (all-pages nil))
+      ((all-pages (moinrpc-get-list-content moinrpc-buffer-local-current-wiki)))
     (print-current-buffer-local "helm-moinrpc-find-page")
-    (setq all-pages (funcall get-list-function
-                             moinrpc-buffer-local-current-wiki))
     (helm :sources
           '(((name . "All wiki pages")
 	     (candidates . all-pages)
