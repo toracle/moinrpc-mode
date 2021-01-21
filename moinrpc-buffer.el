@@ -12,34 +12,11 @@
 
 (defun moinrpc-recent-changes ()
   (interactive)
-  (let ((wiki moinrpc-buffer-local-current-wiki))
-    (with-current-buffer
-        (get-buffer-create (moinrpc-buffer-name "RecentChanges"))
-      (switch-to-buffer (current-buffer))
-      (setq-local moinrpc-buffer-local-list-type :recent-changes)
-      (moinrpc-list-mode)
-      (erase-buffer)
-      (print-current-buffer-local "create-recent-changes-buffer")
-      (setq-local moinrpc-buffer-local-current-wiki wiki)
-      (let ((entries (moinrpc-get-recent-changes wiki))
-            (prev-name nil))
-        (insert "Recent Changes:")
-        (newline)
-        (newline)
-        (dolist (entry entries)
-          (let ((name (cdr (assoc "name" entry)))
-                (author (cdr (assoc "author" entry)))
-                (version (cdr (assoc "version" entry)))
-                (last-modified (cdr (assoc "lastModified" entry))))
-            (unless (equal prev-name name)
-              (moinrpc-add-recent-changes-entry name
-                                                author
-                                                version
-                                                last-modified))
-            (setf prev-name name)))
-        (goto-char 1)
-        (read-only-mode))
-      (current-buffer))))
+  (let* ((wiki moinrpc-buffer-local-current-wiki)
+         (content (moinrpc-xmlrpc-recent-changes wiki))
+         (buffer (moinrpc-buffer-name "RecentChanges")))
+    (switch-to-buffer buffer)
+    (moinrpc-buffer-recent-changes buffer content wiki)))
 
 
 (defun moinrpc-fill-list-attachment ()

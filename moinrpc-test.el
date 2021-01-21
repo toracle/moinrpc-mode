@@ -5,5 +5,6 @@
 (require 'moinrpc-conf-test)
 (require 'moinrpc-mode-test)
 (require 'moinrpc-xmlrpc-test)
+(require 'moinrpc-buffer-helper-test)
 
 (ert t)
