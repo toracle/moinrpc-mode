@@ -39,7 +39,6 @@
 
 
 (defun moinrpc-upload-attachment ()
-  (interactive)
   (let* ((filename (read-file-name "Select a file to upload:"))
          (name (file-name-nondirectory filename))
          (content (moinrpc-read-file-as-base64 filename)))
@@ -51,7 +50,6 @@
 
 
 (defun moinrpc-delete-attachment ()
-  (interactive)
   (let* ((overlay (car (overlays-at (point))))
          (name (moinrpc-get-overlay-text overlay)))
     (moinrpc-xmlrpc-delete-attachment moinrpc-buffer-local-current-wiki
