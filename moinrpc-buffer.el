@@ -88,8 +88,8 @@
   "BUTTON."
   (let
       ((wiki-alias (button-label button)))
-    (setq moinrpc-buffer-local-current-wiki
-          (cdr (assoc wiki-alias *moinrpc-wiki-settings*)))
+    (setq-local moinrpc-buffer-local-current-wiki
+                (cdr (assoc wiki-alias *moinrpc-wiki-settings*)))
     (print-current-buffer-local "helm-find-page")
     (moinrpc-helm-find-page)))
 
