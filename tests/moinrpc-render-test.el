@@ -50,4 +50,4 @@
       (should (equal moinrpc-buffer-local-list-type :attachment-list)))))
 
 
-(provide 'moinrpc-buffer-helper-test)
+(provide 'moinrpc-render-test)
