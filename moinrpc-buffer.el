@@ -19,42 +19,16 @@
     (moinrpc-buffer-recent-changes buffer content wiki)))
 
 
-(defun moinrpc-fill-list-attachment ()
+(defun moinrpc-list-attachments ()
   (interactive)
-  (let ((wiki moinrpc-buffer-local-current-wiki)
-        (pagename moinrpc-buffer-local-current-pagename))
-    (with-current-buffer
-        (get-buffer-create (moinrpc-buffer-name (format "%s:attachments"
-                                                        pagename)))
-        (read-only-mode -1)
-      (erase-buffer)
-      (print-current-buffer-local "create-attachment-list-buffer")
-      (let ((entries (moinrpc-get-attachment-list moinrpc-buffer-local-current-wiki
-                                                  moinrpc-buffer-local-current-pagename)))
-        (insert "Attachment List:")
-        (newline)
-        (newline)
-        (dolist (entry entries)
-          (insert " * ")
-          (insert-button entry)
-          (newline)))
-      (goto-char 1)
-      (read-only-mode))))
-
-
-(defun moinrpc-list-attachment ()
-  (interactive)
-  (let ((wiki moinrpc-buffer-local-current-wiki)
-        (pagename moinrpc-buffer-local-current-pagename))
-    (with-current-buffer
-        (get-buffer-create (moinrpc-buffer-name (format "%s:attachments"
-                                                        pagename)))
-      (switch-to-buffer (current-buffer))
-      (moinrpc-attachment-mode)
-      (setq-local moinrpc-buffer-local-list-type :attachment-list)
-      (setq-local moinrpc-buffer-local-current-wiki wiki)
-      (setq-local moinrpc-buffer-local-current-pagename pagename)
-      (moinrpc-fill-list-attachment))))
+  (let* ((wiki moinrpc-buffer-local-current-wiki)
+         (pagename moinrpc-buffer-local-current-pagename)
+         (content (moinrpc-xmlrpc-list-attachments wiki pagename))
+         (buffer-name (moinrpc-buffer-name (format "%s:attachments"
+                                                   pagename)))
+         (buffer (get-buffer-create buffer-name)))
+    (switch-to-buffer buffer)
+    (moinrpc-buffer-list-attachment buffer pagename content wiki)))
 
 
 (defun moinrpc-read-file-as-base64 (filename)
@@ -69,22 +43,21 @@
   (let* ((filename (read-file-name "Select a file to upload:"))
          (name (file-name-nondirectory filename))
          (content (moinrpc-read-file-as-base64 filename)))
-    (moinrpc-put-attachment moinrpc-buffer-local-current-wiki
+    (moinrpc-xmlrpc-put-attachment moinrpc-buffer-local-current-wiki
                             moinrpc-buffer-local-current-pagename
                             name
                             content)
-    (moinrpc-fill-list-attachment)))
+    (moinrpc-list-attachments)))
 
 
 (defun moinrpc-delete-attachment ()
   (interactive)
   (let* ((overlay (car (overlays-at (point))))
-         (name (buffer-substring (overlay-start overlay)
-                                 (overlay-end overlay))))
+         (name (moinrpc-get-overlay-text overlay)))
     (moinrpc-xmlrpc-delete-attachment moinrpc-buffer-local-current-wiki
                                       moinrpc-buffer-local-current-pagename
                                       name)
-    (moinrpc-fill-list-attachment)))
+    (moinrpc-list-attachments)))
 
 
 (defun moinrpc-find-page ()

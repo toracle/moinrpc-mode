@@ -149,7 +149,7 @@
   (local-set-key (kbd "C-c t 4") 'moinrpc-wrap-title-level-4)
   (local-set-key (kbd "M-RET") 'org-meta-return)
   (local-set-key (kbd "TAB") 'org-cycle)
-  (local-set-key (kbd "C-c a") 'moinrpc-list-attachment))
+  (local-set-key (kbd "C-c a") 'moinrpc-list-attachments))
 
 
 (define-derived-mode moinrpc-list-mode fundamental-mode
@@ -166,7 +166,7 @@
   (local-set-key (kbd "<backtab>") 'backward-button)
   (local-set-key (kbd "a") 'moinrpc-upload-attachment)
   (local-set-key (kbd "d") 'moinrpc-delete-attachment)
-  (local-set-key (kbd "g") 'moinrpc-fill-list-attachment))
+  (local-set-key (kbd "g") 'moinrpc-list-attachments))
 
 
 (define-derived-mode moinrpc-main-mode fundamental-mode

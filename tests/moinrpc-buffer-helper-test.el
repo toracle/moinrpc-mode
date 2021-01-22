@@ -12,6 +12,10 @@
      ("lastModified" . (:datetime 1611246657.9662006)))))
 
 
+(defvar *moinrpc-fixture-list-attachment*
+  '("a.jpg" "b.jpg"))
+
+
 (ert-deftest moinrpc-buffer-recent-changes-should ()
   (with-temp-buffer
     (let ((buffer (current-buffer)))
@@ -26,6 +30,24 @@
                             (buffer-string)))
       (should (equal moinrpc-buffer-local-current-wiki :wiki))
       (should (equal moinrpc-buffer-local-list-type :recent-changes)))))
+
+
+(ert-deftest moinrpc-buffer-list-attachment-should-create-buffer ()
+  (with-temp-buffer
+    (let ((buffer (current-buffer)))
+      (moinrpc-buffer-list-attachment buffer
+                                      "TestPage"
+                                      *moinrpc-fixture-list-attachment*
+                                      :wiki)
+      (should (s-contains-p "Attachment List:"
+                            (buffer-string)))
+      (should (s-contains-p " * a.jpg"
+                            (buffer-string)))
+      (should (s-contains-p " * b.jpg"
+                            (buffer-string)))
+      (should (equal moinrpc-buffer-local-current-wiki :wiki))
+      (should (equal moinrpc-buffer-local-current-pagename "TestPage"))
+      (should (equal moinrpc-buffer-local-list-type :attachment-list)))))
 
 
 (provide 'moinrpc-buffer-helper-test)

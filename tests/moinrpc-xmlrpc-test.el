@@ -103,9 +103,9 @@
                                 ("params" . ["2021-01-17"]))))))))))
 
 
-(ert-deftest moinrpc-list-attachments-should-fire-request ()
+(ert-deftest moinrpc-xmlrpc-list-attachments-should-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-get-attachment-list *fixture-wiki* "TestPage")
+   (moinrpc-xmlrpc-list-attachments *fixture-wiki* "TestPage")
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
@@ -117,9 +117,9 @@
                                 ("params" . ["TestPage"]))))))))))
 
 
-(ert-deftest moinrpc-put-attachment-should-fire-request ()
+(ert-deftest moinrpc-xmlrpc-put-attachment-should-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-put-attachment *fixture-wiki* "TestPage" "a.jpg" "JPG content")
+   (moinrpc-xmlrpc-put-attachment *fixture-wiki* "TestPage" "a.jpg" "JPG content")
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
