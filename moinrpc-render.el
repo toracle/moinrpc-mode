@@ -130,4 +130,38 @@
     (goto-char 1)))
 
 
+(defun moinrpc-wrap-title-level-1 ()
+  (interactive)
+  (moinrpc-wrap-title-level-n 1))
+
+
+(defun moinrpc-wrap-title-level-2 ()
+  (interactive)
+  (moinrpc-wrap-title-level-n 2))
+
+
+(defun moinrpc-wrap-title-level-3 ()
+  (interactive)
+  (moinrpc-wrap-title-level-n 3))
+
+
+(defun moinrpc-wrap-title-level-4 ()
+  (interactive)
+  (moinrpc-wrap-title-level-n 4))
+
+
+(defun moinrpc-wrap-title-level-n (level)
+  (let ((m (point-marker)))
+    (beginning-of-line)
+    (dotimes (_ level)
+             (insert "="))
+    (insert " ")
+    (end-of-line)
+    (insert " ")
+    (dotimes (_ level)
+             (insert "="))
+    (goto-char m)
+  ))
+
+
 (provide 'moinrpc-render)
