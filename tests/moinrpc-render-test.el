@@ -16,7 +16,7 @@
   '("a.jpg" "b.jpg"))
 
 
-(ert-deftest moinrpc-render-recent-changes-should ()
+(ert-deftest moinrpc-render-recent-changes-should-render-buffer ()
   (with-temp-buffer
     (let ((buffer (current-buffer)))
       (moinrpc-render-recent-changes buffer
@@ -32,10 +32,10 @@
       (should (equal moinrpc-buffer-local-list-type :recent-changes)))))
 
 
-(ert-deftest moinrpc-buffer-list-attachment-should-create-buffer ()
+(ert-deftest moinrpc-render-list-attachment-should-render-buffer ()
   (with-temp-buffer
     (let ((buffer (current-buffer)))
-      (moinrpc-buffer-list-attachment buffer
+      (moinrpc-render-list-attachment buffer
                                       "TestPage"
                                       *moinrpc-fixture-list-attachment*
                                       :wiki)

@@ -29,3 +29,30 @@
       (goto-char 1)
       (read-only-mode))
     (current-buffer)))
+
+
+(defun moinrpc-render-list-attachment (buffer pagename content wiki)
+  (with-current-buffer
+      buffer
+    (let ((entries content))
+      (moinrpc-attachment-mode)
+
+      (setq-local moinrpc-buffer-local-list-type :attachment-list)
+      (setq-local moinrpc-buffer-local-current-wiki wiki)
+      (setq-local moinrpc-buffer-local-current-pagename pagename)
+
+      (read-only-mode -1)
+      (erase-buffer)
+
+      (insert "Attachment List:")
+      (newline)
+      (newline)
+      (dolist (entry content)
+        (insert " * ")
+        (insert-button entry)
+        (newline)))
+    (goto-char 1)
+    (read-only-mode)))
+
+
+(provide 'moinrpc-render)

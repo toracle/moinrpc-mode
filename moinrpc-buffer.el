@@ -7,6 +7,7 @@
 
 (require 'moinrpc-common)
 (require 'moinrpc-xmlrpc)
+(require 'moinrpc-render)
 (require 'moinrpc-buffer-helper)
 
 
@@ -28,7 +29,7 @@
                                                    pagename)))
          (buffer (get-buffer-create buffer-name)))
     (switch-to-buffer buffer)
-    (moinrpc-buffer-list-attachment buffer pagename content wiki)))
+    (moinrpc-render-list-attachment buffer pagename content wiki)))
 
 
 (defun moinrpc-read-file-as-base64 (filename)
