@@ -84,19 +84,6 @@
   (current-buffer))
 
 
-(defun moinrpc-buffer-add-recent-changes-entry (name author version last-modified)
-  (insert " * ")
-  (insert-button name
-                 'action '(lambda (overlay)
-                            (moinrpc-get-or-create-page-buffer
-                             (buffer-substring (overlay-start overlay)
-                                               (overlay-end overlay)))))
-  (insert (format " by %s" author))
-  (insert (format " [v%s] " version))
-  (insert (format-time-string "%F %T" (cadr last-modified)))
-  (newline))
-
-
 (defun moinrpc-create-main-buffer ()
   "Create main page buffer.  List up wiki list."
   (with-current-buffer

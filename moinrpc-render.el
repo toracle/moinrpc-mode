@@ -1,6 +1,19 @@
 (require 'moinrpc-common)
 
 
+(defun moinrpc-render-add-recent-changes-entry (name author version last-modified)
+  (insert " * ")
+  (insert-button name
+                 'action '(lambda (overlay)
+                            (moinrpc-get-or-create-page-buffer
+                             (buffer-substring (overlay-start overlay)
+                                               (overlay-end overlay)))))
+  (insert (format " by %s" author))
+  (insert (format " [v%s] " version))
+  (insert (format-time-string "%F %T" (cadr last-modified)))
+  (newline))
+
+
 (defun moinrpc-render-recent-changes (buffer content wiki)
   (with-current-buffer
       buffer
@@ -21,7 +34,7 @@
               (version (cdr (assoc "version" entry)))
               (last-modified (cdr (assoc "lastModified" entry))))
           (unless (equal prev-name name)
-            (moinrpc-buffer-add-recent-changes-entry name
+            (moinrpc-render-add-recent-changes-entry name
                                                      author
                                                      version
                                                      last-modified))
