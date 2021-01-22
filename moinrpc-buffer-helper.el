@@ -5,11 +5,6 @@
 (defvar *moinrpc-buffer-debug-log* nil)
 
 
-(defun moinrpc-get-overlay-text (overlay)
-  (buffer-substring (overlay-start overlay)
-                    (overlay-end overlay)))
-
-
 (defun print-current-buffer-local (location)
   "Print current buffer local var values of LOCATION for debug."
   (when *moinrpc-buffer-debug-log*

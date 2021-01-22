@@ -11,9 +11,16 @@
   "Construct a buffer name of wiki PAGENAME."
   (format moinrpc-buffer-name-format pagename))
 
+
 (defun moinrpc-strip-text-properties (txt)
   "Remove all text properties of TXT."
   (set-text-properties 0 (length txt) nil txt)
   txt)
+
+
+(defun moinrpc-get-overlay-text (overlay)
+  (buffer-substring (overlay-start overlay)
+                    (overlay-end overlay)))
+
 
 (provide 'moinrpc-common)

@@ -6,8 +6,7 @@
   (insert-button name
                  'action '(lambda (overlay)
                             (moinrpc-get-or-create-page-buffer
-                             (buffer-substring (overlay-start overlay)
-                                               (overlay-end overlay)))))
+                             (moinrpc-get-overlay-text overlay))))
   (insert (format " by %s" author))
   (insert (format " [v%s] " version))
   (insert (format-time-string "%F %T" (cadr last-modified)))
