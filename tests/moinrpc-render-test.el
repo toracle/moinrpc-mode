@@ -93,4 +93,15 @@
       (should (equal moinrpc-buffer-local-list-type :attachment-list)))))
 
 
+(ert-deftest moinrpc-render-page-should-render-buffer ()
+  (with-temp-buffer
+    (let ((buffer (current-buffer)))
+      (moinrpc-render-page buffer
+                           "TestPage"
+                           "Test content"
+                           *moinrpc-fixture-single-wiki*)
+
+      (should (s-contains-p "Test content" (buffer-string))))))
+
+
 (provide 'moinrpc-render-test)

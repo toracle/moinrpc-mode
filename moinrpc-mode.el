@@ -71,9 +71,9 @@
   (let ((wikilink (moinrpc-wikilink-at-point))
         (pagename nil))
     (when wikilink
-      (moinrpc-get-or-create-page-buffer (moinrpc-rel-wikilink-to-abs
-                                          wikilink
-                                          moinrpc-buffer-local-current-pagename)))))
+      (moinrpc-open-page (moinrpc-rel-wikilink-to-abs
+                          wikilink
+                          moinrpc-buffer-local-current-pagename)))))
 
 
 (defun moinrpc-wrap-title-level-1 ()
@@ -115,7 +115,7 @@
 
   (setq outline-regexp "[=\f]+")
 ;  (moinmoin-mode)
-  (local-set-key (kbd "C-x C-s") 'moinrpc-save-current-buffer)
+  (local-set-key (kbd "C-x C-s") 'moinrpc-save-page)
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
   (local-set-key (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)

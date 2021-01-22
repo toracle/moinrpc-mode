@@ -54,7 +54,7 @@
   (insert " * ")
   (insert-button name
                  'action '(lambda (overlay)
-                            (moinrpc-get-or-create-page-buffer
+                            (moinrpc-open-page
                              (moinrpc-get-overlay-text overlay))))
   (insert (format " by %s" author))
   (insert (format " [v%s] " version))
@@ -115,6 +115,20 @@
         (newline)))
     (goto-char 1)
     (read-only-mode)))
+
+
+(defun moinrpc-render-page (buffer pagename content wiki)
+  (with-current-buffer
+      buffer
+    (moinrpc-page-mode)
+
+    (setq moinrpc-buffer-local-current-wiki wiki)
+    (setq moinrpc-buffer-local-current-pagename pagename)
+
+    (erase-buffer)
+    (insert content)
+    (set-buffer-modified-p nil)
+    (goto-char 1)))
 
 
 (provide 'moinrpc-render)

@@ -53,6 +53,27 @@
     (moinrpc-render-list-attachment buffer pagename content wiki)))
 
 
+(defun moinrpc-open-page (pagename)
+  (let* ((wiki moinrpc-buffer-local-current-wiki)
+         (buffer-name (moinrpc-buffer-name pagename wiki))
+         (buffer (get-buffer-create buffer-name))
+         (content (moinrpc-get-page-content wiki
+                                            pagename)))
+    (switch-to-buffer buffer)
+    (moinrpc-render-page buffer pagename content wiki)))
+
+
+(defun moinrpc-save-page ()
+  "Save current buffer to remote wiki."
+  (interactive)
+  (moinrpc-save-page-content moinrpc-buffer-local-current-wiki
+                             moinrpc-buffer-local-current-pagename
+                             (moinrpc-strip-text-properties (buffer-string)))
+  (set-buffer-modified-p nil)
+  (print-current-buffer-local "save-current-buffer")
+  (current-buffer))
+
+
 (defun moinrpc-read-file (filename)
   "Read a file from PATH and encode it to base64."
   (with-temp-buffer
@@ -85,7 +106,7 @@
   (interactive)
   (let
       ((pagename (read-string "Open page: ")))
-    (moinrpc-get-or-create-page-buffer pagename)))
+    (moinrpc-open-page pagename)))
 
 
 (defun moinrpc-helm-find-page ()
@@ -97,10 +118,10 @@
     (helm :sources
           '(((name . "All wiki pages")
 	     (candidates . all-pages)
-	     (action . (("Open" . moinrpc-get-or-create-page-buffer))))
+	     (action . (("Open" . moinrpc-open-page))))
 	    ((name . "fallback")
 	     (dummy)
-	     (action . (("Create" . moinrpc-get-or-create-page-buffer)))))
+	     (action . (("Create" . moinrpc-open-page)))))
 	  :prompt "Find Page: "
 	  :buffer "*helm-moinrpc-find-pages*"
 	  )))
