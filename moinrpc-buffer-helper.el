@@ -59,19 +59,6 @@
       (print-current-buffer-local "get-or-create-page-buffer")
     (switch-to-buffer buffer)))
 
-(defun moinrpc-create-list-buffer (wiki)
-  "Create WIKI page list buffer."
-  (with-current-buffer
-      (get-buffer-create (moinrpc-buffer-name "List Pages"))
-    (read-only-mode -1)
-    (erase-buffer)
-    (setq-local moinrpc-buffer-local-current-wiki wiki)
-    (insert (mapconcat
-             'concat
-             (moinrpc-get-list-content moinrpc-buffer-local-current-wiki)
-             "\n"))
-    (read-only-mode)
-    (current-buffer)))
 
 (defun moinrpc-save-current-buffer ()
   "Save current buffer to remote wiki."
