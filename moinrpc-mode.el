@@ -145,15 +145,24 @@
   (local-set-key (kbd "g") 'moinrpc-list-attachments))
 
 
-(define-derived-mode moinrpc-main-mode fundamental-mode
-  (setq mode-name "moinrpc-mode")
+(define-derived-mode moinrpc-front-mode fundamental-mode
+  (setq mode-name "moinrpc-front-mode")
 
-  (local-set-key (kbd "g") 'moinrpc-main-page)
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
   (local-set-key (kbd "C-c C-n") 'moinrpc-new-wiki-setting)
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
   (local-set-key (kbd "<tab>") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button))
+
+
+(define-derived-mode moinrpc-main-mode fundamental-mode
+  (setq mode-name "moinrpc-mode")
+
+  (local-set-key (kbd "g") 'moinrpc-main-page)
+  (local-set-key (kbd "C-c C-n") 'moinrpc-new-wiki-setting)
+  (local-set-key (kbd "<tab>") 'forward-button)
+  (local-set-key (kbd "<backtab>") 'backward-button))
+
 
 (provide 'moinrpc-mode)
 ;;; moinrpc-mode.el ends here

@@ -24,7 +24,7 @@
 (defun moinrpc-render-wiki-front (buffer wiki)
   (with-current-buffer
       buffer
-    (moinrpc-main-mode)
+    (moinrpc-front-mode)
     (setq-local moinrpc-buffer-local-current-wiki wiki)
 
     (read-only-mode -1)
