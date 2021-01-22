@@ -5,8 +5,6 @@
   (with-current-buffer
       buffer
     (moinrpc-main-mode)
-    (setq-local moinrpc-buffer-local-current-wiki
-                (cdr (assoc *moinrpc-current-wiki* *moinrpc-wiki-settings*)))
 
     (read-only-mode -1)
     (erase-buffer)
@@ -18,8 +16,37 @@
       (insert " * ")
       (insert-button wiki-alias
                      'follow-link "\C-m"
-                     'action 'moinrpc-buffer-enter-wiki)
+                     'action 'moinrpc-wiki-front)
       (newline))
+    (read-only-mode)))
+
+
+(defun moinrpc-render-wiki-front (buffer wiki)
+  (with-current-buffer
+      buffer
+    (moinrpc-main-mode)
+    (setq-local moinrpc-buffer-local-current-wiki wiki)
+
+    (read-only-mode -1)
+    (erase-buffer)
+
+    (insert (format "Wiki: %s" (cdr (assoc 'wiki-alias wiki))))
+    (newline)
+    (newline)
+    (insert " ")
+    (insert "[")
+    (insert-button "Recent Changes"
+                   'follow-link "\C-m"
+                   'action '(lambda (button)
+                              (moinrpc-recent-changes)))
+    (insert "] [")
+    (insert-button "Find Page"
+                   'follow-link "\C-m"
+                   'action '(lambda (button)
+                              (moinrpc-helm-find-page)))
+    (insert "]")
+    (newline)
+    (goto-char 1)
     (read-only-mode)))
 
 

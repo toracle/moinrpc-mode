@@ -16,11 +16,12 @@
 (defun moinrpc-create-page-buffer (wiki pagename)
   "Create a buffer for a WIKI page which has a PAGENAME."
   (with-current-buffer
-      (get-buffer-create (moinrpc-buffer-name pagename))
+      (get-buffer-create (moinrpc-buffer-name pagename
+                                              wiki))
     (moinrpc-page-mode)
     (erase-buffer)
-    (setq moinrpc-buffer-local-current-wiki wiki)
-    (setq moinrpc-buffer-local-current-pagename pagename)
+    (setq-local moinrpc-buffer-local-current-wiki wiki)
+    (setq-local moinrpc-buffer-local-current-pagename pagename)
     (switch-to-buffer (current-buffer))
     (print-current-buffer-local "create-page-buffer")
     (current-buffer)))
@@ -40,7 +41,8 @@
 (defun moinrpc-get-or-create-page-buffer (pagename)
   "Get a page buffer which have a PAGENAME or create one if there is not exist."
   (let
-      ((buffer-name (moinrpc-buffer-name pagename))
+      ((buffer-name (moinrpc-buffer-name pagename
+                                         moinrpc-buffer-local-current-wiki))
        (buffer nil))
     (if
         (not (setq buffer (get-buffer buffer-name)))

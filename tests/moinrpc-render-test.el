@@ -25,6 +25,13 @@
      (xmlrpc-api-token . "token-2"))))
 
 
+(defvar *moinrpc-fixture-single-wiki*
+  '((wiki-alias . "wiki-1")
+    (xmlrpc-endpoint . "https://wiki-1.net")
+    (username . "user-1")
+    (xmlrpc-api-token . "token-1")))
+
+
 (defvar *moinrpc-fixture-list-attachment*
   '("a.jpg" "b.jpg"))
 
@@ -33,11 +40,22 @@
   (with-temp-buffer
     (let ((buffer (current-buffer))
           (content (moinrpc-get-keys *moinrpc-fixture-list-wiki*)))
-      (moinrpc-render-main-page buffer
-                                content)
+      (moinrpc-render-main-page buffer content)
+
       (should (s-contains-p "MoinRPC Wiki List" (buffer-string)))
       (should (s-contains-p " * wiki-1" (buffer-string)))
       (should (s-contains-p " * wiki-2" (buffer-string))))))
+
+
+(ert-deftest moinrpc-render-wiki-front-should-render-buffer ()
+  (with-temp-buffer
+    (let ((buffer (current-buffer))
+          (content *moinrpc-fixture-single-wiki*))
+      (moinrpc-render-wiki-front buffer content)
+
+      (should (s-contains-p "Wiki: wiki-1" (buffer-string)))
+      (should (s-contains-p " [Recent Changes] [Find Page]"
+                            (buffer-string))))))
 
 
 (ert-deftest moinrpc-render-recent-changes-should-render-buffer ()
@@ -46,8 +64,8 @@
       (moinrpc-render-recent-changes buffer
                                      *moinrpc-fixture-recent-changes*
                                      :wiki)
-      (should (s-contains-p "Recent Changes:"
-                            (buffer-string)))
+
+      (should (s-contains-p "Recent Changes:" (buffer-string)))
       (should (s-contains-p "* Page1 by user1 [v1] 2021-01-22 01:30:57"
                             (buffer-string)))
       (should (s-contains-p "* Page2 by user2 [v1] 2021-01-22 01:30:57"
@@ -63,6 +81,7 @@
                                       "TestPage"
                                       *moinrpc-fixture-list-attachment*
                                       :wiki)
+
       (should (s-contains-p "Attachment List:"
                             (buffer-string)))
       (should (s-contains-p " * a.jpg"

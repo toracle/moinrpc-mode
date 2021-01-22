@@ -15,18 +15,28 @@
 (defun moinrpc-main-page ()
   "Create a wiki list buffer."
   (interactive)
-  (let ((buffer (get-buffer-create "*moinrpc*"))
+  (let ((buffer (get-buffer-create (moinrpc-buffer-name nil)))
         (content (moinrpc-get-keys *moinrpc-wiki-settings*)))
     (switch-to-buffer buffer)
     (moinrpc-render-main-page buffer content)
     t))
 
 
+(defun moinrpc-wiki-front (button)
+  "Create a wiki front buffer."
+  (interactive)
+  (let* ((wiki-name (button-label button))
+         (wiki (cdr (assoc *moinrpc-current-wiki* *moinrpc-wiki-settings*)))
+         (buffer (get-buffer-create (moinrpc-buffer-name wiki-name))))
+    (switch-to-buffer buffer)
+    (moinrpc-render-wiki-front buffer wiki)))
+
+
 (defun moinrpc-recent-changes ()
   (interactive)
   (let* ((wiki moinrpc-buffer-local-current-wiki)
          (content (moinrpc-xmlrpc-recent-changes wiki))
-         (buffer (moinrpc-buffer-name "RecentChanges")))
+         (buffer (moinrpc-buffer-name "RecentChanges" wiki)))
     (switch-to-buffer buffer)
     (moinrpc-render-recent-changes buffer content wiki)))
 
@@ -37,7 +47,7 @@
          (pagename moinrpc-buffer-local-current-pagename)
          (content (moinrpc-xmlrpc-list-attachments wiki pagename))
          (buffer-name (moinrpc-buffer-name (format "%s:attachments"
-                                                   pagename)))
+                                                   pagename) wiki))
          (buffer (get-buffer-create buffer-name)))
     (switch-to-buffer buffer)
     (moinrpc-render-list-attachment buffer pagename content wiki)))
@@ -95,15 +105,6 @@
 	  :buffer "*helm-moinrpc-find-pages*"
 	  )))
 
-
-(defun moinrpc-buffer-enter-wiki (button)
-  "BUTTON."
-  (let
-      ((wiki-alias (button-label button)))
-    (setq-local moinrpc-buffer-local-current-wiki
-                (cdr (assoc wiki-alias *moinrpc-wiki-settings*)))
-    (print-current-buffer-local "helm-find-page")
-    (moinrpc-helm-find-page)))
 
 (provide 'moinrpc-buffer)
 ;;; moinrpc-buffer.el ends here
