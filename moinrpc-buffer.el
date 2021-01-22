@@ -80,7 +80,7 @@
     (moinrpc-list-attachments)))
 
 
-(defun moinrpc-open-page ()
+(defun moinrpc-find-page ()
   "Find a page with name."
   (interactive)
   (let

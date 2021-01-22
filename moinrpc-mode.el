@@ -117,7 +117,7 @@
 ;  (moinmoin-mode)
   (local-set-key (kbd "C-x C-s") 'moinrpc-save-current-buffer)
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
-  (local-set-key (kbd "C-c C-f") 'moinrpc-open-page)
+  (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
   (local-set-key (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)
   (local-set-key (kbd "C-c t 1") 'moinrpc-wrap-title-level-1)
   (local-set-key (kbd "C-c t 2") 'moinrpc-wrap-title-level-2)
