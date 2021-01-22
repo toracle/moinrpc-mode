@@ -5,7 +5,6 @@
 ;;; Code:
 
 (require 'xml-rpc)
-;(require 'moinmoin-mode)
 (require 'thingatpt)
 (require 's)
 
@@ -37,14 +36,12 @@
 
 (defun moinrpc-wikilink-p ()
   "."
-  (thing-at-point-looking-at moinrpc-regex-wikilink
-                             100))
+  (thing-at-point-looking-at moinrpc-regex-wikilink 100))
 
 
 (defun moinrpc-bracket-wikilink-p ()
   "."
-  (thing-at-point-looking-at moinrpc-regex-bracket-wikilink
-                             100))
+  (thing-at-point-looking-at moinrpc-regex-bracket-wikilink 100))
 
 
 (defun moinrpc-wikilink-at-point ()
@@ -80,7 +77,7 @@
   (setq mode-name "moinrpc-page-mode")
 
   (setq outline-regexp "[=\f]+")
-;  (moinmoin-mode)
+
   (local-set-key (kbd "C-x C-s") 'moinrpc-save-page)
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
