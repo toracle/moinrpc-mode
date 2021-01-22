@@ -32,7 +32,7 @@
     (moinrpc-render-list-attachment buffer pagename content wiki)))
 
 
-(defun moinrpc-read-file-as-base64 (filename)
+(defun moinrpc-read-file (filename)
   "Read a file from PATH and encode it to base64."
   (with-temp-buffer
     (insert-file-contents filename nil nil nil t)
@@ -42,7 +42,7 @@
 (defun moinrpc-upload-attachment ()
   (let* ((filename (read-file-name "Select a file to upload:"))
          (name (file-name-nondirectory filename))
-         (content (moinrpc-read-file-as-base64 filename)))
+         (content (moinrpc-read-file filename)))
     (moinrpc-xmlrpc-put-attachment moinrpc-buffer-local-current-wiki
                             moinrpc-buffer-local-current-pagename
                             name
