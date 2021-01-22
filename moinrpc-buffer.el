@@ -9,7 +9,6 @@
 (require 'moinrpc-conf)
 (require 'moinrpc-xmlrpc)
 (require 'moinrpc-render)
-(require 'moinrpc-buffer-helper)
 
 
 (defun moinrpc-main-page ()
@@ -70,7 +69,6 @@
                              moinrpc-buffer-local-current-pagename
                              (moinrpc-strip-text-properties (buffer-string)))
   (set-buffer-modified-p nil)
-  (print-current-buffer-local "save-current-buffer")
   (current-buffer))
 
 
@@ -114,7 +112,6 @@
   (interactive)
   (let
       ((all-pages (moinrpc-get-list-content moinrpc-buffer-local-current-wiki)))
-    (print-current-buffer-local "helm-moinrpc-find-page")
     (helm :sources
           '(((name . "All wiki pages")
 	     (candidates . all-pages)

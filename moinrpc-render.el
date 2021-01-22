@@ -67,7 +67,6 @@
       buffer
     (let ((prev-name nil))
       (moinrpc-list-mode)
-      (print-current-buffer-local "create-recent-changes-buffer")
 
       (setq-local moinrpc-buffer-local-list-type :recent-changes)
       (setq-local moinrpc-buffer-local-current-wiki wiki)
