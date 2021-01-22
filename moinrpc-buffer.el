@@ -58,14 +58,15 @@
     (moinrpc-list-attachments)))
 
 
-(defun moinrpc-find-page ()
+(defun moinrpc-open-page ()
   "Find a page with name."
   (interactive)
   (let
-      ((pagename (read-string "Find page: ")))
+      ((pagename (read-string "Open page: ")))
     (moinrpc-get-or-create-page-buffer pagename)))
 
-(defun helm-moinrpc-find-page ()
+
+(defun moinrpc-helm-find-page ()
   "Find page using helm."
   (interactive)
   (let
@@ -82,14 +83,15 @@
 	  :buffer "*helm-moinrpc-find-pages*"
 	  )))
 
-(defun moinrpc-helm-find-page (button)
+
+(defun moinrpc-buffer-enter-wiki (button)
   "BUTTON."
   (let
       ((wiki-alias (button-label button)))
     (setq moinrpc-buffer-local-current-wiki
           (cdr (assoc wiki-alias *moinrpc-wiki-settings*)))
     (print-current-buffer-local "helm-find-page")
-    (helm-moinrpc-find-page)))
+    (moinrpc-helm-find-page)))
 
 (provide 'moinrpc-buffer)
 ;;; moinrpc-buffer.el ends here

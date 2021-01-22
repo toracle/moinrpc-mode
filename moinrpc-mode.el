@@ -122,8 +122,8 @@
     (dolist (wiki-alias (moinrpc-get-keys *moinrpc-wiki-settings*))
       (insert " * ")
       (insert-button wiki-alias
-		     'follow-link "\C-m"
-		     'action 'moinrpc-helm-find-page)
+                     'follow-link "\C-m"
+                     'action 'moinrpc-buffer-enter-wiki)
       (newline))
     (read-only-mode)
     (moinrpc-main-mode)
@@ -141,7 +141,7 @@
 ;  (moinmoin-mode)
   (local-set-key (kbd "C-x C-s") 'moinrpc-save-current-buffer)
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
-  (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
+  (local-set-key (kbd "C-c C-f") 'moinrpc-open-page)
   (local-set-key (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)
   (local-set-key (kbd "C-c t 1") 'moinrpc-wrap-title-level-1)
   (local-set-key (kbd "C-c t 2") 'moinrpc-wrap-title-level-2)
