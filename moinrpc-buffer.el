@@ -6,9 +6,20 @@
 ;; Buffer related
 
 (require 'moinrpc-common)
+(require 'moinrpc-conf)
 (require 'moinrpc-xmlrpc)
 (require 'moinrpc-render)
 (require 'moinrpc-buffer-helper)
+
+
+(defun moinrpc-main-page ()
+  "Create a wiki list buffer."
+  (interactive)
+  (let ((buffer (get-buffer-create "*moinrpc*"))
+        (content (moinrpc-get-keys *moinrpc-wiki-settings*)))
+    (switch-to-buffer buffer)
+    (moinrpc-render-main-page buffer content)
+    t))
 
 
 (defun moinrpc-recent-changes ()

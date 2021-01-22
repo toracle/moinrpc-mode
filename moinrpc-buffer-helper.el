@@ -66,15 +66,4 @@
   (current-buffer))
 
 
-(defun moinrpc-create-main-buffer ()
-  "Create main page buffer.  List up wiki list."
-  (with-current-buffer
-      (get-buffer-create "*moinrpc*")
-    (switch-to-buffer (current-buffer))
-    (erase-buffer)
-    (insert (format "%S" *moinrpc-wiki-settings*))
-    (read-only-mode)
-    (print-current-buffer-local "create-main-buffer")))
-
-
 (provide 'moinrpc-buffer-helper)

@@ -10,6 +10,7 @@
 (require 's)
 
 (require 'moinrpc-buffer)
+(require 'moinrpc-render)
 (require 'moinrpc-conf)
 
 
@@ -106,31 +107,6 @@
     (dotimes (_ level)
              (insert "="))
     (goto-char m)
-  ))
-
-
-(defun moinrpc-main-page ()
-  "Create a wiki list buffer."
-  (interactive)
-  (with-current-buffer
-      (get-buffer-create "*moinrpc*")
-    (read-only-mode -1)
-    (erase-buffer)
-    (insert "MoinRPC Wiki List")
-    (newline)
-    (newline)
-    (dolist (wiki-alias (moinrpc-get-keys *moinrpc-wiki-settings*))
-      (insert " * ")
-      (insert-button wiki-alias
-                     'follow-link "\C-m"
-                     'action 'moinrpc-buffer-enter-wiki)
-      (newline))
-    (read-only-mode)
-    (moinrpc-main-mode)
-    (setq-local moinrpc-buffer-local-current-wiki
-                (cdr (assoc *moinrpc-current-wiki* *moinrpc-wiki-settings*)))
-    (switch-to-buffer "*moinrpc*")
-    t
   ))
 
 

@@ -12,8 +12,32 @@
      ("lastModified" . (:datetime 1611246657.9662006)))))
 
 
+(defvar *moinrpc-fixture-list-wiki*
+  '(("wiki-1"
+     (wiki-alias . "wiki-1")
+     (xmlrpc-endpoint . "https://wiki-1.net")
+     (username . "user-1")
+     (xmlrpc-api-token . "token-1"))
+    ("wiki-2"
+     (wiki-alias . "wiki-2")
+     (xmlrpc-endpoint . "https://wiki-2.net")
+     (username . "user-2")
+     (xmlrpc-api-token . "token-2"))))
+
+
 (defvar *moinrpc-fixture-list-attachment*
   '("a.jpg" "b.jpg"))
+
+
+(ert-deftest moinrpc-render-main-page-should-render-buffer ()
+  (with-temp-buffer
+    (let ((buffer (current-buffer))
+          (content (moinrpc-get-keys *moinrpc-fixture-list-wiki*)))
+      (moinrpc-render-main-page buffer
+                                content)
+      (should (s-contains-p "MoinRPC Wiki List" (buffer-string)))
+      (should (s-contains-p " * wiki-1" (buffer-string)))
+      (should (s-contains-p " * wiki-2" (buffer-string))))))
 
 
 (ert-deftest moinrpc-render-recent-changes-should-render-buffer ()

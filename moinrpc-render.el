@@ -1,6 +1,28 @@
 (require 'moinrpc-common)
 
 
+(defun moinrpc-render-main-page (buffer content)
+  (with-current-buffer
+      buffer
+    (moinrpc-main-mode)
+    (setq-local moinrpc-buffer-local-current-wiki
+                (cdr (assoc *moinrpc-current-wiki* *moinrpc-wiki-settings*)))
+
+    (read-only-mode -1)
+    (erase-buffer)
+
+    (insert "MoinRPC Wiki List")
+    (newline)
+    (newline)
+    (dolist (wiki-alias content)
+      (insert " * ")
+      (insert-button wiki-alias
+                     'follow-link "\C-m"
+                     'action 'moinrpc-buffer-enter-wiki)
+      (newline))
+    (read-only-mode)))
+
+
 (defun moinrpc-render-add-recent-changes-entry (name author version last-modified)
   (insert " * ")
   (insert-button name
@@ -23,6 +45,7 @@
       (setq-local moinrpc-buffer-local-list-type :recent-changes)
       (setq-local moinrpc-buffer-local-current-wiki wiki)
 
+      (read-only-mode -1)
       (erase-buffer)
       (insert "Recent Changes:")
       (newline)
