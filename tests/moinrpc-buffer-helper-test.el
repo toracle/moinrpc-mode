@@ -16,10 +16,10 @@
   '("a.jpg" "b.jpg"))
 
 
-(ert-deftest moinrpc-buffer-recent-changes-should ()
+(ert-deftest moinrpc-render-recent-changes-should ()
   (with-temp-buffer
     (let ((buffer (current-buffer)))
-      (moinrpc-buffer-recent-changes buffer
+      (moinrpc-render-recent-changes buffer
                                      *moinrpc-fixture-recent-changes*
                                      :wiki)
       (should (s-contains-p "Recent Changes:"

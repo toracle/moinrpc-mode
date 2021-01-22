@@ -108,7 +108,7 @@
     (print-current-buffer-local "create-main-buffer")))
 
 
-(defun moinrpc-buffer-recent-changes (buffer content wiki)
+(defun moinrpc-render-recent-changes (buffer content wiki)
   (with-current-buffer
       buffer
     (let ((prev-name nil))

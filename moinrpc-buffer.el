@@ -16,7 +16,7 @@
          (content (moinrpc-xmlrpc-recent-changes wiki))
          (buffer (moinrpc-buffer-name "RecentChanges")))
     (switch-to-buffer buffer)
-    (moinrpc-buffer-recent-changes buffer content wiki)))
+    (moinrpc-render-recent-changes buffer content wiki)))
 
 
 (defun moinrpc-list-attachments ()
