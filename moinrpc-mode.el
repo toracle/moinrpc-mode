@@ -156,7 +156,7 @@
 
 
 (define-derived-mode moinrpc-main-mode fundamental-mode
-  (setq mode-name "moinrpc-mode")
+  (setq mode-name "moinrpc-main-mode")
 
   (local-set-key (kbd "g") 'moinrpc-main-page)
   (local-set-key (kbd "C-c C-n") 'moinrpc-new-wiki-setting)
