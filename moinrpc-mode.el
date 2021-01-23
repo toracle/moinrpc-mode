@@ -94,6 +94,7 @@
 (define-derived-mode moinrpc-list-mode fundamental-mode
   (setq mode-name "moinrpc-list-mode")
 
+  (local-set-key (kbd "q") 'quit-window)
   (local-set-key (kbd "<tab>") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button))
 
@@ -101,6 +102,7 @@
 (define-derived-mode moinrpc-attachment-mode fundamental-mode
   (setq mode-name "moinrpc-attachment-mode")
 
+  (local-set-key (kbd "q") 'quit-window)
   (local-set-key (kbd "<tab>") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button)
   (local-set-key (kbd "a") 'moinrpc-upload-attachment)
@@ -111,6 +113,7 @@
 (define-derived-mode moinrpc-front-mode fundamental-mode
   (setq mode-name "moinrpc-front-mode")
 
+  (local-set-key (kbd "q") 'quit-window)
   (local-set-key (kbd "C-x C-f") 'helm-moinrpc-find-page)
   (local-set-key (kbd "C-c C-n") 'moinrpc-new-wiki-setting)
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
@@ -121,6 +124,7 @@
 (define-derived-mode moinrpc-main-mode fundamental-mode
   (setq mode-name "moinrpc-main-mode")
 
+  (local-set-key (kbd "q") 'quit-window)
   (local-set-key (kbd "g") 'moinrpc-main-page)
   (local-set-key (kbd "C-c C-n") 'moinrpc-new-wiki-setting)
   (local-set-key (kbd "<tab>") 'forward-button)
