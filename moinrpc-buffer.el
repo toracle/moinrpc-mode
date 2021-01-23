@@ -111,7 +111,7 @@
   "Find page using helm."
   (interactive)
   (let
-      ((all-pages (moinrpc-get-all-pages moinrpc-buffer-local-current-wiki)))
+      ((all-pages (moinrpc-xmlrpc-get-all-pages moinrpc-buffer-local-current-wiki)))
     (helm :sources
           '(((name . "All wiki pages")
 	     (candidates . all-pages)
@@ -122,6 +122,21 @@
 	  :prompt "Find Page: "
 	  :buffer "*helm-moinrpc-find-pages*"
 	  )))
+
+
+(defun moinrpc-insert-wikilink ()
+  (interactive)
+  (let
+      ((all-pages (moinrpc-xmlrpc-get-all-pages moinrpc-buffer-local-current-wiki)))
+    (helm :sources
+          '(((name . "All wiki pages")
+             (candidates . all-pages)
+             (action . (("Insert" . moinrpc-render-insert-link))))
+            ((name . "fallback")
+             (dummy)
+             (action . (("Insert" . moinrpc-render-insert-link)))))
+          :prompt "Select Page: "
+          :buffer "*helm-moinrpc-find-pages*")))
 
 
 (provide 'moinrpc-buffer)

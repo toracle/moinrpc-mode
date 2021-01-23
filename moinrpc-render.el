@@ -201,8 +201,16 @@
     (insert " ")
     (dotimes (_ level)
              (insert "="))
-    (goto-char m)
-  ))
+    (goto-char m)))
+
+
+(defun moinrpc-render-insert-link (pagename)
+  (if (moinrpc-wikilink-p pagename)
+      (insert pagename)
+    (progn
+      (insert "[[")
+      (insert pagename)
+      (insert "]]"))))
 
 
 (provide 'moinrpc-render)
