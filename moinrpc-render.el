@@ -141,7 +141,7 @@
 
       (setq-local moinrpc-buffer-local-list-type :attachment-list)
       (setq-local moinrpc-current-wiki wiki)
-      (setq-local moinrpc-buffer-local-current-pagename pagename)
+      (setq-local moinrpc-current-pagename pagename)
 
       (read-only-mode -1)
       (erase-buffer)
@@ -163,7 +163,7 @@
     (moinrpc-page-mode)
 
     (setq moinrpc-current-wiki wiki)
-    (setq moinrpc-buffer-local-current-pagename pagename)
+    (setq moinrpc-current-pagename pagename)
 
     (erase-buffer)
     (insert content)

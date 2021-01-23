@@ -53,7 +53,7 @@
     (when wikilink
       (moinrpc-open-page (moinrpc-rel-wikilink-to-abs
                           wikilink
-                          moinrpc-buffer-local-current-pagename)))))
+                          moinrpc-current-pagename)))))
 
 
 (define-derived-mode moinrpc-page-mode outline-mode

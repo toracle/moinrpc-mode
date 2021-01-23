@@ -43,7 +43,7 @@
 (defun moinrpc-list-attachments ()
   (interactive)
   (let* ((wiki moinrpc-current-wiki)
-         (pagename moinrpc-buffer-local-current-pagename)
+         (pagename moinrpc-current-pagename)
          (content (moinrpc-xmlrpc-list-attachments wiki pagename))
          (buffer-name (moinrpc-buffer-name (format "%s:attachments"
                                                    pagename) wiki))
@@ -66,7 +66,7 @@
   "Save current buffer to remote wiki."
   (interactive)
   (moinrpc-put-page moinrpc-current-wiki
-                    moinrpc-buffer-local-current-pagename
+                    moinrpc-current-pagename
                     (moinrpc-strip-text-properties (buffer-string)))
   (set-buffer-modified-p nil)
   (current-buffer))
@@ -84,7 +84,7 @@
          (name (file-name-nondirectory filename))
          (content (moinrpc-read-file filename)))
     (moinrpc-xmlrpc-put-attachment moinrpc-current-wiki
-                            moinrpc-buffer-local-current-pagename
+                            moinrpc-current-pagename
                             name
                             content)
     (moinrpc-list-attachments)))
@@ -94,7 +94,7 @@
   (let* ((overlay (car (overlays-at (point))))
          (name (moinrpc-get-overlay-text overlay)))
     (moinrpc-xmlrpc-delete-attachment moinrpc-current-wiki
-                                      moinrpc-buffer-local-current-pagename
+                                      moinrpc-current-pagename
                                       name)
     (moinrpc-list-attachments)))
 

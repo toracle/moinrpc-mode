@@ -93,7 +93,7 @@
       (should (s-contains-p " * b.jpg"
                             (buffer-string)))
       (should (equal moinrpc-current-wiki :wiki))
-      (should (equal moinrpc-buffer-local-current-pagename "TestPage"))
+      (should (equal moinrpc-current-pagename "TestPage"))
       (should (equal moinrpc-buffer-local-list-type :attachment-list)))))
 
 
