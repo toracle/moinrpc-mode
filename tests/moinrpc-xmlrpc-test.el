@@ -145,4 +145,18 @@
                                 ("params" . ["TestPage" "a.jpg"]))))))))))
 
 
+(ert-deftest moinrpc-xmlrpc-get-page-html-should-fire-request ()
+  (with-dummy-xml-rpc-call
+   (moinrpc-xmlrpc-get-page-html *fixture-wiki* "TestPage")
+   (should (equal *moinrpc-xmlrpc-test-call-history*
+                  '((:server-url
+                     "https://wiki.net/?action=xmlrpc2"
+                     :method
+                     system.multicall
+                     :params (((("methodName" . "applyAuthToken")
+                                ("params" . ["api-token"]))
+                               (("methodName" . "getPageHTML")
+                                ("params" . ["TestPage"]))))))))))
+
+
 (provide 'moinrpc-xmlrpc-test)
