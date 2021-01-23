@@ -111,7 +111,7 @@ Specify WIKI with a PAGENAME."
 				  pagename
 				  content))
 
-(defun moinrpc-get-list-content (wiki)
+(defun moinrpc-xmlrpc-get-all-pages (wiki)
   "Return a list of all page names from WIKI."
   (let*
       ((content (moinrpc-xmlrpc-multi-method-call wiki "getAllPages"))

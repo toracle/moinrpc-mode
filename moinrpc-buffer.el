@@ -111,7 +111,7 @@
   "Find page using helm."
   (interactive)
   (let
-      ((all-pages (moinrpc-get-list-content moinrpc-buffer-local-current-wiki)))
+      ((all-pages (moinrpc-get-all-pages moinrpc-buffer-local-current-wiki)))
     (helm :sources
           '(((name . "All wiki pages")
 	     (candidates . all-pages)

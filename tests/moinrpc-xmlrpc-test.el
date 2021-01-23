@@ -75,9 +75,9 @@
                                 ("params" . ["TestPage" "Test content"]))))))))))
 
 
-(ert-deftest moinrpc-get-list-content-fire-request ()
+(ert-deftest moinrpc-xmlrpc-get-all-pages-should-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-get-list-content *fixture-wiki*)
+   (moinrpc-xmlrpc-get-all-pages *fixture-wiki*)
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
