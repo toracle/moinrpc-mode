@@ -37,7 +37,7 @@
   (with-current-buffer
       buffer
     (moinrpc-front-mode)
-    (setq-local moinrpc-buffer-local-current-wiki wiki)
+    (setq-local moinrpc-current-wiki wiki)
 
     (read-only-mode -1)
     (erase-buffer)
@@ -89,7 +89,7 @@
       (moinrpc-list-mode)
 
       (setq-local moinrpc-buffer-local-list-type :recent-changes)
-      (setq-local moinrpc-buffer-local-current-wiki wiki)
+      (setq-local moinrpc-current-wiki wiki)
 
       (read-only-mode -1)
       (erase-buffer)
@@ -140,7 +140,7 @@
       (moinrpc-attachment-mode)
 
       (setq-local moinrpc-buffer-local-list-type :attachment-list)
-      (setq-local moinrpc-buffer-local-current-wiki wiki)
+      (setq-local moinrpc-current-wiki wiki)
       (setq-local moinrpc-buffer-local-current-pagename pagename)
 
       (read-only-mode -1)
@@ -162,7 +162,7 @@
       buffer
     (moinrpc-page-mode)
 
-    (setq moinrpc-buffer-local-current-wiki wiki)
+    (setq moinrpc-current-wiki wiki)
     (setq moinrpc-buffer-local-current-pagename pagename)
 
     (erase-buffer)

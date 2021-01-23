@@ -33,7 +33,7 @@
 
 (defun moinrpc-recent-changes (&optional last-modified)
   (interactive)
-  (let* ((wiki moinrpc-buffer-local-current-wiki)
+  (let* ((wiki moinrpc-current-wiki)
          (content (moinrpc-xmlrpc-get-recent-changes wiki last-modified))
          (buffer (moinrpc-buffer-name "RecentChanges" wiki)))
     (switch-to-buffer buffer)
@@ -42,7 +42,7 @@
 
 (defun moinrpc-list-attachments ()
   (interactive)
-  (let* ((wiki moinrpc-buffer-local-current-wiki)
+  (let* ((wiki moinrpc-current-wiki)
          (pagename moinrpc-buffer-local-current-pagename)
          (content (moinrpc-xmlrpc-list-attachments wiki pagename))
          (buffer-name (moinrpc-buffer-name (format "%s:attachments"
@@ -53,7 +53,7 @@
 
 
 (defun moinrpc-open-page (pagename)
-  (let* ((wiki moinrpc-buffer-local-current-wiki)
+  (let* ((wiki moinrpc-current-wiki)
          (buffer-name (moinrpc-buffer-name pagename wiki))
          (buffer (get-buffer-create buffer-name))
          (content (moinrpc-xmlrpc-get-page wiki
@@ -65,7 +65,7 @@
 (defun moinrpc-save-page ()
   "Save current buffer to remote wiki."
   (interactive)
-  (moinrpc-put-page moinrpc-buffer-local-current-wiki
+  (moinrpc-put-page moinrpc-current-wiki
                     moinrpc-buffer-local-current-pagename
                     (moinrpc-strip-text-properties (buffer-string)))
   (set-buffer-modified-p nil)
@@ -83,7 +83,7 @@
   (let* ((filename (read-file-name "Select a file to upload:"))
          (name (file-name-nondirectory filename))
          (content (moinrpc-read-file filename)))
-    (moinrpc-xmlrpc-put-attachment moinrpc-buffer-local-current-wiki
+    (moinrpc-xmlrpc-put-attachment moinrpc-current-wiki
                             moinrpc-buffer-local-current-pagename
                             name
                             content)
@@ -93,7 +93,7 @@
 (defun moinrpc-delete-attachment ()
   (let* ((overlay (car (overlays-at (point))))
          (name (moinrpc-get-overlay-text overlay)))
-    (moinrpc-xmlrpc-delete-attachment moinrpc-buffer-local-current-wiki
+    (moinrpc-xmlrpc-delete-attachment moinrpc-current-wiki
                                       moinrpc-buffer-local-current-pagename
                                       name)
     (moinrpc-list-attachments)))
@@ -111,7 +111,7 @@
   "Find page using helm."
   (interactive)
   (let
-      ((all-pages (moinrpc-xmlrpc-get-all-pages moinrpc-buffer-local-current-wiki)))
+      ((all-pages (moinrpc-xmlrpc-get-all-pages moinrpc-current-wiki)))
     (helm :sources
           '(((name . "All wiki pages")
 	     (candidates . all-pages)
@@ -127,7 +127,7 @@
 (defun moinrpc-insert-wikilink ()
   (interactive)
   (let
-      ((all-pages (moinrpc-xmlrpc-get-all-pages moinrpc-buffer-local-current-wiki)))
+      ((all-pages (moinrpc-xmlrpc-get-all-pages moinrpc-current-wiki)))
     (helm :sources
           '(((name . "All wiki pages")
              (candidates . all-pages)

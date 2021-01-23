@@ -69,12 +69,12 @@
       (should (or (s-contains-p "* Page1 by user1 [v1] 2021-01-22 01:30:57 KST"
                                 (buffer-string))
                   (s-contains-p "* Page1 by user1 [v1] 2021-01-21 16:30:57 UTC"
-                            (buffer-string))))
+                                (buffer-string))))
       (should (or (s-contains-p "* Page2 by user2 [v1] 2021-01-22 01:30:57 KST"
                                 (buffer-string))
                   (s-contains-p "* Page2 by user2 [v1] 2021-01-21 16:30:57 UTC"
                                 (buffer-string))))
-      (should (equal moinrpc-buffer-local-current-wiki :wiki))
+      (should (equal moinrpc-current-wiki :wiki))
       (should (equal moinrpc-buffer-local-list-type :recent-changes)))))
 
 
@@ -92,7 +92,7 @@
                             (buffer-string)))
       (should (s-contains-p " * b.jpg"
                             (buffer-string)))
-      (should (equal moinrpc-buffer-local-current-wiki :wiki))
+      (should (equal moinrpc-current-wiki :wiki))
       (should (equal moinrpc-buffer-local-current-pagename "TestPage"))
       (should (equal moinrpc-buffer-local-list-type :attachment-list)))))
 
