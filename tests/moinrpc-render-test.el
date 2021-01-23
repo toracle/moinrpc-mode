@@ -75,7 +75,7 @@
                   (s-contains-p "* Page2 by user2 [v1] 2021-01-21 16:30:57 UTC"
                                 (buffer-string))))
       (should (equal moinrpc-current-wiki :wiki))
-      (should (equal moinrpc-buffer-local-list-type :recent-changes)))))
+      (should (equal moinrpc-list-type :recent-changes)))))
 
 
 (ert-deftest moinrpc-render-list-attachment-should-render-buffer ()
@@ -94,7 +94,7 @@
                             (buffer-string)))
       (should (equal moinrpc-current-wiki :wiki))
       (should (equal moinrpc-current-pagename "TestPage"))
-      (should (equal moinrpc-buffer-local-list-type :attachment-list)))))
+      (should (equal moinrpc-list-type :attachment-list)))))
 
 
 (ert-deftest moinrpc-render-page-should-render-buffer ()
