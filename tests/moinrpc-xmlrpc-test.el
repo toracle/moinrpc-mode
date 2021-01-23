@@ -61,9 +61,9 @@
                                 ("params" . ["TestPage"]))))))))))
 
 
-(ert-deftest moinrpc-save-page-content-fire-request ()
+(ert-deftest moinrpc-xmlrpc-put-page-should-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-save-page-content *fixture-wiki* "TestPage" "Test content")
+   (moinrpc-xmlrpc-put-page *fixture-wiki* "TestPage" "Test content")
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"

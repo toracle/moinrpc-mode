@@ -104,7 +104,7 @@ Specify WIKI with a PAGENAME."
 				  "getPage"
 				  pagename))
 
-(defun moinrpc-save-page-content (wiki pagename content)
+(defun moinrpc-xmlrpc-put-page (wiki pagename content)
   "Save WIKI content with a PAGENAME and CONTENT."
   (moinrpc-xmlrpc-multi-method-call wiki
 				  "putPage"
