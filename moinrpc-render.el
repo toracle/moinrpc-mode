@@ -88,7 +88,6 @@
     (let ((prev-name nil))
       (moinrpc-list-mode)
 
-      (setq-local moinrpc-list-type :recent-changes)
       (setq-local moinrpc-current-wiki wiki)
 
       (read-only-mode -1)
@@ -139,7 +138,6 @@
     (let ((entries content))
       (moinrpc-attachment-mode)
 
-      (setq-local moinrpc-list-type :attachment-list)
       (setq-local moinrpc-current-wiki wiki)
       (setq-local moinrpc-current-pagename pagename)
 
