@@ -80,6 +80,7 @@ There are some other modes for moinmoin supports:
 
  - #6 refactor: remove unnecessary `*moinrpc-content-provider*` (#7)
  - #8 refactor: separate layers (#9)
+ - #10 refactor: match xmlrpc endpoint name (#11)
 
 
 *** v1.0.1
