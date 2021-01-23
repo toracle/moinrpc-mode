@@ -37,7 +37,7 @@
   (with-current-buffer
       buffer
     (moinrpc-front-mode)
-    (setq-local moinrpc-buffer-local-current-wiki wiki)
+    (setq-local moinrpc-current-wiki wiki)
 
     (read-only-mode -1)
     (erase-buffer)
@@ -88,8 +88,7 @@
     (let ((prev-name nil))
       (moinrpc-list-mode)
 
-      (setq-local moinrpc-buffer-local-list-type :recent-changes)
-      (setq-local moinrpc-buffer-local-current-wiki wiki)
+      (setq-local moinrpc-current-wiki wiki)
 
       (read-only-mode -1)
       (erase-buffer)
@@ -139,9 +138,8 @@
     (let ((entries content))
       (moinrpc-attachment-mode)
 
-      (setq-local moinrpc-buffer-local-list-type :attachment-list)
-      (setq-local moinrpc-buffer-local-current-wiki wiki)
-      (setq-local moinrpc-buffer-local-current-pagename pagename)
+      (setq-local moinrpc-current-wiki wiki)
+      (setq-local moinrpc-current-pagename pagename)
 
       (read-only-mode -1)
       (erase-buffer)
@@ -162,8 +160,8 @@
       buffer
     (moinrpc-page-mode)
 
-    (setq moinrpc-buffer-local-current-wiki wiki)
-    (setq moinrpc-buffer-local-current-pagename pagename)
+    (setq moinrpc-current-wiki wiki)
+    (setq moinrpc-current-pagename pagename)
 
     (erase-buffer)
     (insert content)

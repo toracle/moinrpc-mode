@@ -55,7 +55,8 @@
 
       (should (s-contains-p "Wiki: wiki-1" (buffer-string)))
       (should (s-contains-p " [Recent Changes] [Find Page]"
-                            (buffer-string))))))
+                            (buffer-string)))
+      (should (equal moinrpc-current-wiki *moinrpc-fixture-single-wiki*)))))
 
 
 (ert-deftest moinrpc-render-recent-changes-should-render-buffer ()
@@ -69,13 +70,12 @@
       (should (or (s-contains-p "* Page1 by user1 [v1] 2021-01-22 01:30:57 KST"
                                 (buffer-string))
                   (s-contains-p "* Page1 by user1 [v1] 2021-01-21 16:30:57 UTC"
-                            (buffer-string))))
+                                (buffer-string))))
       (should (or (s-contains-p "* Page2 by user2 [v1] 2021-01-22 01:30:57 KST"
                                 (buffer-string))
                   (s-contains-p "* Page2 by user2 [v1] 2021-01-21 16:30:57 UTC"
                                 (buffer-string))))
-      (should (equal moinrpc-buffer-local-current-wiki :wiki))
-      (should (equal moinrpc-buffer-local-list-type :recent-changes)))))
+      (should (equal moinrpc-current-wiki :wiki)))))
 
 
 (ert-deftest moinrpc-render-list-attachment-should-render-buffer ()
@@ -92,9 +92,8 @@
                             (buffer-string)))
       (should (s-contains-p " * b.jpg"
                             (buffer-string)))
-      (should (equal moinrpc-buffer-local-current-wiki :wiki))
-      (should (equal moinrpc-buffer-local-current-pagename "TestPage"))
-      (should (equal moinrpc-buffer-local-list-type :attachment-list)))))
+      (should (equal moinrpc-current-wiki :wiki))
+      (should (equal moinrpc-current-pagename "TestPage")))))
 
 
 (ert-deftest moinrpc-render-page-should-render-buffer ()
@@ -105,7 +104,9 @@
                            "Test content"
                            *moinrpc-fixture-single-wiki*)
 
-      (should (s-contains-p "Test content" (buffer-string))))))
+      (should (s-contains-p "Test content" (buffer-string)))
+      (should (equal moinrpc-current-wiki *moinrpc-fixture-single-wiki*))
+      (should (equal moinrpc-current-pagename "TestPage")))))
 
 
 (provide 'moinrpc-render-test)
