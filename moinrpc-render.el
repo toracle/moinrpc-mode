@@ -58,7 +58,7 @@
                              (moinrpc-get-overlay-text overlay))))
   (insert (format " by %s" author))
   (insert (format " [v%s] " version))
-  (insert (format-time-string "%F %T" (cadr last-modified)))
+  (insert (format-time-string "%F %T %Z" (cadr last-modified)))
   (newline))
 
 

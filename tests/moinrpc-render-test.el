@@ -66,10 +66,14 @@
                                      :wiki)
 
       (should (s-contains-p "Recent Changes:" (buffer-string)))
-      (should (s-contains-p "* Page1 by user1 [v1] 2021-01-22 01:30:57"
-                            (buffer-string)))
-      (should (s-contains-p "* Page2 by user2 [v1] 2021-01-22 01:30:57"
-                            (buffer-string)))
+      (should (or (s-contains-p "* Page1 by user1 [v1] 2021-01-22 01:30:57 KST"
+                                (buffer-string))
+                  (s-contains-p "* Page1 by user1 [v1] 2021-01-21 16:30:57 UTC"
+                            (buffer-string))))
+      (should (or (s-contains-p "* Page2 by user2 [v1] 2021-01-22 01:30:57 KST"
+                                (buffer-string))
+                  (s-contains-p "* Page2 by user2 [v1] 2021-01-21 16:30:57 UTC"
+                                (buffer-string))))
       (should (equal moinrpc-buffer-local-current-wiki :wiki))
       (should (equal moinrpc-buffer-local-list-type :recent-changes)))))
 
