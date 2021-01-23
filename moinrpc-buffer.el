@@ -34,7 +34,7 @@
 (defun moinrpc-recent-changes (&optional last-modified)
   (interactive)
   (let* ((wiki moinrpc-buffer-local-current-wiki)
-         (content (moinrpc-xmlrpc-recent-changes wiki last-modified))
+         (content (moinrpc-xmlrpc-get-recent-changes wiki last-modified))
          (buffer (moinrpc-buffer-name "RecentChanges" wiki)))
     (switch-to-buffer buffer)
     (moinrpc-render-recent-changes buffer content wiki)))

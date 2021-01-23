@@ -119,7 +119,7 @@ Specify WIKI with a PAGENAME."
     sorted-content))
 
 
-(defun moinrpc-xmlrpc-recent-changes (wiki &optional timestamp)
+(defun moinrpc-xmlrpc-get-recent-changes (wiki &optional timestamp)
   (let ((since timestamp))
     (unless timestamp
       (setq since (time-subtract (current-time) (* 3600 24 7))))

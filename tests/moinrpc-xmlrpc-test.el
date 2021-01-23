@@ -89,9 +89,9 @@
                                 ("params" . []))))))))))
 
 
-(ert-deftest moinrpc-xmlrpc-recent-changes-fire-request ()
+(ert-deftest moinrpc-xmlrpc-get-recent-changes-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-xmlrpc-recent-changes *fixture-wiki* '(24587 43080))
+   (moinrpc-xmlrpc-get-recent-changes *fixture-wiki* '(24587 43080))
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
