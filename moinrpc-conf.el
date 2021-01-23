@@ -52,7 +52,7 @@
                                                xmlrpc-endpoint
                                                username))
     (setq xmlrpc-api-token
-          (moinrpc-get-auth-token wiki-setting))
+          (moinrpc-xmlrpc-get-auth-token wiki-setting))
     (moinrpc-make-wiki-conf wiki-alias
                             xmlrpc-endpoint
                             username

@@ -10,25 +10,25 @@
     (xmlrpc-api-token . "api-token")))
 
 
-(ert-deftest moinrpc-check-xmlrpc-response ()
+(ert-deftest moinrpc-xmlrpc-check-response ()
   (my-fixture
    (lambda ()
-     (should (equal (moinrpc-check-xmlrpc-response
+     (should (equal (moinrpc-xmlrpc-check-response
                      *moinrpc-fixture-response-get-pages*
 		     *moinrpc-fixture-wiki*
 		     nil)
 		    t))
-     (should (equal (moinrpc-check-xmlrpc-response
+     (should (equal (moinrpc-xmlrpc-check-response
                      *moinrpc-fixture-response-error-invalid-token*
 		     *moinrpc-fixture-wiki*
 		     #'moinrpc-on-error-mockup)
 		    nil)))))
 
 
-(ert-deftest moinrpc-encode-xml-rpc-multi-each-method ()
+(ert-deftest moinrpc-xml-encode-rpc-multi-each-method ()
   (my-fixture
    (lambda ()
-     (should (equal (moinrpc-encode-xml-rpc-multi-each-method 'getPage "TestPage")
+     (should (equal (moinrpc-xml-encode-rpc-multi-each-method 'getPage "TestPage")
 		    '(("methodName" . getPage) ("params" . ["TestPage"])))))))
 
 
@@ -47,9 +47,9 @@
      (advice-remove 'xml-rpc-method-call 'dummy-xml-rpc-method-call)))
 
 
-(ert-deftest moinrpc-get-page-content-fire-request ()
+(ert-deftest moinrpc-xmlrpc-get-page-content-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-get-page-content *fixture-wiki* "TestPage")
+   (moinrpc-xmlrpc-get-page-content *fixture-wiki* "TestPage")
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
