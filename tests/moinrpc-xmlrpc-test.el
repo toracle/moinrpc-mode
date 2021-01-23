@@ -47,9 +47,9 @@
      (advice-remove 'xml-rpc-method-call 'dummy-xml-rpc-method-call)))
 
 
-(ert-deftest moinrpc-xmlrpc-get-page-content-fire-request ()
+(ert-deftest moinrpc-xmlrpc-get-page-should-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-xmlrpc-get-page-content *fixture-wiki* "TestPage")
+   (moinrpc-xmlrpc-get-page *fixture-wiki* "TestPage")
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
@@ -61,9 +61,9 @@
                                 ("params" . ["TestPage"]))))))))))
 
 
-(ert-deftest moinrpc-save-page-content-fire-request ()
+(ert-deftest moinrpc-xmlrpc-put-page-should-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-save-page-content *fixture-wiki* "TestPage" "Test content")
+   (moinrpc-xmlrpc-put-page *fixture-wiki* "TestPage" "Test content")
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
@@ -75,9 +75,9 @@
                                 ("params" . ["TestPage" "Test content"]))))))))))
 
 
-(ert-deftest moinrpc-get-list-content-fire-request ()
+(ert-deftest moinrpc-xmlrpc-get-all-pages-should-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-get-list-content *fixture-wiki*)
+   (moinrpc-xmlrpc-get-all-pages *fixture-wiki*)
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
@@ -89,9 +89,9 @@
                                 ("params" . []))))))))))
 
 
-(ert-deftest moinrpc-xmlrpc-recent-changes-fire-request ()
+(ert-deftest moinrpc-xmlrpc-get-recent-changes-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-xmlrpc-recent-changes *fixture-wiki* '(24587 43080))
+   (moinrpc-xmlrpc-get-recent-changes *fixture-wiki* '(24587 43080))
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"

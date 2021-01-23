@@ -97,21 +97,21 @@
 			 (moinrpc-get-wiki-conf wiki 'username)
 			 password)))
     
-(defun moinrpc-xmlrpc-get-page-content (wiki pagename)
+(defun moinrpc-xmlrpc-get-page (wiki pagename)
   "Return raw wiki content string of a page.
 Specify WIKI with a PAGENAME."
   (moinrpc-xmlrpc-multi-method-call wiki
 				  "getPage"
 				  pagename))
 
-(defun moinrpc-save-page-content (wiki pagename content)
+(defun moinrpc-xmlrpc-put-page (wiki pagename content)
   "Save WIKI content with a PAGENAME and CONTENT."
   (moinrpc-xmlrpc-multi-method-call wiki
 				  "putPage"
 				  pagename
 				  content))
 
-(defun moinrpc-get-list-content (wiki)
+(defun moinrpc-xmlrpc-get-all-pages (wiki)
   "Return a list of all page names from WIKI."
   (let*
       ((content (moinrpc-xmlrpc-multi-method-call wiki "getAllPages"))
@@ -119,7 +119,7 @@ Specify WIKI with a PAGENAME."
     sorted-content))
 
 
-(defun moinrpc-xmlrpc-recent-changes (wiki &optional timestamp)
+(defun moinrpc-xmlrpc-get-recent-changes (wiki &optional timestamp)
   (let ((since timestamp))
     (unless timestamp
       (setq since (time-subtract (current-time) (* 3600 24 7))))

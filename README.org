@@ -63,10 +63,10 @@ There are some other modes for moinmoin supports:
  - [X] User friendly wiki setting
  - [X] Recent changes
  - [X] Attachment handling (put, get, list, delete)
+ - [ ] Find reverse links of a page
  - [ ] ~C-j~ to complete a helm candidate
  - [ ] Align table
  - [ ] Syntax highlighting (already there is a nice moinmoin-mode but it [[http://d.hatena.ne.jp/ymorimo/20070308/1173373043][contains some error]])
- - [ ] Find reverse links of a page
  - [ ] ~C-c C-l~: insert wiki link with helm page search
  - [ ] Search page
  - [ ] Conflict detection (compare local and remote page version before save and give diff when it conflicts)
@@ -80,6 +80,7 @@ There are some other modes for moinmoin supports:
 
  - #6 refactor: remove unnecessary `*moinrpc-content-provider*` (#7)
  - #8 refactor: separate layers (#9)
+ - #10 refactor: match xmlrpc endpoint name (#11)
 
 
 *** v1.0.1

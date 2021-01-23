@@ -34,7 +34,7 @@
 (defun moinrpc-recent-changes (&optional last-modified)
   (interactive)
   (let* ((wiki moinrpc-buffer-local-current-wiki)
-         (content (moinrpc-xmlrpc-recent-changes wiki last-modified))
+         (content (moinrpc-xmlrpc-get-recent-changes wiki last-modified))
          (buffer (moinrpc-buffer-name "RecentChanges" wiki)))
     (switch-to-buffer buffer)
     (moinrpc-render-recent-changes buffer content wiki)))
@@ -56,8 +56,8 @@
   (let* ((wiki moinrpc-buffer-local-current-wiki)
          (buffer-name (moinrpc-buffer-name pagename wiki))
          (buffer (get-buffer-create buffer-name))
-         (content (moinrpc-xmlrpc-get-page-content wiki
-                                            pagename)))
+         (content (moinrpc-xmlrpc-get-page wiki
+                                           pagename)))
     (switch-to-buffer buffer)
     (moinrpc-render-page buffer pagename content wiki)))
 
@@ -65,9 +65,9 @@
 (defun moinrpc-save-page ()
   "Save current buffer to remote wiki."
   (interactive)
-  (moinrpc-save-page-content moinrpc-buffer-local-current-wiki
-                             moinrpc-buffer-local-current-pagename
-                             (moinrpc-strip-text-properties (buffer-string)))
+  (moinrpc-put-page moinrpc-buffer-local-current-wiki
+                    moinrpc-buffer-local-current-pagename
+                    (moinrpc-strip-text-properties (buffer-string)))
   (set-buffer-modified-p nil)
   (current-buffer))
 
@@ -111,7 +111,7 @@
   "Find page using helm."
   (interactive)
   (let
-      ((all-pages (moinrpc-get-list-content moinrpc-buffer-local-current-wiki)))
+      ((all-pages (moinrpc-get-all-pages moinrpc-buffer-local-current-wiki)))
     (helm :sources
           '(((name . "All wiki pages")
 	     (candidates . all-pages)
