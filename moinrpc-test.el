@@ -5,5 +5,7 @@
 (require 'moinrpc-conf-test)
 (require 'moinrpc-mode-test)
 (require 'moinrpc-xmlrpc-test)
+(require 'moinrpc-render-test)
+(require 'moinrpc-common-test)
 
 (ert t)
