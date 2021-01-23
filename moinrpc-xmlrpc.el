@@ -152,5 +152,12 @@ Specify WIKI with a PAGENAME."
                                      name))
 
 
+(defun moinrpc-xmlrpc-get-page-html (wiki pagename)
+  "Get HTML of a page has PAGENAME from WIKI."
+  (moinrpc-xmlrpc-multi-method-call wiki
+                                    "getPageHTML"
+                                    pagename))
+
+
 (provide 'moinrpc-xmlrpc)
 ;;; moinrpc-xmlrpc.el ends here
