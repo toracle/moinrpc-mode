@@ -1,6 +1,18 @@
 (require 'moinrpc-common)
 
 
+(defmacro moinrpc-insert-decorated-button (prefix label postfix &rest params)
+  (declare (indent 3) (debug t))
+  `(progn
+     (unless (null ,prefix)
+       (insert ,prefix))
+
+     (insert-button ,label ,@params)
+
+     (unless (null ,postfix)
+       (insert ,postfix))))
+
+
 (defun moinrpc-render-main-page (buffer content)
   (with-current-buffer
       buffer
@@ -35,29 +47,31 @@
                     (cdr (assoc 'username wiki))))
     (newline)
     (newline)
-    (insert " ")
-    (insert "[")
-    (insert-button "Recent Changes"
-                   'follow-link "\C-m"
-                   'action '(lambda (button)
-                              (moinrpc-recent-changes)))
-    (insert "] [")
-    (insert-button "Find Page"
-                   'follow-link "\C-m"
-                   'action '(lambda (button)
-                              (moinrpc-helm-find-page)))
-    (insert "]")
+    (moinrpc-insert-decorated-button
+        " [" "Recent Changes" "]"
+      'follow-link "\C-m"
+      'action '(lambda (button)
+                 (moinrpc-recent-changes)))
+
+    (moinrpc-insert-decorated-button
+        " [" "Find Page" "]"
+      'follow-link "\C-m"
+      'action '(lambda (button)
+                 (moinrpc-helm-find-page)))
+
     (newline)
     (goto-char 1)
     (read-only-mode)))
 
 
 (defun moinrpc-render-add-recent-changes-entry (name author version last-modified)
-  (insert " * ")
-  (insert-button name
-                 'action '(lambda (overlay)
-                            (moinrpc-open-page
-                             (moinrpc-get-overlay-text overlay))))
+  (moinrpc-insert-decorated-button
+      " * " name nil
+    'follow-link "\C-m"
+    'action '(lambda (overlay)
+               (moinrpc-open-page
+                (moinrpc-get-overlay-text overlay))))
+
   (insert (format " by %s" author))
   (insert (format " [v%s] " version))
   (insert (format-time-string "%F %T %Z" (cadr last-modified)))
@@ -82,22 +96,25 @@
       (insert "Recent Changes:")
       (newline)
       (newline)
-      (insert " [")
-      (insert-button "7 days"
-                     'follow-link "\C-m"
-                     'action '(lambda (button)
-                                (moinrpc-recent-changes (moinrpc-date-since 7))))
-      (insert "] [")
-      (insert-button "30 days"
-                     'follow-link "\C-m"
-                     'action '(lambda (button)
-                                (moinrpc-recent-changes (moinrpc-date-since 30))))
-      (insert "] [")
-      (insert-button "90 days"
-                     'follow-link "\C-m"
-                     'action '(lambda (button)
-                                (moinrpc-recent-changes (moinrpc-date-since 90))))
-      (insert "]")
+
+      (moinrpc-insert-decorated-button
+          " [" "7 days" "]"
+        'follow-link "\C-m"
+        'action '(lambda (button)
+                   (moinrpc-recent-changes (moinrpc-date-since 7))))
+
+      (moinrpc-insert-decorated-button
+          " [" "30 days" "]"
+        'follow-link "\C-m"
+        'action '(lambda (button)
+                   (moinrpc-recent-changes (moinrpc-date-since 30))))
+
+      (moinrpc-insert-decorated-button
+          " [" "90 days" "]"
+        'follow-link "\C-m"
+        'action '(lambda (button)
+                   (moinrpc-recent-changes (moinrpc-date-since 90))))
+
       (newline)
       (newline)
       (dolist (entry content)
