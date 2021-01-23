@@ -62,6 +62,10 @@
   (newline))
 
 
+(defun moinrpc-date-since (days)
+  (time-subtract (current-time) (* 3600 24 days)))
+
+
 (defun moinrpc-render-recent-changes (buffer content wiki)
   (with-current-buffer
       buffer
@@ -74,6 +78,24 @@
       (read-only-mode -1)
       (erase-buffer)
       (insert "Recent Changes:")
+      (newline)
+      (newline)
+      (insert " [")
+      (insert-button "7 days"
+                     'follow-link "\C-m"
+                     'action '(lambda (button)
+                                (moinrpc-recent-changes (moinrpc-date-since 7))))
+      (insert "] [")
+      (insert-button "30 days"
+                     'follow-link "\C-m"
+                     'action '(lambda (button)
+                                (moinrpc-recent-changes (moinrpc-date-since 30))))
+      (insert "] [")
+      (insert-button "90 days"
+                     'follow-link "\C-m"
+                     'action '(lambda (button)
+                                (moinrpc-recent-changes (moinrpc-date-since 90))))
+      (insert "]")
       (newline)
       (newline)
       (dolist (entry content)
