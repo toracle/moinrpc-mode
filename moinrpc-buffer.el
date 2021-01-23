@@ -56,8 +56,8 @@
   (let* ((wiki moinrpc-buffer-local-current-wiki)
          (buffer-name (moinrpc-buffer-name pagename wiki))
          (buffer (get-buffer-create buffer-name))
-         (content (moinrpc-xmlrpc-get-page-content wiki
-                                            pagename)))
+         (content (moinrpc-xmlrpc-get-page wiki
+                                           pagename)))
     (switch-to-buffer buffer)
     (moinrpc-render-page buffer pagename content wiki)))
 

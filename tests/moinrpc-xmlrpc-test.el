@@ -47,9 +47,9 @@
      (advice-remove 'xml-rpc-method-call 'dummy-xml-rpc-method-call)))
 
 
-(ert-deftest moinrpc-xmlrpc-get-page-content-fire-request ()
+(ert-deftest moinrpc-xmlrpc-get-page-should-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-xmlrpc-get-page-content *fixture-wiki* "TestPage")
+   (moinrpc-xmlrpc-get-page *fixture-wiki* "TestPage")
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"

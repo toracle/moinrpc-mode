@@ -97,7 +97,7 @@
 			 (moinrpc-get-wiki-conf wiki 'username)
 			 password)))
     
-(defun moinrpc-xmlrpc-get-page-content (wiki pagename)
+(defun moinrpc-xmlrpc-get-page (wiki pagename)
   "Return raw wiki content string of a page.
 Specify WIKI with a PAGENAME."
   (moinrpc-xmlrpc-multi-method-call wiki
