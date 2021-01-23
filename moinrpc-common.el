@@ -8,6 +8,14 @@
 (defvar moinrpc-buffer-name-wiki-format )
 
 
+(defvar moinrpc-regex-bracket-wikilink
+  "\\[\\[[^|]+?\\]\\]")
+
+
+(defvar moinrpc-regex-wikilink
+  "\\([A-Z][a-z]+\\)+?")
+
+
 (defun moinrpc-wiki-name (wiki)
   (cdr (assoc 'wiki-alias wiki)))
 
@@ -33,6 +41,26 @@
 (defun moinrpc-get-overlay-text (overlay)
   (buffer-substring (overlay-start overlay)
                     (overlay-end overlay)))
+
+
+(defun moinrpc-wikilink-p (&optional word)
+  "."
+  (if (null word)
+      (thing-at-point-looking-at moinrpc-regex-wikilink
+                                 100)
+    (not (null (string-match moinrpc-regex-wikilink
+                             word)))))
+  
+
+
+(defun moinrpc-bracket-wikilink-p (&optional word)
+  "."
+  (if (null word)
+      (thing-at-point-looking-at moinrpc-regex-bracket-wikilink
+                                 100)
+    (not (null (string-match moinrpc-regex-bracket-wikilink
+                             word)))))
+
 
 
 (provide 'moinrpc-common)

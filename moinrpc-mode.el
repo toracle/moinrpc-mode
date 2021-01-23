@@ -11,6 +11,7 @@
 (require 'moinrpc-buffer)
 (require 'moinrpc-render)
 (require 'moinrpc-conf)
+(require 'moinrpc-common)
 
 
 ;;; Wiki setting
@@ -24,24 +25,6 @@
     (moinrpc-create-wiki-setting wiki-alias
                                  xmlrpc-endpoint
                                  username)))
-
-
-(defvar moinrpc-regex-bracket-wikilink
-  "\\[\\[[^|]+?\\]\\]")
-
-
-(defvar moinrpc-regex-wikilink
-  "\\([A-Z][a-z]+\\)+?")
-
-
-(defun moinrpc-wikilink-p ()
-  "."
-  (thing-at-point-looking-at moinrpc-regex-wikilink 100))
-
-
-(defun moinrpc-bracket-wikilink-p ()
-  "."
-  (thing-at-point-looking-at moinrpc-regex-bracket-wikilink 100))
 
 
 (defun moinrpc-wikilink-at-point ()
@@ -82,6 +65,7 @@
   (local-set-key (kbd "C-x C-f") 'moinrpc-helm-find-page)
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
   (local-set-key (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)
+  (local-set-key (kbd "C-c C-l") 'moinrpc-insert-wikilink)
   (local-set-key (kbd "C-c t 1") 'moinrpc-wrap-title-level-1)
   (local-set-key (kbd "C-c t 2") 'moinrpc-wrap-title-level-2)
   (local-set-key (kbd "C-c t 3") 'moinrpc-wrap-title-level-3)

@@ -82,6 +82,7 @@ There are some other modes for moinmoin supports:
  - #8 refactor: separate layers (#9)
  - #10 refactor: match xmlrpc endpoint name (#11)
  - #12 add some more xmlrpc endpoints (#13)
+ - #14 add `moinrpc-insert-wikilink` (#15)
 
 
 *** v1.0.1
