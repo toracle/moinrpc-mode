@@ -45,7 +45,7 @@ Select a wikipage, then a new buffer will be opened with content. Edit the page 
  - ~C-c C-f~: Open page or create a new one
  - ~C-x C-f~: Open page or create a new one (using Helm)
  - ~C-x C-s~: Save page
- - ~C-c C-o~: Open a wikilink which is cursor on. Currently only works for bracketed link, not for camel case link.
+ - ~C-c C-o~: Open a wikilink which is cursor on.
  - ~TAB~: fold/unfold sub-tree headings
 
 
@@ -79,6 +79,7 @@ There are some other modes for moinmoin supports:
 *** Unreleased
 
  - #6 refactor: remove unnecessary `*moinrpc-content-provider*` (#7)
+ - #8 refactor: separate layers (#9)
 
 
 *** v1.0.1
