@@ -122,11 +122,10 @@ Specify WIKI with a PAGENAME."
 (defun moinrpc-xmlrpc-recent-changes (wiki &optional timestamp)
   (let ((since timestamp))
     (unless timestamp
-      (setq since (time-subtract (current-time) (* 3600 24 90))))
+      (setq since (time-subtract (current-time) (* 3600 24 7))))
     (moinrpc-xmlrpc-multi-method-call wiki
                                        "getRecentChanges"
-                                       (format-time-string "%F"
-                                                           since))))
+                                       (list :datetime since))))
 
 
 (defun moinrpc-xmlrpc-list-attachments (wiki pagename)

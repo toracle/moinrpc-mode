@@ -91,7 +91,7 @@
 
 (ert-deftest moinrpc-xmlrpc-recent-changes-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-xmlrpc-recent-changes *fixture-wiki* 1610852783.2646885)
+   (moinrpc-xmlrpc-recent-changes *fixture-wiki* '(24587 43080))
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
@@ -100,7 +100,7 @@
                      :params (((("methodName" . "applyAuthToken")
                                 ("params" . ["api-token"]))
                                (("methodName" . "getRecentChanges")
-                                ("params" . ["2021-01-17"]))))))))))
+                                ("params" . [(:datetime (24587 43080))]))))))))))
 
 
 (ert-deftest moinrpc-xmlrpc-list-attachments-should-fire-request ()
