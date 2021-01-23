@@ -159,5 +159,42 @@ Specify WIKI with a PAGENAME."
                                     pagename))
 
 
+(defun moinrpc-xmlrpc-list-links (wiki pagename)
+  "List links for a given page has PAGENAME from WIKI."
+  (moinrpc-xmlrpc-multi-method-call wiki
+                                    "listLinks"
+                                    pagename))
+
+
+(defun moinrpc-xmlrpc-rename-page (wiki pagename new-pagename)
+  "Rename a page has PAGENAME to NEW-PAGENAME of WIKI."
+  (moinrpc-xmlrpc-multi-method-call wiki
+                                    "renamePage"
+                                    pagename
+                                    new-pagename))
+
+
+(defun moinrpc-xmlrpc-search-pages (wiki query-string)
+  (moinrpc-xmlrpc-multi-method-call wiki
+                                    "searchPages"
+                                    query-string))
+
+
+(defun moinrpc-xmlrpc-get-moin-version (wiki)
+  (moinrpc-xmlrpc-multi-method-call wiki
+                                    "getMoinVersion"))
+
+
+(defun moinrpc-xmlrpc-get-rpc-version-supported (wiki)
+  (moinrpc-xmlrpc-multi-method-call wiki
+                                    "getRPCVersionSupported"))
+
+
+(defun moinrpc-xmlrpc-get-page-info (wiki pagename)
+  (moinrpc-xmlrpc-multi-method-call wiki
+                                    "getPageInfo"
+                                    pagename))
+
+
 (provide 'moinrpc-xmlrpc)
 ;;; moinrpc-xmlrpc.el ends here
