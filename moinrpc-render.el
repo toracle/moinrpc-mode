@@ -30,7 +30,9 @@
     (read-only-mode -1)
     (erase-buffer)
 
-    (insert (format "Wiki: %s" (cdr (assoc 'wiki-alias wiki))))
+    (insert (format "Wiki: %s (logged as %s)"
+                    (cdr (assoc 'wiki-alias wiki))
+                    (cdr (assoc 'username wiki))))
     (newline)
     (newline)
     (insert " ")
