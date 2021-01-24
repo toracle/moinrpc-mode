@@ -160,8 +160,8 @@
       buffer
     (moinrpc-page-mode)
 
-    (setq moinrpc-current-wiki wiki)
-    (setq moinrpc-current-pagename pagename)
+    (setq-local moinrpc-current-wiki wiki)
+    (setq-local moinrpc-current-pagename pagename)
 
     (erase-buffer)
     (insert content)
