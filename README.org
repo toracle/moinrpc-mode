@@ -57,21 +57,23 @@ There are some other modes for moinmoin supports:
  - moinmoin-mode
 
 
-** To-do [5/13]
+** To-do [6/15]
 
  - [X] ~C-c C-o~: follow a WikiLink
  - [X] User friendly wiki setting
  - [X] Recent changes
  - [X] Attachment handling (put, get, list, delete)
  - [X] Find reverse links of a page (moinmoin doesn't support this kind of API)
- - [ ] ~C-c C-l~: insert wiki link with helm page search
+ - [X] ~C-c C-l~: insert wiki link with helm page search
+ - [ ] Support template page. Load template page from new or existing page
+ - [ ] Search page
  - [ ] ~C-j~ to complete a helm candidate
  - [ ] Align table
  - [ ] Syntax highlighting (already there is a nice moinmoin-mode but it [[http://d.hatena.ne.jp/ymorimo/20070308/1173373043][contains some error]])
- - [ ] Search page
  - [ ] Conflict detection (compare local and remote page version before save and give diff when it conflicts)
  - [ ] Render page to HTML and display it on eww
  - [ ] Display embeded image
+ - [ ] Something like org-babel
 
 
 ** Change logs
@@ -84,6 +86,7 @@ There are some other modes for moinmoin supports:
  - #12 add some more xmlrpc endpoints (#13)
  - #14 add `moinrpc-insert-wikilink` (#15)
  - #16 simplify buffer-local variable name (#17)
+ - add wiki front page
 
 
 *** v1.0.1
