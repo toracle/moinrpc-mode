@@ -65,9 +65,9 @@
 (defun moinrpc-save-page ()
   "Save current buffer to remote wiki."
   (interactive)
-  (moinrpc-put-page moinrpc-current-wiki
-                    moinrpc-current-pagename
-                    (moinrpc-strip-text-properties (buffer-string)))
+  (moinrpc-xmlrpc-put-page moinrpc-current-wiki
+                           moinrpc-current-pagename
+                           (moinrpc-strip-text-properties (buffer-string)))
   (set-buffer-modified-p nil)
   (current-buffer))
 
