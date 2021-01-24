@@ -16,45 +16,6 @@
 
 ;;; Wiki setting
 
-(defun moinrpc-create-wiki-setting-i ()
-  "."
-  (interactive)
-  (let* ((wiki-alias (read-string "Wiki alias: "))
-         (xmlrpc-endpoint (read-string "XML-RPC endpoint: "))
-         (username (read-string "Username: ")))
-    (moinrpc-create-wiki-setting wiki-alias
-                                 xmlrpc-endpoint
-                                 username)))
-
-
-(defun moinrpc-wikilink-at-point ()
-  "."
-  (cond ((moinrpc-bracket-wikilink-p)
-         (let ((wikilink-bracket (buffer-substring (match-beginning 0)
-                                                   (match-end 0))))
-           (substring wikilink-bracket 2 -2)))
-        ((moinrpc-wikilink-p)
-         (buffer-substring (match-beginning 0)
-                           (match-end 0)))))
-
-
-(defun moinrpc-rel-wikilink-to-abs (wikilink parent)
-  (if (or (s-starts-with? "/" wikilink)
-          (s-starts-with? ".." wikilink))
-      (format "%s%s" parent wikilink)
-    wikilink))
-
-
-(defun moinrpc-open-wikilink-at-point ()
-  "."
-  (interactive)
-  (let ((wikilink (moinrpc-wikilink-at-point))
-        (pagename nil))
-    (when wikilink
-      (moinrpc-open-page (moinrpc-rel-wikilink-to-abs
-                          wikilink
-                          moinrpc-current-pagename)))))
-
 
 (define-derived-mode moinrpc-page-mode outline-mode
   (setq mode-name "moinrpc-page-mode")
