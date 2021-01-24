@@ -28,13 +28,13 @@
   (local-set-key (kbd "C-c C-r") 'moinrpc-recent-changes)
   (local-set-key (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)
   (local-set-key (kbd "C-c C-l") 'moinrpc-insert-wikilink)
+  (local-set-key (kbd "C-c C-a") 'moinrpc-list-attachments)
   (local-set-key (kbd "C-c t 1") 'moinrpc-wrap-title-level-1)
   (local-set-key (kbd "C-c t 2") 'moinrpc-wrap-title-level-2)
   (local-set-key (kbd "C-c t 3") 'moinrpc-wrap-title-level-3)
   (local-set-key (kbd "C-c t 4") 'moinrpc-wrap-title-level-4)
   (local-set-key (kbd "M-RET") 'org-meta-return)
-  (local-set-key (kbd "TAB") 'org-cycle)
-  (local-set-key (kbd "C-c a") 'moinrpc-list-attachments))
+  (local-set-key (kbd "TAB") 'org-cycle))
 
 
 (define-derived-mode moinrpc-list-mode fundamental-mode
