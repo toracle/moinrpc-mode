@@ -73,7 +73,8 @@ There are some other modes for moinmoin supports:
  - [ ] Conflict detection (compare local and remote page version before save and give diff when it conflicts)
  - [ ] Render page to HTML and display it on eww
  - [ ] Display embeded image
- - [ ] Something like org-babel
+ - [ ] Render org-mode markup
+ - [ ] Something like org-babel, execute block and attach output file
 
 
 ** Change logs
