@@ -13,7 +13,7 @@
 
 
 (defvar moinrpc-regex-wikilink
-  "\\([A-Z][a-z]+\\)+?")
+  "\\([A-Z][a-z]+\\)\\{2,\\}?")
 
 
 (defun moinrpc-wiki-name (wiki)
@@ -48,19 +48,17 @@
   (if (null word)
       (thing-at-point-looking-at moinrpc-regex-wikilink
                                  100)
-    (not (null (string-match moinrpc-regex-wikilink
-                             word)))))
+    (string-match-p (format "^%s$" moinrpc-regex-wikilink)
+                    word)))
   
-
 
 (defun moinrpc-bracket-wikilink-p (&optional word)
   "."
   (if (null word)
       (thing-at-point-looking-at moinrpc-regex-bracket-wikilink
                                  100)
-    (not (null (string-match moinrpc-regex-bracket-wikilink
-                             word)))))
-
+    (string-match-p (format "^%s$" moinrpc-regex-bracket-wikilink)
+                    word)))
 
 
 (provide 'moinrpc-common)
