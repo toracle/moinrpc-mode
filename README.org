@@ -88,6 +88,7 @@ There are some other modes for moinmoin supports:
  - #14 add `moinrpc-insert-wikilink` (#15)
  - #16 simplify buffer-local variable name (#17)
  - add wiki front page
+ - #18 enhance wikilink detection (#20)
 
 
 *** v1.0.1
