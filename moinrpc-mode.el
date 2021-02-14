@@ -28,11 +28,12 @@
   (local-set-key (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)
   (local-set-key (kbd "C-c C-l") 'moinrpc-insert-wikilink)
   (local-set-key (kbd "C-c C-a") 'moinrpc-list-attachments)
-  (local-set-key (kbd "C-c C-r") 'moinrpc-search-backlinks)
   (local-set-key (kbd "C-c t 1") 'moinrpc-wrap-title-level-1)
   (local-set-key (kbd "C-c t 2") 'moinrpc-wrap-title-level-2)
   (local-set-key (kbd "C-c t 3") 'moinrpc-wrap-title-level-3)
   (local-set-key (kbd "C-c t 4") 'moinrpc-wrap-title-level-4)
+  (local-set-key (kbd "C-c m r") 'moinrpc-search-backlinks)
+  (local-set-key (kbd "C-c m s") 'moinrpc-search-pages)
   (local-set-key (kbd "M-RET") 'org-meta-return)
   (local-set-key (kbd "TAB") 'org-cycle))
 
@@ -44,6 +45,7 @@
   (local-set-key (kbd "C-x C-f") 'moinrpc-helm-find-page)
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
   (local-set-key (kbd "C-c C-r") 'moinrpc-recent-changes)
+  (local-set-key (kbd "C-c m s") 'moinrpc-search-pages)
   (local-set-key (kbd "<tab>") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button))
 
@@ -77,7 +79,8 @@
   (local-set-key (kbd "C-x C-f") 'moinrpc-helm-find-page)
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
   (local-set-key (kbd "C-c C-n") 'moinrpc-new-wiki-setting)
-  (local-set-key (kbd "C-c C-b") 'moinrpc-search-backlinks)
+  (local-set-key (kbd "C-c m r") 'moinrpc-search-backlinks)
+  (local-set-key (kbd "C-c m s") 'moinrpc-search-pages)
   (local-set-key (kbd "<tab>") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button))
 
