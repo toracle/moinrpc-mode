@@ -152,7 +152,7 @@
   (let* ((wiki moinrpc-current-wiki)
          (pagename moinrpc-current-pagename)
          (content (moinrpc-xmlrpc-search-backlinks wiki pagename))
-         (buffer (moinrpc-buffer-name (format "Search:linkto:%s" pagename) wiki)))
+         (buffer (moinrpc-buffer-name (format "Search [linkto:%s]" pagename) wiki)))
     (switch-to-buffer buffer)
     (moinrpc-render-search buffer pagename content wiki)))
 
