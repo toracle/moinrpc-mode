@@ -173,4 +173,18 @@
                                 ("params" . ["TestPage"]))))))))))
 
 
+(ert-deftest moinrpc-xmlrpc-search-backlinks-should-fire-request ()
+  (with-dummy-xml-rpc-call
+   (moinrpc-xmlrpc-search-backlinks *fixture-wiki* "TestPage")
+   (should (equal *moinrpc-xmlrpc-test-call-history*
+                  '((:server-url
+                     "https://wiki.net/?action=xmlrpc2"
+                     :method
+                     system.multicall
+                     :params (((("methodName" . "applyAuthToken")
+                                ("params" . ["api-token"]))
+                               (("methodName" . "searchPages")
+                                ("params" . ["linkto:TestPage"]))))))))))
+
+
 (provide 'moinrpc-xmlrpc-test)
