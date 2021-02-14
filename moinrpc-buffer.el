@@ -147,6 +147,27 @@
     (moinrpc-open-page pagename)))
 
 
+(defun moinrpc-search-backlinks ()
+  (interactive)
+  (let* ((wiki moinrpc-current-wiki)
+         (pagename moinrpc-current-pagename)
+         (content (moinrpc-xmlrpc-search-backlinks wiki pagename))
+         (buffer (moinrpc-buffer-name (format "Search [linkto:%s]" pagename) wiki)))
+    (switch-to-buffer buffer)
+    (moinrpc-render-search buffer pagename content wiki)))
+
+
+(defun moinrpc-search-pages ()
+  (interactive)
+  (let
+      ((query-string (read-string "Search: ")))
+    (let* ((wiki moinrpc-current-wiki)
+           (content (moinrpc-xmlrpc-search-pages wiki query-string))
+           (buffer (moinrpc-buffer-name (format "Search [%s]" query-string) wiki)))
+      (switch-to-buffer buffer)
+      (moinrpc-render-search buffer query-string content wiki))))
+
+
 (defun moinrpc-helm-find-page ()
   "Find page using helm."
   (interactive)

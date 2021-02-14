@@ -46,6 +46,8 @@ Select a wikipage, then a new buffer will be opened with content. Edit the page 
  - ~C-x C-f~: Open page or create a new one (using Helm)
  - ~C-x C-s~: Save page
  - ~C-c C-o~: Open a wikilink which is cursor on.
+ - ~C-c m r~: Search backlinks of current page
+ - ~C-c m s~: Serach pages
  - ~TAB~: fold/unfold sub-tree headings
 
 
@@ -57,16 +59,16 @@ There are some other modes for moinmoin supports:
  - moinmoin-mode
 
 
-** To-do [6/15]
+** To-do [7/16]
 
  - [X] ~C-c C-o~: follow a WikiLink
  - [X] User friendly wiki setting
  - [X] Recent changes
  - [X] Attachment handling (put, get, list, delete)
- - [X] Find reverse links of a page (moinmoin doesn't support this kind of API)
+ - [X] Find reverse links of a page
+ - [X] Search page
  - [X] ~C-c C-l~: insert wiki link with helm page search
  - [ ] Support template page. Load template page from new or existing page
- - [ ] Search page
  - [ ] ~C-j~ to complete a helm candidate
  - [ ] Align table
  - [ ] Syntax highlighting (already there is a nice moinmoin-mode but it [[http://d.hatena.ne.jp/ymorimo/20070308/1173373043][contains some error]])
@@ -80,6 +82,8 @@ There are some other modes for moinmoin supports:
 ** Change logs
 
 *** Unreleased
+
+ - #19 add search and backlinks (#21)
 
 
 *** v1.0.2

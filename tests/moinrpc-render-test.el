@@ -109,4 +109,19 @@
       (should (equal moinrpc-current-pagename "TestPage")))))
 
 
+(ert-deftest moinrpc-render-search-backlinks-should-render-buffer ()
+  (with-temp-buffer
+    (let ((buffer (current-buffer)))
+      (moinrpc-render-search buffer
+                             "TestPage"
+                             '(("Page1" "Content1")
+                               ("Page2" "Content2"))
+                             *moinrpc-fixture-single-wiki*)
+
+      (should (s-contains-p " * Page1" (buffer-string)))
+      (should (s-contains-p " * Page2" (buffer-string)))
+      (should (equal moinrpc-current-wiki *moinrpc-fixture-single-wiki*))
+      (should (equal moinrpc-current-pagename "TestPage")))))
+
+
 (provide 'moinrpc-render-test)
