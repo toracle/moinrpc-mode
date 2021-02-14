@@ -25,10 +25,10 @@
   (local-set-key (kbd "C-x C-s") 'moinrpc-save-page)
   (local-set-key (kbd "C-x C-f") 'moinrpc-helm-find-page)
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
-  (local-set-key (kbd "C-c C-r") 'moinrpc-recent-changes)
   (local-set-key (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)
   (local-set-key (kbd "C-c C-l") 'moinrpc-insert-wikilink)
   (local-set-key (kbd "C-c C-a") 'moinrpc-list-attachments)
+  (local-set-key (kbd "C-c C-r") 'moinrpc-search-backlinks)
   (local-set-key (kbd "C-c t 1") 'moinrpc-wrap-title-level-1)
   (local-set-key (kbd "C-c t 2") 'moinrpc-wrap-title-level-2)
   (local-set-key (kbd "C-c t 3") 'moinrpc-wrap-title-level-3)
@@ -60,6 +60,15 @@
   (local-set-key (kbd "g") 'moinrpc-list-attachments))
 
 
+(define-derived-mode moinrpc-search-mode fundamental-mode
+  (setq mode-name "moinrpc-search-mode")
+
+  (local-set-key (kbd "C-c C-r") 'moinrpc-recent-changes)
+  (local-set-key (kbd "q") 'quit-window)
+  (local-set-key (kbd "<tab>") 'forward-button)
+  (local-set-key (kbd "<backtab>") 'backward-button))
+
+
 (define-derived-mode moinrpc-front-mode fundamental-mode
   (setq mode-name "moinrpc-front-mode")
 
@@ -68,6 +77,7 @@
   (local-set-key (kbd "C-x C-f") 'moinrpc-helm-find-page)
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
   (local-set-key (kbd "C-c C-n") 'moinrpc-new-wiki-setting)
+  (local-set-key (kbd "C-c C-b") 'moinrpc-search-backlinks)
   (local-set-key (kbd "<tab>") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button))
 

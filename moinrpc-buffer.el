@@ -147,6 +147,16 @@
     (moinrpc-open-page pagename)))
 
 
+(defun moinrpc-search-backlinks ()
+  (interactive)
+  (let* ((wiki moinrpc-current-wiki)
+         (pagename moinrpc-current-pagename)
+         (content (moinrpc-xmlrpc-search-backlinks wiki pagename))
+         (buffer (moinrpc-buffer-name (format "Search:linkto:%s" pagename) wiki)))
+    (switch-to-buffer buffer)
+    (moinrpc-render-search buffer pagename content wiki)))
+
+
 (defun moinrpc-helm-find-page ()
   "Find page using helm."
   (interactive)
