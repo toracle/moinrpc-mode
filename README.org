@@ -45,7 +45,7 @@ Select a wikipage, then a new buffer will be opened with content. Edit the page 
  - ~C-c C-f~: Open page or create a new one
  - ~C-x C-f~: Open page or create a new one (using Helm)
  - ~C-x C-s~: Save page
- - ~C-c C-o~: Open a wikilink which is cursor on. Currently only works for bracketed link, not for camel case link.
+ - ~C-c C-o~: Open a wikilink which is cursor on.
  - ~TAB~: fold/unfold sub-tree headings
 
 
@@ -57,26 +57,41 @@ There are some other modes for moinmoin supports:
  - moinmoin-mode
 
 
-** To-do [4/13]
+** To-do [6/15]
 
  - [X] ~C-c C-o~: follow a WikiLink
  - [X] User friendly wiki setting
  - [X] Recent changes
  - [X] Attachment handling (put, get, list, delete)
+ - [X] Find reverse links of a page (moinmoin doesn't support this kind of API)
+ - [X] ~C-c C-l~: insert wiki link with helm page search
+ - [ ] Support template page. Load template page from new or existing page
+ - [ ] Search page
  - [ ] ~C-j~ to complete a helm candidate
  - [ ] Align table
  - [ ] Syntax highlighting (already there is a nice moinmoin-mode but it [[http://d.hatena.ne.jp/ymorimo/20070308/1173373043][contains some error]])
- - [ ] Find reverse links of a page
- - [ ] ~C-c C-l~: insert wiki link with helm page search
- - [ ] Search page
  - [ ] Conflict detection (compare local and remote page version before save and give diff when it conflicts)
  - [ ] Render page to HTML and display it on eww
  - [ ] Display embeded image
+ - [ ] Render org-mode markup
+ - [ ] Something like org-babel, execute block and attach output file
 
 
 ** Change logs
 
 *** Unreleased
+
+
+*** v1.0.2
+
+ - #6 refactor: remove unnecessary `*moinrpc-content-provider*` (#7)
+ - #8 refactor: separate layers (#9)
+ - #10 refactor: match xmlrpc endpoint name (#11)
+ - #12 add some more xmlrpc endpoints (#13)
+ - #14 add `moinrpc-insert-wikilink` (#15)
+ - #16 simplify buffer-local variable name (#17)
+ - add wiki front page
+ - #18 enhance wikilink detection (#20)
 
 
 *** v1.0.1

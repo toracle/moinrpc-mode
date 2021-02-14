@@ -10,25 +10,25 @@
     (xmlrpc-api-token . "api-token")))
 
 
-(ert-deftest moinrpc-check-xmlrpc-response ()
+(ert-deftest moinrpc-xmlrpc-check-response ()
   (my-fixture
    (lambda ()
-     (should (equal (moinrpc-check-xmlrpc-response
+     (should (equal (moinrpc-xmlrpc-check-response
                      *moinrpc-fixture-response-get-pages*
 		     *moinrpc-fixture-wiki*
 		     nil)
 		    t))
-     (should (equal (moinrpc-check-xmlrpc-response
+     (should (equal (moinrpc-xmlrpc-check-response
                      *moinrpc-fixture-response-error-invalid-token*
 		     *moinrpc-fixture-wiki*
 		     #'moinrpc-on-error-mockup)
 		    nil)))))
 
 
-(ert-deftest moinrpc-encode-xml-rpc-multi-each-method ()
+(ert-deftest moinrpc-xml-encode-rpc-multi-each-method ()
   (my-fixture
    (lambda ()
-     (should (equal (moinrpc-encode-xml-rpc-multi-each-method 'getPage "TestPage")
+     (should (equal (moinrpc-xml-encode-rpc-multi-each-method 'getPage "TestPage")
 		    '(("methodName" . getPage) ("params" . ["TestPage"])))))))
 
 
@@ -47,9 +47,9 @@
      (advice-remove 'xml-rpc-method-call 'dummy-xml-rpc-method-call)))
 
 
-(ert-deftest moinrpc-get-page-content-fire-request ()
+(ert-deftest moinrpc-xmlrpc-get-page-should-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-get-page-content *fixture-wiki* "TestPage")
+   (moinrpc-xmlrpc-get-page *fixture-wiki* "TestPage")
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
@@ -61,9 +61,9 @@
                                 ("params" . ["TestPage"]))))))))))
 
 
-(ert-deftest moinrpc-save-page-content-fire-request ()
+(ert-deftest moinrpc-xmlrpc-put-page-should-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-save-page-content *fixture-wiki* "TestPage" "Test content")
+   (moinrpc-xmlrpc-put-page *fixture-wiki* "TestPage" "Test content")
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
@@ -75,9 +75,9 @@
                                 ("params" . ["TestPage" "Test content"]))))))))))
 
 
-(ert-deftest moinrpc-get-list-content-fire-request ()
+(ert-deftest moinrpc-xmlrpc-get-all-pages-should-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-get-list-content *fixture-wiki*)
+   (moinrpc-xmlrpc-get-all-pages *fixture-wiki*)
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
@@ -89,9 +89,9 @@
                                 ("params" . []))))))))))
 
 
-(ert-deftest moinrpc-get-recent-changes-fire-request ()
+(ert-deftest moinrpc-xmlrpc-get-recent-changes-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-get-recent-changes *fixture-wiki* 1610852783.2646885)
+   (moinrpc-xmlrpc-get-recent-changes *fixture-wiki* '(24587 43080))
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
@@ -100,12 +100,12 @@
                      :params (((("methodName" . "applyAuthToken")
                                 ("params" . ["api-token"]))
                                (("methodName" . "getRecentChanges")
-                                ("params" . ["2021-01-17"]))))))))))
+                                ("params" . [(:datetime (24587 43080))]))))))))))
 
 
-(ert-deftest moinrpc-list-attachments-should-fire-request ()
+(ert-deftest moinrpc-xmlrpc-list-attachments-should-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-get-attachment-list *fixture-wiki* "TestPage")
+   (moinrpc-xmlrpc-list-attachments *fixture-wiki* "TestPage")
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
@@ -117,9 +117,9 @@
                                 ("params" . ["TestPage"]))))))))))
 
 
-(ert-deftest moinrpc-put-attachment-should-fire-request ()
+(ert-deftest moinrpc-xmlrpc-put-attachment-should-fire-request ()
   (with-dummy-xml-rpc-call
-   (moinrpc-put-attachment *fixture-wiki* "TestPage" "a.jpg" "JPG content")
+   (moinrpc-xmlrpc-put-attachment *fixture-wiki* "TestPage" "a.jpg" "JPG content")
    (should (equal *moinrpc-xmlrpc-test-call-history*
                   '((:server-url
                      "https://wiki.net/?action=xmlrpc2"
@@ -143,6 +143,20 @@
                                 ("params" . ["api-token"]))
                                (("methodName" . "deleteAttachment")
                                 ("params" . ["TestPage" "a.jpg"]))))))))))
+
+
+(ert-deftest moinrpc-xmlrpc-get-page-html-should-fire-request ()
+  (with-dummy-xml-rpc-call
+   (moinrpc-xmlrpc-get-page-html *fixture-wiki* "TestPage")
+   (should (equal *moinrpc-xmlrpc-test-call-history*
+                  '((:server-url
+                     "https://wiki.net/?action=xmlrpc2"
+                     :method
+                     system.multicall
+                     :params (((("methodName" . "applyAuthToken")
+                                ("params" . ["api-token"]))
+                               (("methodName" . "getPageHTML")
+                                ("params" . ["TestPage"]))))))))))
 
 
 (provide 'moinrpc-xmlrpc-test)
