@@ -201,30 +201,6 @@
           :buffer "*helm-moinrpc-find-pages*")))
 
 
-;; (defun moinrpc-table-find-edge (&optional backward)
-;;   "Undone... refactoring moinrpc-table-range"
-;;   (let ((m (point-marker))
-;;         (moves 1)
-;;         (position nil)
-;;         (delta (if backward 1 -1))
-;;         (line-function (if backward
-;;                            #'end-of-line
-;;                          #'beginning-of-line)))
-;;     (funcall line-function)
-;;     (while (and (moinrpc-table-p)
-;;                 (not (= moves 0)))
-;;       (setq position (point-marker))
-;;       (setq moves (forward-line delta))
-;;       (funcall line-function))
-;;     (goto-char m)
-;;     position))
-
-
-;; (defun moinrpc-table-range ()
-;;   (cons (moinrpc-table-find-edge)
-;;         (moinrpc-table-find-edge t)))
-
-
 (defun moinrpc-table-find-edge (&optional backward)
   (let ((m (point-marker))
         (position nil)
