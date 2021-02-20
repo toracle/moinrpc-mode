@@ -7,5 +7,6 @@
 (require 'moinrpc-xmlrpc-test)
 (require 'moinrpc-render-test)
 (require 'moinrpc-common-test)
+(require 'moinrpc-buffer-test)
 
 (ert t)

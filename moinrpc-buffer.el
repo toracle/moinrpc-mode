@@ -9,6 +9,7 @@
 (require 'moinrpc-conf)
 (require 'moinrpc-xmlrpc)
 (require 'moinrpc-render)
+(require 'subr-x)
 
 
 (defun moinrpc-create-wiki-setting-i ()
@@ -198,6 +199,124 @@
              (action . (("Insert" . moinrpc-render-insert-link)))))
           :prompt "Select Page: "
           :buffer "*helm-moinrpc-find-pages*")))
+
+
+;; (defun moinrpc-table-find-edge (&optional backward)
+;;   "Undone... refactoring moinrpc-table-range"
+;;   (let ((m (point-marker))
+;;         (moves 1)
+;;         (position nil)
+;;         (delta (if backward 1 -1))
+;;         (line-function (if backward
+;;                            #'end-of-line
+;;                          #'beginning-of-line)))
+;;     (funcall line-function)
+;;     (while (and (moinrpc-table-p)
+;;                 (not (= moves 0)))
+;;       (setq position (point-marker))
+;;       (setq moves (forward-line delta))
+;;       (funcall line-function))
+;;     (goto-char m)
+;;     position))
+
+
+;; (defun moinrpc-table-range ()
+;;   (cons (moinrpc-table-find-edge)
+;;         (moinrpc-table-find-edge t)))
+
+
+(defun moinrpc-table-range ()
+  (let ((m (point-marker))
+        (start nil)
+        (end nil))
+    (while (moinrpc-table-p)
+      (end-of-line)
+      (setq end (point-marker))
+      (forward-line 1))
+    (goto-char m)
+    (while (moinrpc-table-p)
+      (beginning-of-line)
+      (setq start (point-marker))
+      (forward-line -1))
+    (goto-char m)
+    (cons start end)))
+
+
+(defun moinrpc-table-p ()
+  (let ((m (point-marker)))
+    (beginning-of-line)
+    (let ((result (looking-at (format "^%s$"
+                                      moinrpc-regex-table))))
+      (goto-char m)
+      result)))
+
+
+(defun moinrpc-table-parse ()
+  (let* ((range (moinrpc-table-range))
+         (start (car range))
+         (end (cdr range)))
+    (map 'list
+         #'moinrpc-table-parse-line
+         (split-string (buffer-substring-no-properties start end)
+                       "\n"))))
+
+
+(defun moinrpc-table-parse-line (line)
+  (mapcar #'string-trim
+          (butlast (cdr (split-string line "||")))))
+
+
+(defun moinrpc-table-columns-width (table)
+  (mapcar #'(lambda (x) (apply #'max x))
+          (moinrpc-table-transpose
+           (mapcar #'(lambda (row)
+                       (mapcar #'(lambda (s)
+                                   (string-width (string-trim s)))
+                               row))
+                   table))))
+
+
+(defun moinrpc-table-dimension (table)
+  (let ((x (length table))
+        (y (length (moinrpc-table-transpose table))))
+    (cons x y)))
+
+
+(defun moinrpc-table-transpose (table)
+  (apply #'mapcar* #'list table))
+
+
+(defun moinrpc-table-delete ()
+  (let* ((range (moinrpc-table-range))
+         (start (car range))
+         (end (cdr range)))
+    (delete-region start end)))
+
+
+(defun moinrpc-table-render (table)
+  (let* ((widths (moinrpc-table-columns-width table))
+         (dim (moinrpc-table-dimension table)))
+      (dolist (row table)
+     (insert "||")
+     (dotimes (idx-col (cdr dim))
+       (insert (format (format "%%-%ds" (nth idx-col widths))
+                       (or (nth idx-col row) "")))
+       (insert "||"))
+     (newline))))
+
+
+(defun moinrpc-table-format ()
+  (when (moinrpc-table-p)
+    (let ((table (moinrpc-table-parse)))
+      (moinrpc-table-delete)
+      (moinrpc-table-render table))))
+
+
+(defun moinrpc-cycle ()
+  (interactive)
+  (if (moinrpc-table-p)
+      (moinrpc-table-format)
+    (indent-for-tab-command)))
 
 
 (provide 'moinrpc-buffer)
