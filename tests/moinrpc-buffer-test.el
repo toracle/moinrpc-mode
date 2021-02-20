@@ -27,14 +27,13 @@
 (ert-deftest moinrpc-table-range-should-return-range ()
   (with-temp-buffer
     (let ((buffer (current-buffer)))
-      (newline)
       (insert "||R1-C1||R1-C2||R1-C3||")
       (newline)
       (insert "||R2-C1||R2-C2||R2-C3||")
       (goto-char 3)
       (let ((range (moinrpc-table-range)))
-        (should (equal (marker-position (car range)) 2))
-        (should (equal (marker-position (cdr range)) 49))))))
+        (should (equal (marker-position (car range)) 1))
+        (should (equal (marker-position (cdr range)) 48))))))
 
 
 (provide 'moinrpc-buffer-test)

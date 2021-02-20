@@ -228,14 +228,16 @@
 (defun moinrpc-table-find-edge (&optional backward)
   (let ((m (point-marker))
         (position nil)
+        (moves 0)
         (delta (if backward 1 -1))
         (line-function (if backward
                            #'end-of-line
                          #'beginning-of-line)))
-    (while (moinrpc-table-p)
+    (while (and (= moves 0)
+                (moinrpc-table-p))
       (funcall line-function)
       (setq position (point-marker))
-      (forward-line delta))
+      (setq moves (forward-line delta)))
     (goto-char m)
     position))
 
