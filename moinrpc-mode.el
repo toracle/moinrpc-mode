@@ -35,7 +35,7 @@
   (local-set-key (kbd "C-c m r") 'moinrpc-search-backlinks)
   (local-set-key (kbd "C-c m s") 'moinrpc-search-pages)
   (local-set-key (kbd "M-RET") 'org-meta-return)
-  (local-set-key (kbd "TAB") 'org-cycle))
+  (local-set-key (kbd "TAB") 'moinrpc-cycle))
 
 
 (define-derived-mode moinrpc-list-mode fundamental-mode

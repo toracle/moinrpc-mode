@@ -59,7 +59,7 @@ There are some other modes for moinmoin supports:
  - moinmoin-mode
 
 
-** To-do [7/16]
+** To-do [8/16]
 
  - [X] ~C-c C-o~: follow a WikiLink
  - [X] User friendly wiki setting
@@ -68,9 +68,9 @@ There are some other modes for moinmoin supports:
  - [X] Find reverse links of a page
  - [X] Search page
  - [X] ~C-c C-l~: insert wiki link with helm page search
+ - [X] Align table
  - [ ] Support template page. Load template page from new or existing page
  - [ ] ~C-j~ to complete a helm candidate
- - [ ] Align table
  - [ ] Syntax highlighting (already there is a nice moinmoin-mode but it [[http://d.hatena.ne.jp/ymorimo/20070308/1173373043][contains some error]])
  - [ ] Conflict detection (compare local and remote page version before save and give diff when it conflicts)
  - [ ] Render page to HTML and display it on eww
@@ -84,6 +84,7 @@ There are some other modes for moinmoin supports:
 *** Unreleased
 
  - #19 add search and backlinks (#21)
+ - #22 align table width (#23)
 
 
 *** v1.0.2
