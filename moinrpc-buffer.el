@@ -10,7 +10,6 @@
 (require 'moinrpc-xmlrpc)
 (require 'moinrpc-render)
 (require 'subr-x)
-(require 'cl-lib)
 
 
 (defun moinrpc-create-wiki-setting-i ()
