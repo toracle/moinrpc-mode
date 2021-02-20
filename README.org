@@ -83,6 +83,9 @@ There are some other modes for moinmoin supports:
 
 *** Unreleased
 
+
+*** v1.1.0
+
  - #19 add search and backlinks (#21)
  - #22 align table width (#23)
 
