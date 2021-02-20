@@ -16,6 +16,10 @@
   "\\([A-Z][a-z]+\\)\\{2,\\}?")
 
 
+(defvar moinrpc-regex-table
+  "\\(||.*?\\)+||")
+
+
 (defun moinrpc-wiki-name (wiki)
   (cdr (assoc 'wiki-alias wiki)))
 

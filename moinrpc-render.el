@@ -155,6 +155,35 @@
     (read-only-mode)))
 
 
+(defun moinrpc-render-search (buffer pagename content wiki)
+  (with-current-buffer
+      buffer
+    (let ((entries content))
+      (moinrpc-search-mode)
+
+      (setq-local moinrpc-current-wiki wiki)
+      (setq-local moinrpc-current-pagename pagename)
+
+      (read-only-mode -1)
+      (erase-buffer)
+
+      (insert "Search:")
+      (newline)
+      (newline)
+
+      (dolist (entry content)
+        (let ((target-pagename (car entry)))
+          (insert " * ")
+          (insert-button target-pagename
+                         'follow-link "\C-m"
+                         'action (lambda (overlay)
+                                   (moinrpc-open-page
+                                    (moinrpc-get-overlay-text overlay))))
+          (newline))))
+    (goto-char 1)
+    (read-only-mode)))
+
+
 (defun moinrpc-render-page (buffer pagename content wiki)
   (with-current-buffer
       buffer

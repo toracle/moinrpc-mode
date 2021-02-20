@@ -3,7 +3,7 @@
 (source gnu)
 (source melpa)
 
-(package "moinrpc-mode" "1.0.2" "MoinRPC mode")
+(package "moinrpc-mode" "1.1.0" "MoinRPC mode")
 
 (development
  (depends-on "xml-rpc")

@@ -180,6 +180,10 @@ Specify WIKI with a PAGENAME."
                                     query-string))
 
 
+(defun moinrpc-xmlrpc-search-backlinks (wiki pagename)
+  (moinrpc-xmlrpc-search-pages wiki (format "linkto:%s" pagename)))
+
+
 (defun moinrpc-xmlrpc-get-moin-version (wiki)
   (moinrpc-xmlrpc-multi-method-call wiki
                                     "getMoinVersion"))
