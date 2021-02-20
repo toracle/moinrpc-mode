@@ -10,6 +10,7 @@
 (require 'moinrpc-xmlrpc)
 (require 'moinrpc-render)
 (require 'subr-x)
+(require 'cl-lib)
 
 
 (defun moinrpc-create-wiki-setting-i ()
@@ -264,7 +265,7 @@
 
 
 (defun moinrpc-table-transpose (table)
-  (apply #'mapcar* #'list table))
+  (apply #'cl-mapcar #'list table))
 
 
 (defun moinrpc-table-delete ()
