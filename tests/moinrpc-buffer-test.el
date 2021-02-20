@@ -36,4 +36,31 @@
         (should (equal (marker-position (cdr range)) 48))))))
 
 
+(ert-deftest moinrpc-table-dimension ()
+  (with-temp-buffer
+    (let ((buffer (current-buffer)))
+      (should (equal (moinrpc-table-dimension
+                      '(("1" "2")
+                        ("3" "4")))
+                     '(2 . 2)))
+      (should (equal (moinrpc-table-dimension
+                      '(("1" "2")
+                        ("3" "4" "5")))
+                     '(2 . 3))))))
+
+
+(ert-deftest moinrpc-table-columns-width ()
+  (with-temp-buffer
+    (let ((buffer (current-buffer)))
+      (should (equal (moinrpc-table-columns-width
+                      '(("1" "2")
+                        ("3" "4")))
+                     '(1 1)))
+      (should (equal (moinrpc-table-columns-width
+                      '(("1" "22")
+                        ("333" "4444")
+                        ("55555" "666666" "7777777")))
+                     '(5 6 7))))))
+
+
 (provide 'moinrpc-buffer-test)

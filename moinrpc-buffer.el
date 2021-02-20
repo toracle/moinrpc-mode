@@ -249,23 +249,24 @@
 
 
 (defun moinrpc-table-columns-width (table)
-  (mapcar #'(lambda (x) (apply #'max x))
-          (moinrpc-table-transpose
-           (mapcar #'(lambda (row)
-                       (mapcar #'(lambda (s)
-                                   (string-width (string-trim s)))
-                               row))
-                   table))))
+  (let* ((dim (moinrpc-table-dimension table))
+         (x (cdr dim))
+         (widths (make-list x 0)))
+    (dolist (row table)
+      (dotimes (col-idx (length row))
+        (setf (nth col-idx widths)
+              (max (nth col-idx widths)
+                   (string-width (string-trim (nth col-idx row)))))))
+    widths))
 
 
 (defun moinrpc-table-dimension (table)
   (let ((x (length table))
-        (y (length (moinrpc-table-transpose table))))
+        (y 0))
+    (dolist (row table)
+      (when (< y (length row))
+        (setq y (length row))))
     (cons x y)))
-
-
-(defun moinrpc-table-transpose (table)
-  (apply #'cl-mapcar #'list table))
 
 
 (defun moinrpc-table-delete ()
