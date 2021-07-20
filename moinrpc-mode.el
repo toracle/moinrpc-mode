@@ -32,6 +32,7 @@
   (local-set-key (kbd "C-c t 2") 'moinrpc-wrap-title-level-2)
   (local-set-key (kbd "C-c t 3") 'moinrpc-wrap-title-level-3)
   (local-set-key (kbd "C-c t 4") 'moinrpc-wrap-title-level-4)
+  (local-set-key (kbd "C-c t 5") 'moinrpc-wrap-title-level-5)
   (local-set-key (kbd "C-c m r") 'moinrpc-search-backlinks)
   (local-set-key (kbd "C-c m s") 'moinrpc-search-pages)
   (local-set-key (kbd "M-RET") 'org-meta-return)

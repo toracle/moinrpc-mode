@@ -218,6 +218,11 @@
   (moinrpc-wrap-title-level-n 4))
 
 
+(defun moinrpc-wrap-title-level-5 ()
+  (interactive)
+  (moinrpc-wrap-title-level-n 5))
+
+
 (defun moinrpc-wrap-title-level-n (level)
   (let ((m (point-marker)))
     (beginning-of-line)
