@@ -121,6 +121,7 @@
 
 
 (defun moinrpc-upload-attachment ()
+  (interactive)
   (let* ((filename (read-file-name "Select a file to upload:"))
          (name (file-name-nondirectory filename))
          (content (moinrpc-read-file filename)))
