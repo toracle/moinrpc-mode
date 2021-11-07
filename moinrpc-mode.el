@@ -47,7 +47,7 @@
   (local-set-key (kbd "C-c C-f") 'moinrpc-find-page)
   (local-set-key (kbd "C-c C-r") 'moinrpc-recent-changes)
   (local-set-key (kbd "C-c m s") 'moinrpc-search-pages)
-  (local-set-key (kbd "<tab>") 'forward-button)
+  (local-set-key (kbd "TAB") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button))
 
 
@@ -56,7 +56,7 @@
 
   (local-set-key (kbd "C-c C-r") 'moinrpc-recent-changes)
   (local-set-key (kbd "q") 'quit-window)
-  (local-set-key (kbd "<tab>") 'forward-button)
+  (local-set-key (kbd "TAB") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button)
   (local-set-key (kbd "a") 'moinrpc-upload-attachment)
   (local-set-key (kbd "d") 'moinrpc-delete-attachment)
@@ -68,7 +68,7 @@
 
   (local-set-key (kbd "C-c C-r") 'moinrpc-recent-changes)
   (local-set-key (kbd "q") 'quit-window)
-  (local-set-key (kbd "<tab>") 'forward-button)
+  (local-set-key (kbd "TAB") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button))
 
 
@@ -82,7 +82,7 @@
   (local-set-key (kbd "C-c C-n") 'moinrpc-new-wiki-setting)
   (local-set-key (kbd "C-c m r") 'moinrpc-search-backlinks)
   (local-set-key (kbd "C-c m s") 'moinrpc-search-pages)
-  (local-set-key (kbd "<tab>") 'forward-button)
+  (local-set-key (kbd "TAB") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button))
 
 
@@ -92,7 +92,7 @@
   (local-set-key (kbd "q") 'quit-window)
   (local-set-key (kbd "g") 'moinrpc-main-page)
   (local-set-key (kbd "C-c C-n") 'moinrpc-new-wiki-setting)
-  (local-set-key (kbd "<tab>") 'forward-button)
+  (local-set-key (kbd "TAB") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button))
 
 
