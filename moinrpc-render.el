@@ -147,6 +147,13 @@
       (insert "Attachment List:")
       (newline)
       (newline)
+      (moinrpc-insert-decorated-button
+          " [" "Upload" "]"
+        'follow-link "\C-m"
+        'action '(lambda (button)
+                   (moinrpc-upload-attachment)))
+      (newline)
+      (newline)
       (dolist (entry content)
         (insert " * ")
         (insert-button entry)
