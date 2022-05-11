@@ -58,6 +58,8 @@
   (local-set-key (kbd "q") 'quit-window)
   (local-set-key (kbd "TAB") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button)
+  (local-set-key (kbd "n") 'forward-button)
+  (local-set-key (kbd "p") 'backward-button)
   (local-set-key (kbd "a") 'moinrpc-upload-attachment)
   (local-set-key (kbd "d") 'moinrpc-delete-attachment)
   (local-set-key (kbd "g") 'moinrpc-list-attachments))
