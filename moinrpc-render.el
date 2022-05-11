@@ -156,7 +156,7 @@
       (newline)
       (dolist (entry content)
         (insert " * ")
-        (insert-button entry)
+        (insert-button (format "[[attachment:%s]]" entry))
         (newline)))
     (goto-char 1)
     (read-only-mode)))
