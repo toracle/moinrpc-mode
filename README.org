@@ -4,6 +4,22 @@ This mode enables Emacs to communicate with moinmoin wiki.
 
 Currently this is in alpha stage.
 
+You can navigate several wikis,
+
+#+CAPTION: wiki list
+[[./docs/wiki-list.png]]
+
+and can list recently changed wiki pages, open a certain wiki page,
+
+#+CAPTION: recent changes page
+[[./docs/recent-changes.png]]
+
+and can open a wiki page, edit it and save it to wiki server.
+
+#+CAPTION: wiki page
+[[./docs/wiki-page.png]]
+
+
 ** Prerequisite
 
 You must own a MoinMoin wiki server.
