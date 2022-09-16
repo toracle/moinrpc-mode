@@ -11,6 +11,10 @@ You can navigate several wikis,
 
 and can list recently changed wiki pages, open a certain wiki page,
 
+#+CAPTION: wiki server main
+[[./docs/wiki-server-main.png]]
+
+
 #+CAPTION: recent changes page
 [[./docs/recent-changes.png]]
 
