@@ -48,7 +48,9 @@
   (local-set-key (kbd "C-c C-r") 'moinrpc-recent-changes)
   (local-set-key (kbd "C-c m s") 'moinrpc-search-pages)
   (local-set-key (kbd "TAB") 'forward-button)
-  (local-set-key (kbd "<backtab>") 'backward-button))
+  (local-set-key (kbd "<backtab>") 'backward-button)
+  (local-set-key (kbd "n") 'forward-button)
+  (local-set-key (kbd "p") 'backward-button))
 
 
 (define-derived-mode moinrpc-attachment-mode fundamental-mode
