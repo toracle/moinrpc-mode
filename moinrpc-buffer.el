@@ -302,5 +302,31 @@
     (indent-for-tab-command)))
 
 
+(defun moinrpc-get-clipboard-image-target ()
+  (let* ((targets (gui-get-selection 'CLIPBOARD 'TARGETS))
+         (image-targets (seq-filter '(lambda (x) (or (equal x 'image/png) (equal x 'PNG))) targets)))
+    (when image-targets
+      (first image-targets))
+    ))
+
+
+(defun moinrpc-clipboard-image-p ()
+  (not (equal (moinrpc-get-clipboard-image-target) nil)))
+
+
+(defun moinrpc-get-clipboard-image-data ()
+  (gui-get-selection 'CLIPBOARD (moinrpc-get-clipboard-image-target)))
+
+
+(defun moinrpc-save-clipboard-image ()
+  (when (moinrpc-clipboard-image-p)
+    (let ((filename "image.png"))
+     (with-temp-buffer
+       (insert (moinrpc-get-clipboard-image-data))
+       (write-region nil nil filename nil nil nil 'no-conversion))
+     filename)))
+
+
+
 (provide 'moinrpc-buffer)
 ;;; moinrpc-buffer.el ends here
