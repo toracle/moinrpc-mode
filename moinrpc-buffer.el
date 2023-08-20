@@ -306,26 +306,35 @@
   (let* ((targets (gui-get-selection 'CLIPBOARD 'TARGETS))
          (image-targets (seq-filter '(lambda (x) (or (equal x 'image/png) (equal x 'PNG))) targets)))
     (when image-targets
-      (first image-targets))
-    ))
+      (first image-targets))))
 
 
 (defun moinrpc-clipboard-image-p ()
   (not (equal (moinrpc-get-clipboard-image-target) nil)))
 
 
-(defun moinrpc-get-clipboard-image-data ()
-  (gui-get-selection 'CLIPBOARD (moinrpc-get-clipboard-image-target)))
-
-
-(defun moinrpc-save-clipboard-image ()
-  (when (moinrpc-clipboard-image-p)
-    (let ((filename "image.png"))
-     (with-temp-buffer
-       (insert (moinrpc-get-clipboard-image-data))
-       (write-region nil nil filename nil nil nil 'no-conversion))
-     filename)))
-
+(defun moinrpc-save-clipboard-image-to-file ()
+  "Save the image content in the clipboard to a temporary file and return the file path."
+  (interactive)
+  (if (moinrpc-clipboard-image-p)
+      (let* ((temp-file (make-temp-file "moinrpc-clipboard-image-" nil ".png")))
+        (cond ((eq system-type 'darwin)
+               (shell-command (format "pngpaste %s" temp-file))
+               (message "Saved clipboard image to %s" temp-file)
+               temp-file)
+              ((eq system-type 'gnu/linux)
+               (shell-command (format "xclip -selection clipboard -t image/png -o | convert - %s" temp-file))
+               (message "Saved clipboard image to %s" temp-file)
+               temp-file)
+              ((eq system-type 'windows-nt)
+               (shell-command (format "powershell -command \"Get-Content %s | Set-Clipboard\"" temp-file))
+               (message "Saved clipboard image to %s" temp-file)
+               temp-file)
+              (t
+               (message "Unsupported system type: %s" system-type)
+               nil)))
+    (message "No image in clipboard")
+    nil))
 
 
 (provide 'moinrpc-buffer)
