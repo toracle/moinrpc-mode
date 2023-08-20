@@ -317,22 +317,27 @@
   "Save the image content in the clipboard to a temporary file and return the file path."
   (interactive)
   (if (moinrpc-clipboard-image-p)
-      (let* ((temp-file (make-temp-file "moinrpc-clipboard-image-" nil ".png")))
+      (let* ((temp-file (make-temp-file "moinrpc-clipboard-image-" nil ".png"))
+             (shell-command-string nil))
         (cond ((eq system-type 'darwin)
-               (shell-command (format "pngpaste %s" temp-file))
-               (message "Saved clipboard image to %s" temp-file)
-               temp-file)
+               (setq shell-command-string
+                     (format "pngpaste %s" temp-file)))
               ((eq system-type 'gnu/linux)
-               (shell-command (format "xclip -selection clipboard -t image/png -o | convert - %s" temp-file))
-               (message "Saved clipboard image to %s" temp-file)
-               temp-file)
+               (setq shell-command-string
+                     (format "xclip -selection clipboard -t image/png -o | convert - %s" temp-file)))
               ((eq system-type 'windows-nt)
-               (shell-command (format "powershell -command \"Get-Content %s | Set-Clipboard\"" temp-file))
-               (message "Saved clipboard image to %s" temp-file)
-               temp-file)
+               (setq shell-command-string
+                     (format "powershell -command \"$img = Get-Clipboard -Format Image; $img.save(\\\"%s\\\");\"" temp-file)))
               (t
                (message "Unsupported system type: %s" system-type)
-               nil)))
+               nil))
+        (when shell-command-string
+          (message (format "Execute clipboard save command: %s" shell-command-string))
+          (shell-command shell-command-string
+                         "*moinrpc-clipboard-shell-output*"
+                         "*moinrpc-clipboard-shell-error*")
+          (message "Saved clipboard image to %s" temp-file)
+          temp-file))
     (message "No image in clipboard")
     nil))
 
