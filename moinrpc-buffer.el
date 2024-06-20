@@ -306,9 +306,14 @@
 
 (defun moinrpc-get-clipboard-image-target ()
   (let* ((targets (gui-get-selection 'CLIPBOARD 'TARGETS))
-         (image-targets (seq-filter '(lambda (x) (or (equal x 'image/png) (equal x 'PNG))) targets)))
-    (when image-targets
-      (first image-targets))))
+         (image-targets (seq-filter '(lambda (x)
+                                       (or (equal x 'image/png)
+					   (equal x 'image/tiff)
+                                           (equal x 'PNG)))
+                                    targets)))
+    (cond (image-targets
+           (first image-targets))
+          ((and (not targets) (eq system-type 'darwin)) t))))
 
 
 (defun moinrpc-clipboard-image-p ()

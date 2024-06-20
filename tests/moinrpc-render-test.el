@@ -88,9 +88,9 @@
 
       (should (s-contains-p "Attachment List:"
                             (buffer-string)))
-      (should (s-contains-p " * a.jpg"
+      (should (s-contains-p " * [[attachment:a.jpg]]"
                             (buffer-string)))
-      (should (s-contains-p " * b.jpg"
+      (should (s-contains-p " * [[attachment:b.jpg]]"
                             (buffer-string)))
       (should (equal moinrpc-current-wiki :wiki))
       (should (equal moinrpc-current-pagename "TestPage")))))
