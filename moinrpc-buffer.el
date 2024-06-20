@@ -315,6 +315,10 @@
   (not (equal (moinrpc-get-clipboard-image-target) nil)))
 
 
+(defvar powershell-cmd "powershell")
+
+(defvar powershell-cmd "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe")
+
 (defun moinrpc-save-clipboard-image-to-file ()
   "Save the image content in the clipboard to a temporary file and return the file path."
   (interactive)
@@ -329,7 +333,7 @@
                      (format "xclip -selection clipboard -t image/png -o | convert - %s" temp-file)))
               ((eq system-type 'windows-nt)
                (setq shell-command-string
-                     (format "powershell -command \"$img = Get-Clipboard -Format Image; $img.save(\\\"%s\\\");\"" temp-file)))
+                     (format "%s -command \"$img = Get-Clipboard -Format Image; $img.save(\\\"%s\\\");\"" powershell-cmd temp-file)))
               (t
                (message "Unsupported system type: %s" system-type)
                nil))
