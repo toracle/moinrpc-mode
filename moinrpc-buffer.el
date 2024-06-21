@@ -329,20 +329,26 @@
   (interactive)
   (if (moinrpc-clipboard-image-p)
       (let* ((temp-file (make-temp-file "moinrpc-clipboard-image-" nil ".png"))
+             (shell-command nil)
              (shell-command-string nil))
         (cond ((eq system-type 'darwin)
-               (setq shell-command-string
+               (setq shell-command "pngpaste"
+                     shell-command-string
                      (format "pngpaste %s" temp-file)))
               ((eq system-type 'gnu/linux)
-               (setq shell-command-string
+               (setq shell-command "xclip"
+                     shell-command-string
                      (format "xclip -selection clipboard -t image/png -o | convert - %s" temp-file)))
               ((eq system-type 'windows-nt)
-               (setq shell-command-string
+               (setq shell-command powershell-cmd
+                     shell-command-string
                      (format "%s -command \"$img = Get-Clipboard -Format Image; $img.save(\\\"%s\\\");\"" powershell-cmd temp-file)))
               (t
                (message "Unsupported system type: %s" system-type)
                nil))
         (when shell-command-string
+          (unless (executable-find shell-command)
+            (error (format "Can not find screenshot executable. Please install it first: %s" shell-command)))
           (message (format "Execute clipboard save command: %s" shell-command-string))
           (shell-command shell-command-string
                          "*moinrpc-clipboard-shell-output*"
