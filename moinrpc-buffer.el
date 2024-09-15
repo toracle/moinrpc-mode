@@ -122,10 +122,10 @@
 
 (defun moinrpc-upload-attachment (&optional filename show-list-page)
   (interactive)
-  (let* ((name (file-name-nondirectory filename))
+  (let* ((filename (if filename filename
+                     (read-file-name "Select a file to upload:")))
+         (name (file-name-nondirectory filename))
          (content (moinrpc-read-file filename)))
-    (when (not filename)
-      (setq filename (read-file-name "Select a file to upload:")))
     (moinrpc-xmlrpc-put-attachment moinrpc-current-wiki
                             moinrpc-current-pagename
                             name
