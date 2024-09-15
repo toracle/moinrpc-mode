@@ -114,13 +114,14 @@
 
 
 (defun moinrpc-read-file (filename)
-  "Read a file from PATH and encode it to base64."
+  "Read a file from FILENAME and encode it to base64."
   (with-temp-buffer
     (insert-file-contents filename nil nil nil t)
     (buffer-string)))
 
 
 (defun moinrpc-upload-attachment (&optional filename show-list-page)
+  "Upload FILENAME as attachment.  Set SHOW-LIST-PAGE as t for ..."
   (interactive)
   (let* ((filename (if filename filename
                      (read-file-name "Select a file to upload:")))
@@ -134,12 +135,13 @@
       (moinrpc-list-attachments))))
 
 
-(defun moinrpc-delete-attachment ()
+(defun moinrpc-delete-attachment (&optional filename)
+  "Delete an attachment file.  Use button info if FILENAME is not given."
   (let* ((overlay (car (overlays-at (point))))
-         (name (moinrpc-get-overlay-text overlay)))
+         (filename (moinrpc-get-overlay-text overlay)))
     (moinrpc-xmlrpc-delete-attachment moinrpc-current-wiki
                                       moinrpc-current-pagename
-                                      name)
+                                      filename)
     (moinrpc-list-attachments)))
 
 
@@ -317,6 +319,7 @@
 
 
 (defun moinrpc-clipboard-image-p ()
+  "Let me know OS clipboard has image data or not."
   (not (equal (moinrpc-get-clipboard-image-target) nil)))
 
 
@@ -360,6 +363,7 @@
 
 
 (defun moinrpc-yank ()
+  "Paste clipboard to moinmoin.  Upload clipboard to an attachment if clipboard item is an image and embed its link, or just paste clipboard text."
   (interactive)
   (if (moinrpc-clipboard-image-p)
       (let* ((filename (moinrpc-save-clipboard-image-to-file))
