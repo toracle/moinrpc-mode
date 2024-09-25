@@ -194,10 +194,10 @@ Specify WIKI with a PAGENAME."
                                     "getRPCVersionSupported"))
 
 
-(defun moinrpc-xmlrpc-get-page-info (wiki pagename)
-  (moinrpc-xmlrpc-multi-method-call wiki
-                                    "getPageInfo"
-                                    pagename))
+(defun moinrpc-xmlrpc-get-page-info (wiki pagename &optional key)
+  (let ((info (moinrpc-xmlrpc-multi-method-call wiki "getPageInfo" pagename)))
+    (if key (cdr (assoc key info))
+      info)))
 
 
 (provide 'moinrpc-xmlrpc)

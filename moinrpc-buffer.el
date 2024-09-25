@@ -94,23 +94,42 @@
 
 
 (defun moinrpc-open-page (pagename)
+  "Open page with PAGENAME."
   (let* ((wiki moinrpc-current-wiki)
          (buffer-name (moinrpc-buffer-name pagename wiki))
          (buffer (get-buffer-create buffer-name))
-         (content (moinrpc-xmlrpc-get-page wiki
-                                           pagename)))
-    (switch-to-buffer buffer)
-    (moinrpc-render-page buffer pagename content wiki)))
+         (content (moinrpc-xmlrpc-get-page wiki pagename))
+         (version (moinrpc-xmlrpc-get-page-info wiki pagename "version")))
+    (with-current-buffer buffer
+      (setq-local moinrpc-current-wiki wiki)
+      (setq-local moinrpc-current-pagename pagename)
+      (setq-local moinrpc-current-page-version version)
+
+      (moinrpc-render-page buffer pagename content wiki)
+      (switch-to-buffer buffer))))
 
 
 (defun moinrpc-save-page ()
   "Save current buffer to remote wiki."
   (interactive)
-  (moinrpc-xmlrpc-put-page moinrpc-current-wiki
-                           moinrpc-current-pagename
-                           (moinrpc-strip-text-properties (buffer-string)))
-  (set-buffer-modified-p nil)
-  (current-buffer))
+
+  (let* ((wiki moinrpc-current-wiki)
+         (pagename moinrpc-current-pagename)
+         (my-content (moinrpc-strip-text-properties (buffer-string))))
+   (flet ((save-page () (moinrpc-xmlrpc-put-page wiki
+                                                 pagename
+                                                 my-content)
+                     (let ((new-version (moinrpc-xmlrpc-get-page-info wiki pagename "version")))
+                       (set-buffer-modified-p nil)
+                       (setq-local moinrpc-current-page-version new-version)
+                       (current-buffer))))
+     (let* ((my-version moinrpc-current-page-version)
+            (their-version (moinrpc-xmlrpc-get-page-info wiki pagename "version"))
+            (version-match-p (eq my-version their-version)))
+       (if version-match-p (save-page)
+         (let* ((their-content (moinrpc-xmlrpc-get-page wiki pagename))
+                (force-to-save (yes-or-no-p (format "Wiki server has newer version. %s %s. Force to save?" my-version their-version))))
+           (when force-to-save (save-page))))))))
 
 
 (defun moinrpc-read-file (filename)

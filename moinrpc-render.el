@@ -196,9 +196,6 @@
       buffer
     (moinrpc-page-mode)
 
-    (setq-local moinrpc-current-wiki wiki)
-    (setq-local moinrpc-current-pagename pagename)
-
     (erase-buffer)
     (insert content)
     (set-buffer-modified-p nil)
