@@ -69,7 +69,8 @@
          (wiki (cdr (assoc *moinrpc-current-wiki* *moinrpc-wiki-settings*)))
          (buffer (get-buffer-create (moinrpc-buffer-name wiki-name))))
     (switch-to-buffer buffer)
-    (moinrpc-render-wiki-front buffer wiki)))
+    (moinrpc-render-wiki-front buffer wiki)
+    (setq-local moinrpc-current-wiki wiki)))
 
 
 (defun moinrpc-recent-changes (&optional last-modified)
@@ -78,7 +79,8 @@
          (content (moinrpc-xmlrpc-get-recent-changes wiki last-modified))
          (buffer (moinrpc-buffer-name "RecentChanges" wiki)))
     (switch-to-buffer buffer)
-    (moinrpc-render-recent-changes buffer content wiki)))
+    (moinrpc-render-recent-changes buffer content wiki)
+    (setq-local moinrpc-current-wiki wiki)))
 
 
 (defun moinrpc-list-attachments ()
@@ -90,7 +92,9 @@
                                                    pagename) wiki))
          (buffer (get-buffer-create buffer-name)))
     (switch-to-buffer buffer)
-    (moinrpc-render-list-attachment buffer pagename content wiki)))
+    (moinrpc-render-list-attachment buffer pagename content wiki)
+    (setq-local moinrpc-current-wiki wiki)
+    (setq-local moinrpc-current-pagename pagename)))
 
 
 (defun moinrpc-open-page (pagename)
@@ -178,7 +182,9 @@
          (content (moinrpc-xmlrpc-search-backlinks wiki pagename))
          (buffer (moinrpc-buffer-name (format "Search [linkto:%s]" pagename) wiki)))
     (switch-to-buffer buffer)
-    (moinrpc-render-search buffer pagename content wiki)))
+    (moinrpc-render-search buffer pagename content wiki)
+    (setq-local moinrpc-current-wiki wiki)
+    (setq-local moinrpc-current-pagename pagename)))
 
 
 (defun moinrpc-search-pages ()
@@ -189,7 +195,9 @@
            (content (moinrpc-xmlrpc-search-pages wiki query-string))
            (buffer (moinrpc-buffer-name (format "Search [%s]" query-string) wiki)))
       (switch-to-buffer buffer)
-      (moinrpc-render-search buffer query-string content wiki))))
+      (moinrpc-render-search buffer query-string content wiki)
+      (setq-local moinrpc-current-wiki wiki)
+      (setq-local moinrpc-current-pagename pagename))))
 
 
 (defun moinrpc-helm-find-page ()

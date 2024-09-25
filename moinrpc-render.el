@@ -37,7 +37,6 @@
   (with-current-buffer
       buffer
     (moinrpc-front-mode)
-    (setq-local moinrpc-current-wiki wiki)
 
     (read-only-mode -1)
     (erase-buffer)
@@ -88,8 +87,6 @@
     (let ((prev-name nil))
       (moinrpc-list-mode)
 
-      (setq-local moinrpc-current-wiki wiki)
-
       (read-only-mode -1)
       (erase-buffer)
       (insert "Recent Changes:")
@@ -138,9 +135,6 @@
     (let ((entries content))
       (moinrpc-attachment-mode)
 
-      (setq-local moinrpc-current-wiki wiki)
-      (setq-local moinrpc-current-pagename pagename)
-
       (read-only-mode -1)
       (erase-buffer)
 
@@ -167,9 +161,6 @@
       buffer
     (let ((entries content))
       (moinrpc-search-mode)
-
-      (setq-local moinrpc-current-wiki wiki)
-      (setq-local moinrpc-current-pagename pagename)
 
       (read-only-mode -1)
       (erase-buffer)
