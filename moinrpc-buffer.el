@@ -101,11 +101,10 @@
          (content (moinrpc-xmlrpc-get-page wiki pagename))
          (version (moinrpc-xmlrpc-get-page-info wiki pagename "version")))
     (with-current-buffer buffer
+      (moinrpc-render-page buffer pagename content wiki)
       (setq-local moinrpc-current-wiki wiki)
       (setq-local moinrpc-current-pagename pagename)
       (setq-local moinrpc-current-page-version version)
-
-      (moinrpc-render-page buffer pagename content wiki)
       (switch-to-buffer buffer))))
 
 
@@ -128,7 +127,7 @@
             (version-match-p (eq my-version their-version)))
        (if version-match-p (save-page)
          (let* ((their-content (moinrpc-xmlrpc-get-page wiki pagename))
-                (force-to-save (yes-or-no-p (format "Wiki server has newer version. %s %s. Force to save?" my-version their-version))))
+                (force-to-save (yes-or-no-p (format "Remote page is newer (v%s) than local (v%s).  Force to save? " their-version my-version))))
            (when force-to-save (save-page))))))))
 
 
