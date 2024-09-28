@@ -135,7 +135,7 @@
             (version-match-p (eq my-version their-version)))
        (if version-match-p (save-page)
          (let* ((their-content (moinrpc-xmlrpc-get-page wiki pagename))
-                (force-to-save (yes-or-no-p (format "Remote page is newer (v%s) than local (v%s).  Force to save? " their-version my-version))))
+                (force-to-save (y-or-n-p (format "Remote page is newer (v%s) than local (v%s).  Force to save? " their-version my-version))))
            (when force-to-save (save-page))))))))
 
 
