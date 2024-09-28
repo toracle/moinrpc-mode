@@ -12,6 +12,16 @@
 (require 'subr-x)
 
 
+(use-package datetime-format
+  :ensure t)
+
+
+(defcustom moinrpc-diary-page-prefix "일기"
+  "Prefix string of diary page."
+  :type 'string
+  :group 'moinrpc)
+
+
 (defun moinrpc-create-wiki-setting-i ()
   "."
   (interactive)
@@ -403,6 +413,18 @@
         (when filename
           (delete-file filename)))
     (yank)))
+
+
+(defun moinrpc-get-today-diary-name ()
+  (let* ((current-username (moinrpc-get-wiki-conf moinrpc-current-wiki 'username))
+         (today (datetime-format "%Y-%m-%d"))
+         (args (append (list current-username moinrpc-diary-page-prefix) (list today))))
+    (apply 'format "%s/%s/%s" args)))
+
+
+(defun moinrpc-open-diary ()
+  (interactive)
+  (moinrpc-open-page (moinrpc-get-today-diary-name)))
 
 
 (provide 'moinrpc-buffer)
