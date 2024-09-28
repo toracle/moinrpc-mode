@@ -102,9 +102,13 @@
   (let* ((wiki moinrpc-current-wiki)
          (buffer-name (moinrpc-buffer-name pagename wiki))
          (buffer (get-buffer-create buffer-name))
-         (content (moinrpc-xmlrpc-get-page wiki pagename))
-         (version (moinrpc-xmlrpc-get-page-info wiki pagename "version")))
+         (content (moinrpc-xmlrpc-response-filter
+                   (moinrpc-xmlrpc-get-page wiki pagename)))
+         (version (moinrpc-xmlrpc-response-filter
+                   (moinrpc-xmlrpc-get-page-info wiki pagename "version"))))
     (with-current-buffer buffer
+      (unless content
+        (message (format "New page: %s" pagename)))
       (moinrpc-render-page buffer pagename content wiki)
       (setq-local moinrpc-current-wiki wiki)
       (setq-local moinrpc-current-pagename pagename)
