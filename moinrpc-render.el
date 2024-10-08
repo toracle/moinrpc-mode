@@ -188,7 +188,8 @@
     (moinrpc-page-mode)
 
     (erase-buffer)
-    (insert content)
+    (when content
+      (insert content))
     (set-buffer-modified-p nil)
     (goto-char 1)))
 

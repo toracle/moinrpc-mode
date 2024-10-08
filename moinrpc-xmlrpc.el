@@ -111,6 +111,15 @@ Specify WIKI with a PAGENAME."
 				  pagename
 				  content))
 
+(defun moinrpc-xmlrpc-response-failure-p (response)
+  (when (listp response)
+      (when (equal (car response) "faultCode")
+        t)))
+
+(defun moinrpc-xmlrpc-response-filter (response)
+  (unless (moinrpc-xmlrpc-response-failure-p response)
+    response))
+
 (defun moinrpc-xmlrpc-get-all-pages (wiki)
   "Return a list of all page names from WIKI."
   (let*
@@ -196,8 +205,9 @@ Specify WIKI with a PAGENAME."
 
 (defun moinrpc-xmlrpc-get-page-info (wiki pagename &optional key)
   (let ((info (moinrpc-xmlrpc-multi-method-call wiki "getPageInfo" pagename)))
-    (if key (cdr (assoc key info))
-      info)))
+    (unless (moinrpc-xmlrpc-response-failure-p info)
+      (if key (cdr (assoc key info))
+        info))))
 
 
 (provide 'moinrpc-xmlrpc)

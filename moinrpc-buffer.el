@@ -12,6 +12,16 @@
 (require 'subr-x)
 
 
+(use-package datetime-format
+  :ensure t)
+
+
+(defcustom moinrpc-diary-page-prefix "일기"
+  "Prefix string of diary page."
+  :type 'string
+  :group 'moinrpc)
+
+
 (defun moinrpc-create-wiki-setting-i ()
   "."
   (interactive)
@@ -102,9 +112,13 @@
   (let* ((wiki moinrpc-current-wiki)
          (buffer-name (moinrpc-buffer-name pagename wiki))
          (buffer (get-buffer-create buffer-name))
-         (content (moinrpc-xmlrpc-get-page wiki pagename))
-         (version (moinrpc-xmlrpc-get-page-info wiki pagename "version")))
+         (content (moinrpc-xmlrpc-response-filter
+                   (moinrpc-xmlrpc-get-page wiki pagename)))
+         (version (moinrpc-xmlrpc-response-filter
+                   (moinrpc-xmlrpc-get-page-info wiki pagename "version"))))
     (with-current-buffer buffer
+      (unless content
+        (message (format "New page: %s" pagename)))
       (moinrpc-render-page buffer pagename content wiki)
       (setq-local moinrpc-current-wiki wiki)
       (setq-local moinrpc-current-pagename pagename)
@@ -131,7 +145,7 @@
             (version-match-p (eq my-version their-version)))
        (if version-match-p (save-page)
          (let* ((their-content (moinrpc-xmlrpc-get-page wiki pagename))
-                (force-to-save (yes-or-no-p (format "Remote page is newer (v%s) than local (v%s).  Force to save? " their-version my-version))))
+                (force-to-save (y-or-n-p (format "Remote page is newer (v%s) than local (v%s).  Force to save? " their-version my-version))))
            (when force-to-save (save-page))))))))
 
 
@@ -399,6 +413,18 @@
         (when filename
           (delete-file filename)))
     (yank)))
+
+
+(defun moinrpc-get-today-diary-name ()
+  (let* ((current-username (moinrpc-get-wiki-conf moinrpc-current-wiki 'username))
+         (today (datetime-format "%Y-%m-%d"))
+         (args (append (list current-username moinrpc-diary-page-prefix) (list today))))
+    (apply 'format "%s/%s/%s" args)))
+
+
+(defun moinrpc-open-diary ()
+  (interactive)
+  (moinrpc-open-page (moinrpc-get-today-diary-name)))
 
 
 (provide 'moinrpc-buffer)
