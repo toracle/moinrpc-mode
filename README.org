@@ -80,7 +80,7 @@ There are some other modes for moinmoin supports:
  - moinmoin-mode
 
 
-** To-do [9/17]
+** To-do [10/17]
 
  - [X] ~C-c C-o~: follow a WikiLink
  - [X] User friendly wiki setting
@@ -91,10 +91,10 @@ There are some other modes for moinmoin supports:
  - [X] ~C-c C-l~: insert wiki link with helm page search
  - [X] Align table
  - [X] Paste clipboard image to wiki page (upload it to page attachment and insert embed link)
+ - [X] Conflict detection (compare local and remote page version before save and give diff when it conflicts)
  - [ ] Support template page. Load template page from new or existing page
  - [ ] ~C-j~ to complete a helm candidate
  - [ ] Syntax highlighting (already there is a nice moinmoin-mode but it [[http://d.hatena.ne.jp/ymorimo/20070308/1173373043][contains some error]])
- - [ ] Conflict detection (compare local and remote page version before save and give diff when it conflicts)
  - [ ] Render page to HTML and display it on eww
  - [ ] Display embeded image
  - [ ] Render org-mode markup
@@ -104,6 +104,8 @@ There are some other modes for moinmoin supports:
 ** Change logs
 
 *** Unreleased
+
+ - Detect page version conflict of a wiki page between local and remote
 
 
 *** v1.1.0
