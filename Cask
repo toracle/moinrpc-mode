@@ -9,4 +9,5 @@
  (depends-on "xml-rpc")
  (depends-on "thingatpt")
  (depends-on "s")
- (depends-on "ert"))
+ (depends-on "ert")
+ (depends-on "datetime-format"))
