@@ -133,7 +133,7 @@
   (let* ((wiki moinrpc-current-wiki)
          (pagename moinrpc-current-pagename)
          (my-content (moinrpc-strip-text-properties (buffer-string))))
-   (flet ((save-page () (moinrpc-xmlrpc-put-page wiki
+   (cl-flet ((save-page () (moinrpc-xmlrpc-put-page wiki
                                                  pagename
                                                  my-content)
                      (let ((new-version (moinrpc-xmlrpc-get-page-info wiki pagename "version")))
@@ -281,14 +281,14 @@
   (let* ((range (moinrpc-table-range))
          (start (car range))
          (end (cdr range)))
-    (map 'list
+    (cl-map 'list
          #'moinrpc-table-parse-line
          (split-string (buffer-substring-no-properties start end)
                        "\n"))))
 
 
 (defun moinrpc-table-parse-line (line)
-  (mapcar #'string-trim
+  (cl-mapcar #'string-trim
           (butlast (cdr (split-string line "||")))))
 
 
