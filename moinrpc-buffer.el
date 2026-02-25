@@ -10,10 +10,7 @@
 (require 'moinrpc-xmlrpc)
 (require 'moinrpc-render)
 (require 'subr-x)
-
-
-(use-package datetime-format
-  :ensure t)
+(require 'datetime-format)
 
 
 (defcustom moinrpc-diary-page-prefix "일기"
