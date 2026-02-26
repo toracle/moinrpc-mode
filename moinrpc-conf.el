@@ -24,7 +24,7 @@
   (interactive)
   (moinrpc-add-wiki-setting-to-global (moinrpc-create-wiki-setting-i))
   (moinrpc-save-wiki-settings)
-  (moinrpc-main-page))
+  (moinrpc))
 
 
 (defun moinrpc-make-wiki-conf (wiki-alias &optional xmlrpc-endpoint username xmlrpc-api-token)

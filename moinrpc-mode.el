@@ -95,7 +95,7 @@
   (setq mode-name "moinrpc-main-mode")
 
   (local-set-key (kbd "q") 'quit-window)
-  (local-set-key (kbd "g") 'moinrpc-main-page)
+  (local-set-key (kbd "g") 'moinrpc)
   (local-set-key (kbd "C-c C-n") 'moinrpc-new-wiki-setting)
   (local-set-key (kbd "TAB") 'forward-button)
   (local-set-key (kbd "<backtab>") 'backward-button))

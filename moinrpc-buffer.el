@@ -59,7 +59,7 @@
                           moinrpc-current-pagename)))))
 
 
-(defun moinrpc-main-page ()
+(defun moinrpc ()
   "Create a wiki list buffer."
   (interactive)
   (let ((buffer (get-buffer-create (moinrpc-buffer-name nil)))
