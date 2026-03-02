@@ -3,7 +3,7 @@
 ;; Author: Jeongsoo Park <toracle@gmail.com>
 ;; URL: https://github.com/toracle/moinrpc-mode
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1") (xml-rpc "1.0") (s "1.12.0") (thingatpt "1.0"))
+;; Package-Requires: ((emacs "27.1") (xml-rpc "1.0") (s "1.12.0") (thingatpt "1.0") (datetime-format "1.0"))
 ;; Keywords: convenience xml moinmoin
 ;; SPDX-License-Identifier: MIT
 
