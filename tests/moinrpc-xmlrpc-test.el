@@ -1,3 +1,4 @@
+;; -*- no-byte-compile: t; -*-
 (require 'moinrpc-xmlrpc)
 (require 'moinrpc-test-fixtures)
 

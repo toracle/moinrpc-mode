@@ -1,3 +1,4 @@
+;; -*- no-byte-compile: t; -*-
 (add-to-list 'load-path ".")
 (add-to-list 'load-path "tests")
 
