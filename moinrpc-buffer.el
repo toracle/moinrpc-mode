@@ -23,6 +23,7 @@
   :group 'moinrpc)
 
 
+;;;###autoload
 (defun moinrpc-create-wiki-setting-i ()
   "."
   (interactive)
@@ -74,6 +75,7 @@
     t))
 
 
+;;;###autoload
 (defun moinrpc-wiki-front (button)
   "Create a wiki front buffer."
   (interactive)
@@ -85,6 +87,7 @@
     (setq-local moinrpc-current-wiki wiki)))
 
 
+;;;###autoload
 (defun moinrpc-recent-changes (&optional last-modified)
   (interactive)
   (let* ((wiki moinrpc-current-wiki)
@@ -95,6 +98,7 @@
     (setq-local moinrpc-current-wiki wiki)))
 
 
+;;;###autoload
 (defun moinrpc-list-attachments ()
   (interactive)
   (let* ((wiki moinrpc-current-wiki)
@@ -160,6 +164,7 @@
     (buffer-string)))
 
 
+;;;###autoload
 (defun moinrpc-upload-attachment (&optional filename show-list-page)
   "Upload FILENAME as attachment.  Set SHOW-LIST-PAGE as t for ..."
   (interactive)
@@ -185,6 +190,7 @@
     (moinrpc-list-attachments)))
 
 
+;;;###autoload
 (defun moinrpc-find-page ()
   "Find a page with name."
   (interactive)
@@ -193,6 +199,7 @@
     (moinrpc-open-page pagename)))
 
 
+;;;###autoload
 (defun moinrpc-search-backlinks ()
   (interactive)
   (let* ((wiki moinrpc-current-wiki)
@@ -205,6 +212,7 @@
     (setq-local moinrpc-current-pagename pagename)))
 
 
+;;;###autoload
 (defun moinrpc-search-pages ()
   (interactive)
   (let
@@ -235,6 +243,7 @@
 	  )))
 
 
+;;;###autoload
 (defun moinrpc-insert-wikilink ()
   (interactive)
   (let
@@ -343,6 +352,7 @@
       (moinrpc-table-render table))))
 
 
+;;;###autoload
 (defun moinrpc-cycle ()
   (interactive)
   (if (moinrpc-table-p)
@@ -371,6 +381,8 @@
 
 (defvar powershell-cmd "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe")
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-save-clipboard-image-to-file ()
   "Save the image content in the clipboard to a temporary file and return the file path."
   (interactive)
@@ -406,6 +418,8 @@
     nil))
 
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-yank ()
   "Paste clipboard to moinmoin.  Upload clipboard to an attachment if clipboard item is an image and embed its link, or just paste clipboard text."
   (interactive)
@@ -426,6 +440,8 @@
     (apply 'format "%s/%s/%s" args)))
 
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-open-diary ()
   (interactive)
   (moinrpc-open-page (moinrpc-get-today-diary-name)))

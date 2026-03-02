@@ -23,6 +23,25 @@
 (require 'moinrpc-buffer)
 (require 'moinrpc-render)
 
+(provide 'moinrpc)
+
+;;;###autoload
+(autoload 'moinrpc-main-page "moinrpc-buffer" nil t)
+(autoload 'moinrpc-open-page "moinrpc-buffer" nil t)
+(autoload 'moinrpc-save-page "moinrpc-buffer" nil t)
+(autoload 'moinrpc-helm-find-page "moinrpc-buffer" nil t)
+(autoload 'moinrpc-main-mode "moinrpc-mode" nil t)
+(autoload 'moinrpc-page-mode "moinrpc-mode" nil t)
+(autoload 'moinrpc-front-mode "moinrpc-mode" nil t)
+(autoload 'moinrpc-list-mode "moinrpc-mode" nil t)
+(autoload 'moinrpc-attachment-mode "moinrpc-mode" nil t)
+(autoload 'moinrpc-search-mode "moinrpc-mode" nil t)
+(autoload 'moinrpc-open-diary "moinrpc-buffer" nil t)
+(autoload 'moinrpc-upload-attachment "moinrpc-buffer" nil t)
+(autoload 'moinrpc-find-page "moinrpc-buffer" nil t)
+(autoload 'moinrpc-recent-changes "moinrpc-buffer" nil t)
+
+
 
 ;;; Wiki setting
 

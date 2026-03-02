@@ -28,6 +28,7 @@
     t))
 
 
+;;;###autoload
 (defun moinrpc-new-wiki-setting ()
   "Add a new wiki settings."
   (interactive)
