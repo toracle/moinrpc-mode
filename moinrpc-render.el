@@ -1,4 +1,9 @@
+;;; moinrpc-render.el --- Rendering utilities for moinrpc
+;; -*- lexical-binding: t -*-
+
 (require 'moinrpc-common)
+(require 'button)
+(require 'subr-x)
 
 
 (defmacro moinrpc-insert-decorated-button (prefix label postfix &rest params)
@@ -242,3 +247,5 @@
 
 
 (provide 'moinrpc-render)
+;;; moinrpc-render.el ends here
+

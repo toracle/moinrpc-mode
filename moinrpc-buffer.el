@@ -1,5 +1,9 @@
-;;; package --- moinmoin xml-rpc client
+;;; moinrpc-buffer.el --- MoinMoin buffer utilities
+;; -*- lexical-binding: t -*-
+;; Package-Requires: ((helm "3.0"))
+
 ;;; Commentary:
+;; Buffer utilities for moinrpc-mode
 
 ;;; Code:
 
@@ -59,6 +63,7 @@
                           moinrpc-current-pagename)))))
 
 
+;;;###autoload
 (defun moinrpc-main-page ()
   "Create a wiki list buffer."
   (interactive)
@@ -104,6 +109,7 @@
     (setq-local moinrpc-current-pagename pagename)))
 
 
+;;;###autoload
 (defun moinrpc-open-page (pagename)
   "Open page with PAGENAME."
   (let* ((wiki moinrpc-current-wiki)
@@ -123,6 +129,7 @@
       (switch-to-buffer buffer))))
 
 
+;;;###autoload
 (defun moinrpc-save-page ()
   "Save current buffer to remote wiki."
   (interactive)
@@ -426,3 +433,20 @@
 
 (provide 'moinrpc-buffer)
 ;;; moinrpc-buffer.el ends here
+
+;;;###autoload
+(defun moinrpc-helm-find-page ()
+  "Find page using helm."
+  (interactive)
+  (let
+      ((all-pages (moinrpc-xmlrpc-get-all-pages moinrpc-current-wiki)))
+    (helm :sources
+          '(((name . "All wiki pages")
+	 (candidates . all-pages)
+	 (action . (("Open" . moinrpc-open-page))))
+	((name . "fallback")
+	 (dummy)
+	 (action . (("Create" . moinrpc-open-page)))))
+	:prompt "Find Page: "
+	:buffer "*helm-moinrpc-find-pages*"
+	 )))
