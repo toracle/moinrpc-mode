@@ -1,7 +1,4 @@
 ;;; moinrpc-buffer.el --- MoinMoin buffer utilities
-;; -*- lexical-binding: t -*-
-;; Package-Requires: ((helm "3.0"))
-
 ;;; Commentary:
 ;; Buffer utilities for moinrpc-mode
 
@@ -192,23 +189,77 @@
                                       filename)
     (moinrpc-list-attachments)))
 
+(defun moinrpc--get-current-wiki-conf ()
+  "Return the current wiki configuration alist."
+  (let ((val (or (and (boundp 'moinrpc-current-wiki) moinrpc-current-wiki)
+                 (and (boundp '*moinrpc-current-wiki*) *moinrpc-current-wiki*))))
+    (if (and (listp val) (assoc 'xmlrpc-endpoint val))
+        val
+      (let ((wiki-alias (if (listp val) (cdr (assoc 'wiki-alias val)) val)))
+        (cdr (assoc wiki-alias *moinrpc-wiki-settings*))))))
 
-;;;###autoload
+(defun moinrpc--get-wiki-alias (wiki)
+  "Get wiki alias from WIKI config."
+  (cdr (assoc 'wiki-alias wiki)))
+
+(defun moinrpc--get-page-metadata (wiki)
+  "Fetch recent page metadata and return a hash table and a list of recent names."
+  (let* ((recent (moinrpc-xmlrpc-get-recent-changes wiki))
+         (meta-cache (make-hash-table :test 'equal))
+         (recent-names nil))
+    ;; Map metadata from recent changes
+    (dolist (item recent)
+      (let ((name (cdr (assoc "name" item))))
+        (unless (member name recent-names)
+          (push name recent-names))
+        (unless (gethash name meta-cache)
+          (puthash name item meta-cache))))
+    (list meta-cache (nreverse recent-names))))
+
+(defun moinrpc--annotate-page (meta-cache)
+  "Return an annotation function for wiki pages using META-CACHE."
+  (lambda (cand)
+    (let ((meta (gethash (substring-no-properties cand) meta-cache)))
+      (if meta
+          (let* ((author (cdr (assoc "author" meta)))
+                 (version (cdr (assoc "version" meta)))
+                 (mtime (cdr (assoc "lastModified" meta)))
+                 (date (if (and (listp mtime) (eq (car mtime) :datetime))
+                           (format-time-string "%Y-%m-%d %H:%M" (cadr mtime))
+                         "")))
+            (format "  (v%s, %s, %s)" 
+                    (or version "?") 
+                    (or author "?")
+                    date))
+        ""))))
+
 (defun moinrpc-find-page ()
-  "Find a page with name."
+  "Find a page with completion."
   (interactive)
-  (let
-      ((pagename (read-string "Open page: ")))
-    (moinrpc-open-page pagename)))
-
+  (let ((wiki (moinrpc--get-current-wiki-conf)))
+    (unless wiki (error "No wiki configuration found"))
+    (let* ((all-pages (moinrpc-xmlrpc-get-all-pages wiki))
+           (meta-data (moinrpc--get-page-metadata wiki))
+           (meta-cache (car meta-data))
+           (recent-names (cadr meta-data))
+           ;; Move recent pages to the front of the list
+           (sorted-pages (append recent-names (seq-difference all-pages recent-names)))
+           (completion-extra-properties
+            `(:annotation-function ,(moinrpc--annotate-page meta-cache)))
+           (pagename (completing-read "Find Page: " 
+                                    sorted-pages
+                                    nil nil nil 'moinrpc-page-history)))
+      (when (and pagename (not (string-empty-p pagename)))
+        (let ((moinrpc-current-wiki wiki))
+          (moinrpc-open-page pagename))))))
 
 ;;;###autoload
 (defun moinrpc-search-backlinks ()
   (interactive)
-  (let* ((wiki moinrpc-current-wiki)
+  (let* ((wiki (moinrpc--get-current-wiki-conf))
          (pagename moinrpc-current-pagename)
          (content (moinrpc-xmlrpc-search-backlinks wiki pagename))
-         (buffer (moinrpc-buffer-name (format "Search [linkto:%s]" pagename) wiki)))
+         (buffer (moinrpc-buffer-name (format "Search [linkto:%s]" pagename) (moinrpc--get-wiki-alias wiki))))
     (switch-to-buffer buffer)
     (moinrpc-render-search buffer pagename content wiki)
     (setq-local moinrpc-current-wiki wiki)
@@ -220,9 +271,9 @@
   (interactive)
   (let
       ((query-string (read-string "Search: ")))
-    (let* ((wiki moinrpc-current-wiki)
+    (let* ((wiki (moinrpc--get-current-wiki-conf))
            (content (moinrpc-xmlrpc-search-pages wiki query-string))
-           (buffer (moinrpc-buffer-name (format "Search [%s]" query-string) wiki)))
+           (buffer (moinrpc-buffer-name (format "Search [%s]" query-string) (moinrpc--get-wiki-alias wiki))))
       (switch-to-buffer buffer)
       (moinrpc-render-search buffer query-string content wiki)
       (setq-local moinrpc-current-wiki wiki)
@@ -231,36 +282,25 @@
 
 (defun moinrpc-helm-find-page ()
   "Find page using helm."
+  (declare (obsolete moinrpc-find-page "0.2.0"))
   (interactive)
-  (let
-      ((all-pages (moinrpc-xmlrpc-get-all-pages moinrpc-current-wiki)))
-    (helm :sources
-          '(((name . "All wiki pages")
-	     (candidates . all-pages)
-	     (action . (("Open" . moinrpc-open-page))))
-	    ((name . "fallback")
-	     (dummy)
-	     (action . (("Create" . moinrpc-open-page)))))
-	  :prompt "Find Page: "
-	  :buffer "*helm-moinrpc-find-pages*"
-	  )))
-
+  (moinrpc-find-page))
 
 ;;;###autoload
 (defun moinrpc-insert-wikilink ()
   (interactive)
-  (let
-      ((all-pages (moinrpc-xmlrpc-get-all-pages moinrpc-current-wiki)))
-    (helm :sources
-          '(((name . "All wiki pages")
-             (candidates . all-pages)
-             (action . (("Insert" . moinrpc-render-insert-link))))
-            ((name . "fallback")
-             (dummy)
-             (action . (("Insert" . moinrpc-render-insert-link)))))
-          :prompt "Select Page: "
-          :buffer "*helm-moinrpc-find-pages*")))
-
+  (let ((wiki (moinrpc--get-current-wiki-conf)))
+    (unless wiki (error "No wiki configuration found"))
+    (let* ((all-pages (moinrpc-xmlrpc-get-all-pages wiki))
+           (meta-data (moinrpc--get-page-metadata wiki))
+           (meta-cache (car meta-data))
+           (recent-names (cadr meta-data))
+           (sorted-pages (append recent-names (seq-difference all-pages recent-names)))
+           (completion-extra-properties
+            `(:annotation-function ,(moinrpc--annotate-page meta-cache)))
+           (pagename (completing-read "Select Page: " sorted-pages)))
+      (when (and pagename (not (string-empty-p pagename)))
+        (moinrpc-render-insert-link pagename)))))
 
 (defun moinrpc-table-find-edge (&optional backward)
   (let ((m (point-marker))
@@ -452,20 +492,3 @@
 
 (provide 'moinrpc-buffer)
 ;;; moinrpc-buffer.el ends here
-
-;;;###autoload
-(defun moinrpc-helm-find-page ()
-  "Find page using helm."
-  (interactive)
-  (let
-      ((all-pages (moinrpc-xmlrpc-get-all-pages moinrpc-current-wiki)))
-    (helm :sources
-          '(((name . "All wiki pages")
-	 (candidates . all-pages)
-	 (action . (("Open" . moinrpc-open-page))))
-	((name . "fallback")
-	 (dummy)
-	 (action . (("Create" . moinrpc-open-page)))))
-	:prompt "Find Page: "
-	:buffer "*helm-moinrpc-find-pages*"
-	 )))

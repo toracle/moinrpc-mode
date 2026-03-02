@@ -3,7 +3,7 @@
 ;; Author: Jeongsoo Park <toracle@gmail.com>
 ;; URL: https://github.com/toracle/moinrpc-mode
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1") (xml-rpc "20231009.1432") (s "1.13.0") (thingatpt "1.0") (helm "20260214.1432") (datetime-format "20240105.1901"))
+;; Package-Requires: ((emacs "27.1") (xml-rpc "20231009.1432") (s "1.13.0") (thingatpt "1.0") (datetime-format "20240105.1901"))
 ;; Keywords: convenience xml moinmoin
 ;; SPDX-License-Identifier: MIT
 
@@ -29,7 +29,6 @@
 (autoload 'moinrpc-main-page "moinrpc-buffer" nil t)
 (autoload 'moinrpc-open-page "moinrpc-buffer" nil t)
 (autoload 'moinrpc-save-page "moinrpc-buffer" nil t)
-(autoload 'moinrpc-helm-find-page "moinrpc-buffer" nil t)
 (autoload 'moinrpc-main-mode "moinrpc-mode" nil t)
 (autoload 'moinrpc-page-mode "moinrpc-mode" nil t)
 (autoload 'moinrpc-front-mode "moinrpc-mode" nil t)
@@ -51,7 +50,7 @@
   "Major mode for viewing/editing MoinMoin wiki pages.")
 
 (define-key moinrpc-page-mode-map (kbd "C-x C-s") 'moinrpc-save-page)
-(define-key moinrpc-page-mode-map (kbd "C-x C-f") 'moinrpc-helm-find-page)
+(define-key moinrpc-page-mode-map (kbd "C-x C-f") 'moinrpc-find-page)
 (define-key moinrpc-page-mode-map (kbd "C-c C-f") 'moinrpc-find-page)
 (define-key moinrpc-page-mode-map (kbd "C-c C-o") 'moinrpc-open-wikilink-at-point)
 (define-key moinrpc-page-mode-map (kbd "C-c C-l") 'moinrpc-insert-wikilink)
@@ -73,7 +72,7 @@
   "Mode for listing wiki entries.")
 
 (define-key moinrpc-list-mode-map (kbd "q") 'quit-window)
-(define-key moinrpc-list-mode-map (kbd "C-x C-f") 'moinrpc-helm-find-page)
+(define-key moinrpc-list-mode-map (kbd "C-x C-f") 'moinrpc-find-page)
 (define-key moinrpc-list-mode-map (kbd "C-c C-f") 'moinrpc-find-page)
 (define-key moinrpc-list-mode-map (kbd "C-c C-r") 'moinrpc-recent-changes)
 (define-key moinrpc-list-mode-map (kbd "C-c m s") 'moinrpc-search-pages)
@@ -114,7 +113,7 @@
 
 (define-key moinrpc-front-mode-map (kbd "q") 'quit-window)
 (define-key moinrpc-front-mode-map (kbd "C-c C-r") 'moinrpc-recent-changes)
-(define-key moinrpc-front-mode-map (kbd "C-x C-f") 'moinrpc-helm-find-page)
+(define-key moinrpc-front-mode-map (kbd "C-x C-f") 'moinrpc-find-page)
 (define-key moinrpc-front-mode-map (kbd "C-c C-f") 'moinrpc-find-page)
 (define-key moinrpc-front-mode-map (kbd "C-c C-n") 'moinrpc-new-wiki-setting)
 (define-key moinrpc-front-mode-map (kbd "C-c m r") 'moinrpc-search-backlinks)
