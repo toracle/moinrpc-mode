@@ -75,6 +75,9 @@
     t))
 
 
+(defalias 'moinrpc 'moinrpc-main-page)
+
+
 ;;;###autoload
 (defun moinrpc-wiki-front (button)
   "Create a wiki front buffer."
