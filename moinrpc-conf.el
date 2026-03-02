@@ -78,7 +78,7 @@
     (when (not (eq *moinrpc-wiki-settings* nil))
       (progn (setq wiki-settings (assq-delete-all wiki-alias *moinrpc-wiki-settings*))
              (message (format "%S" wiki-settings))))
-    (add-to-list 'wiki-settings (cons wiki-alias wiki-setting))
+    (push (cons wiki-alias wiki-setting) wiki-settings)
     (setq *moinrpc-wiki-settings* wiki-settings)
     (setq *moinrpc-current-wiki* wiki-alias)
     (moinrpc-save-wiki-settings)))
