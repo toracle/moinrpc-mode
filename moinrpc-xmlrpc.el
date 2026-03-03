@@ -1,7 +1,11 @@
-;;; package --- moinmoin xml-rpc client
-;;; Commentary: 
+;;; moinrpc-xmlrpc.el --- XML-RPC interface for moinrpc
+;; -*- lexical-binding: t -*-
+;; Package-Requires: ((xml-rpc "1.0"))
 
-;;; Code: 
+;;; Commentary:
+;; XML-RPC wrapper functions
+
+;;; Code:
 
 (require 'moinrpc-conf)
 
@@ -111,6 +115,15 @@ Specify WIKI with a PAGENAME."
 				  pagename
 				  content))
 
+(defun moinrpc-xmlrpc-response-failure-p (response)
+  (when (listp response)
+      (when (equal (car response) "faultCode")
+        t)))
+
+(defun moinrpc-xmlrpc-response-filter (response)
+  (unless (moinrpc-xmlrpc-response-failure-p response)
+    response))
+
 (defun moinrpc-xmlrpc-get-all-pages (wiki)
   "Return a list of all page names from WIKI."
   (let*
@@ -194,10 +207,11 @@ Specify WIKI with a PAGENAME."
                                     "getRPCVersionSupported"))
 
 
-(defun moinrpc-xmlrpc-get-page-info (wiki pagename)
-  (moinrpc-xmlrpc-multi-method-call wiki
-                                    "getPageInfo"
-                                    pagename))
+(defun moinrpc-xmlrpc-get-page-info (wiki pagename &optional key)
+  (let ((info (moinrpc-xmlrpc-multi-method-call wiki "getPageInfo" pagename)))
+    (unless (moinrpc-xmlrpc-response-failure-p info)
+      (if key (cdr (assoc key info))
+        info))))
 
 
 (provide 'moinrpc-xmlrpc)

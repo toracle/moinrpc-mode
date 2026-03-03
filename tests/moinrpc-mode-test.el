@@ -1,3 +1,4 @@
+;; -*- no-byte-compile: t; -*-
 (require 'moinrpc-mode)
 (require 'moinrpc-common)
 (require 'moinrpc-conf)

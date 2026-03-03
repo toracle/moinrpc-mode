@@ -1,3 +1,4 @@
+;; -*- no-byte-compile: t; -*-
 (require 'moinrpc-test-fixtures)
 
 (ert-deftest moinrpc-make-wiki-conf ()

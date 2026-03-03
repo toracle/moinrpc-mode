@@ -1,3 +1,4 @@
+;; -*- no-byte-compile: t; -*-
 (defun my-fixture (body)
   (unwind-protect
       (let ((xml-rpc-method-call #'moinrpc-mock-xml-rpc-method-call)

@@ -1,4 +1,9 @@
+;;; moinrpc-render.el --- Rendering utilities for moinrpc
+;; -*- lexical-binding: t -*-
+
 (require 'moinrpc-common)
+(require 'button)
+(require 'subr-x)
 
 
 (defmacro moinrpc-insert-decorated-button (prefix label postfix &rest params)
@@ -13,6 +18,7 @@
        (insert ,postfix))))
 
 
+;;;###autoload
 (defun moinrpc-render-main-page (buffer content)
   (with-current-buffer
       buffer
@@ -33,11 +39,11 @@
     (read-only-mode)))
 
 
+;;;###autoload
 (defun moinrpc-render-wiki-front (buffer wiki)
   (with-current-buffer
       buffer
     (moinrpc-front-mode)
-    (setq-local moinrpc-current-wiki wiki)
 
     (read-only-mode -1)
     (erase-buffer)
@@ -64,6 +70,8 @@
     (read-only-mode)))
 
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-render-add-recent-changes-entry (name author version last-modified)
   (moinrpc-insert-decorated-button
       " * " name nil
@@ -82,13 +90,12 @@
   (time-subtract (current-time) (* 3600 24 days)))
 
 
+;;;###autoload
 (defun moinrpc-render-recent-changes (buffer content wiki)
   (with-current-buffer
       buffer
     (let ((prev-name nil))
       (moinrpc-list-mode)
-
-      (setq-local moinrpc-current-wiki wiki)
 
       (read-only-mode -1)
       (erase-buffer)
@@ -138,18 +145,22 @@
     (let ((entries content))
       (moinrpc-attachment-mode)
 
-      (setq-local moinrpc-current-wiki wiki)
-      (setq-local moinrpc-current-pagename pagename)
-
       (read-only-mode -1)
       (erase-buffer)
 
       (insert "Attachment List:")
       (newline)
       (newline)
+      (moinrpc-insert-decorated-button
+          " [" "Upload" "]"
+        'follow-link "\C-m"
+        'action '(lambda (button)
+                   (moinrpc-upload-attachment)))
+      (newline)
+      (newline)
       (dolist (entry content)
         (insert " * ")
-        (insert-button entry)
+        (insert-button (format "[[attachment:%s]]" entry))
         (newline)))
     (goto-char 1)
     (read-only-mode)))
@@ -160,9 +171,6 @@
       buffer
     (let ((entries content))
       (moinrpc-search-mode)
-
-      (setq-local moinrpc-current-wiki wiki)
-      (setq-local moinrpc-current-pagename pagename)
 
       (read-only-mode -1)
       (erase-buffer)
@@ -189,33 +197,46 @@
       buffer
     (moinrpc-page-mode)
 
-    (setq-local moinrpc-current-wiki wiki)
-    (setq-local moinrpc-current-pagename pagename)
-
     (erase-buffer)
-    (insert content)
+    (when content
+      (insert content))
     (set-buffer-modified-p nil)
     (goto-char 1)))
 
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-wrap-title-level-1 ()
   (interactive)
   (moinrpc-wrap-title-level-n 1))
 
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-wrap-title-level-2 ()
   (interactive)
   (moinrpc-wrap-title-level-n 2))
 
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-wrap-title-level-3 ()
   (interactive)
   (moinrpc-wrap-title-level-n 3))
 
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-wrap-title-level-4 ()
   (interactive)
   (moinrpc-wrap-title-level-n 4))
+
+
+;;;###autoload
+;;;###autoload
+(defun moinrpc-wrap-title-level-5 ()
+  (interactive)
+  (moinrpc-wrap-title-level-n 5))
 
 
 (defun moinrpc-wrap-title-level-n (level)
@@ -241,3 +262,5 @@
 
 
 (provide 'moinrpc-render)
+;;; moinrpc-render.el ends here
+

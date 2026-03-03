@@ -1,5 +1,6 @@
-;;; package --- moinmoin xml-rpc client
+;;; moinrpc-buffer.el --- MoinMoin buffer utilities
 ;;; Commentary:
+;; Buffer utilities for moinrpc-mode
 
 ;;; Code:
 
@@ -10,9 +11,16 @@
 (require 'moinrpc-xmlrpc)
 (require 'moinrpc-render)
 (require 'subr-x)
-(require 'cl-lib)
+(require 'datetime-format)
 
 
+(defcustom moinrpc-diary-page-prefix "일기"
+  "Prefix string of diary page."
+  :type 'string
+  :group 'moinrpc)
+
+
+;;;###autoload
 (defun moinrpc-create-wiki-setting-i ()
   "."
   (interactive)
@@ -53,6 +61,7 @@
                           moinrpc-current-pagename)))))
 
 
+;;;###autoload
 (defun moinrpc-main-page ()
   "Create a wiki list buffer."
   (interactive)
@@ -63,6 +72,10 @@
     t))
 
 
+(defalias 'moinrpc 'moinrpc-main-page)
+
+
+;;;###autoload
 (defun moinrpc-wiki-front (button)
   "Create a wiki front buffer."
   (interactive)
@@ -70,18 +83,22 @@
          (wiki (cdr (assoc *moinrpc-current-wiki* *moinrpc-wiki-settings*)))
          (buffer (get-buffer-create (moinrpc-buffer-name wiki-name))))
     (switch-to-buffer buffer)
-    (moinrpc-render-wiki-front buffer wiki)))
+    (moinrpc-render-wiki-front buffer wiki)
+    (setq-local moinrpc-current-wiki wiki)))
 
 
+;;;###autoload
 (defun moinrpc-recent-changes (&optional last-modified)
   (interactive)
   (let* ((wiki moinrpc-current-wiki)
          (content (moinrpc-xmlrpc-get-recent-changes wiki last-modified))
          (buffer (moinrpc-buffer-name "RecentChanges" wiki)))
     (switch-to-buffer buffer)
-    (moinrpc-render-recent-changes buffer content wiki)))
+    (moinrpc-render-recent-changes buffer content wiki)
+    (setq-local moinrpc-current-wiki wiki)))
 
 
+;;;###autoload
 (defun moinrpc-list-attachments ()
   (interactive)
   (let* ((wiki moinrpc-current-wiki)
@@ -91,116 +108,199 @@
                                                    pagename) wiki))
          (buffer (get-buffer-create buffer-name)))
     (switch-to-buffer buffer)
-    (moinrpc-render-list-attachment buffer pagename content wiki)))
+    (moinrpc-render-list-attachment buffer pagename content wiki)
+    (setq-local moinrpc-current-wiki wiki)
+    (setq-local moinrpc-current-pagename pagename)))
 
 
+;;;###autoload
 (defun moinrpc-open-page (pagename)
+  "Open page with PAGENAME."
   (let* ((wiki moinrpc-current-wiki)
          (buffer-name (moinrpc-buffer-name pagename wiki))
          (buffer (get-buffer-create buffer-name))
-         (content (moinrpc-xmlrpc-get-page wiki
-                                           pagename)))
-    (switch-to-buffer buffer)
-    (moinrpc-render-page buffer pagename content wiki)))
+         (content (moinrpc-xmlrpc-response-filter
+                   (moinrpc-xmlrpc-get-page wiki pagename)))
+         (version (moinrpc-xmlrpc-response-filter
+                   (moinrpc-xmlrpc-get-page-info wiki pagename "version"))))
+    (with-current-buffer buffer
+      (unless content
+        (message (format "New page: %s" pagename)))
+      (moinrpc-render-page buffer pagename content wiki)
+      (setq-local moinrpc-current-wiki wiki)
+      (setq-local moinrpc-current-pagename pagename)
+      (setq-local moinrpc-current-page-version version)
+      (switch-to-buffer buffer))))
 
 
+;;;###autoload
 (defun moinrpc-save-page ()
   "Save current buffer to remote wiki."
   (interactive)
-  (moinrpc-xmlrpc-put-page moinrpc-current-wiki
-                           moinrpc-current-pagename
-                           (moinrpc-strip-text-properties (buffer-string)))
-  (set-buffer-modified-p nil)
-  (current-buffer))
+
+  (let* ((wiki moinrpc-current-wiki)
+         (pagename moinrpc-current-pagename)
+         (my-content (moinrpc-strip-text-properties (buffer-string))))
+   (cl-flet ((save-page () (moinrpc-xmlrpc-put-page wiki
+                                                 pagename
+                                                 my-content)
+                     (let ((new-version (moinrpc-xmlrpc-get-page-info wiki pagename "version")))
+                       (set-buffer-modified-p nil)
+                       (setq-local moinrpc-current-page-version new-version)
+                       (current-buffer))))
+     (let* ((my-version moinrpc-current-page-version)
+            (their-version (moinrpc-xmlrpc-get-page-info wiki pagename "version"))
+            (version-match-p (eq my-version their-version)))
+       (if version-match-p (save-page)
+         (let* ((their-content (moinrpc-xmlrpc-get-page wiki pagename))
+                (force-to-save (y-or-n-p (format "Remote page is newer (v%s) than local (v%s).  Force to save? " their-version my-version))))
+           (when force-to-save (save-page))))))))
 
 
 (defun moinrpc-read-file (filename)
-  "Read a file from PATH and encode it to base64."
+  "Read a file from FILENAME and encode it to base64."
   (with-temp-buffer
     (insert-file-contents filename nil nil nil t)
     (buffer-string)))
 
 
-(defun moinrpc-upload-attachment ()
-  (let* ((filename (read-file-name "Select a file to upload:"))
+;;;###autoload
+(defun moinrpc-upload-attachment (&optional filename show-list-page)
+  "Upload FILENAME as attachment.  Set SHOW-LIST-PAGE as t for ..."
+  (interactive)
+  (let* ((filename (if filename filename
+                     (read-file-name "Select a file to upload:")))
          (name (file-name-nondirectory filename))
          (content (moinrpc-read-file filename)))
     (moinrpc-xmlrpc-put-attachment moinrpc-current-wiki
                             moinrpc-current-pagename
                             name
                             content)
-    (moinrpc-list-attachments)))
+    (when show-list-page
+      (moinrpc-list-attachments))))
 
 
-(defun moinrpc-delete-attachment ()
+(defun moinrpc-delete-attachment (&optional filename)
+  "Delete an attachment file.  Use button info if FILENAME is not given."
   (let* ((overlay (car (overlays-at (point))))
-         (name (moinrpc-get-overlay-text overlay)))
+         (filename (moinrpc-get-overlay-text overlay)))
     (moinrpc-xmlrpc-delete-attachment moinrpc-current-wiki
                                       moinrpc-current-pagename
-                                      name)
+                                      filename)
     (moinrpc-list-attachments)))
 
+(defun moinrpc--get-current-wiki-conf ()
+  "Return the current wiki configuration alist."
+  (let ((val (or (and (boundp 'moinrpc-current-wiki) moinrpc-current-wiki)
+                 (and (boundp '*moinrpc-current-wiki*) *moinrpc-current-wiki*))))
+    (if (and (listp val) (assoc 'xmlrpc-endpoint val))
+        val
+      (let ((wiki-alias (if (listp val) (cdr (assoc 'wiki-alias val)) val)))
+        (cdr (assoc wiki-alias *moinrpc-wiki-settings*))))))
+
+(defun moinrpc--get-wiki-alias (wiki)
+  "Get wiki alias from WIKI config."
+  (cdr (assoc 'wiki-alias wiki)))
+
+(defun moinrpc--get-page-metadata (wiki)
+  "Fetch recent page metadata and return a hash table and a list of recent names."
+  (let* ((recent (moinrpc-xmlrpc-get-recent-changes wiki))
+         (meta-cache (make-hash-table :test 'equal))
+         (recent-names nil))
+    ;; Map metadata from recent changes
+    (dolist (item recent)
+      (let ((name (cdr (assoc "name" item))))
+        (unless (member name recent-names)
+          (push name recent-names))
+        (unless (gethash name meta-cache)
+          (puthash name item meta-cache))))
+    (list meta-cache (nreverse recent-names))))
+
+(defun moinrpc--annotate-page (meta-cache)
+  "Return an annotation function for wiki pages using META-CACHE."
+  (lambda (cand)
+    (let ((meta (gethash (substring-no-properties cand) meta-cache)))
+      (if meta
+          (let* ((author (cdr (assoc "author" meta)))
+                 (version (cdr (assoc "version" meta)))
+                 (mtime (cdr (assoc "lastModified" meta)))
+                 (date (if (and (listp mtime) (eq (car mtime) :datetime))
+                           (format-time-string "%Y-%m-%d %H:%M" (cadr mtime))
+                         "")))
+            (format "  (v%s, %s, %s)" 
+                    (or version "?") 
+                    (or author "?")
+                    date))
+        ""))))
 
 (defun moinrpc-find-page ()
-  "Find a page with name."
+  "Find a page with completion."
   (interactive)
-  (let
-      ((pagename (read-string "Open page: ")))
-    (moinrpc-open-page pagename)))
+  (let ((wiki (moinrpc--get-current-wiki-conf)))
+    (unless wiki (error "No wiki configuration found"))
+    (let* ((all-pages (moinrpc-xmlrpc-get-all-pages wiki))
+           (meta-data (moinrpc--get-page-metadata wiki))
+           (meta-cache (car meta-data))
+           (recent-names (cadr meta-data))
+           ;; Move recent pages to the front of the list
+           (sorted-pages (append recent-names (seq-difference all-pages recent-names)))
+           (completion-extra-properties
+            `(:annotation-function ,(moinrpc--annotate-page meta-cache)))
+           (pagename (completing-read "Find Page: " 
+                                    sorted-pages
+                                    nil nil nil 'moinrpc-page-history)))
+      (when (and pagename (not (string-empty-p pagename)))
+        (let ((moinrpc-current-wiki wiki))
+          (moinrpc-open-page pagename))))))
 
-
+;;;###autoload
 (defun moinrpc-search-backlinks ()
   (interactive)
-  (let* ((wiki moinrpc-current-wiki)
+  (let* ((wiki (moinrpc--get-current-wiki-conf))
          (pagename moinrpc-current-pagename)
          (content (moinrpc-xmlrpc-search-backlinks wiki pagename))
-         (buffer (moinrpc-buffer-name (format "Search [linkto:%s]" pagename) wiki)))
+         (buffer (moinrpc-buffer-name (format "Search [linkto:%s]" pagename) (moinrpc--get-wiki-alias wiki))))
     (switch-to-buffer buffer)
-    (moinrpc-render-search buffer pagename content wiki)))
+    (moinrpc-render-search buffer pagename content wiki)
+    (setq-local moinrpc-current-wiki wiki)
+    (setq-local moinrpc-current-pagename pagename)))
 
 
+;;;###autoload
 (defun moinrpc-search-pages ()
   (interactive)
   (let
       ((query-string (read-string "Search: ")))
-    (let* ((wiki moinrpc-current-wiki)
+    (let* ((wiki (moinrpc--get-current-wiki-conf))
            (content (moinrpc-xmlrpc-search-pages wiki query-string))
-           (buffer (moinrpc-buffer-name (format "Search [%s]" query-string) wiki)))
+           (buffer (moinrpc-buffer-name (format "Search [%s]" query-string) (moinrpc--get-wiki-alias wiki))))
       (switch-to-buffer buffer)
-      (moinrpc-render-search buffer query-string content wiki))))
+      (moinrpc-render-search buffer query-string content wiki)
+      (setq-local moinrpc-current-wiki wiki)
+      (setq-local moinrpc-current-pagename pagename))))
 
 
 (defun moinrpc-helm-find-page ()
   "Find page using helm."
+  (declare (obsolete moinrpc-find-page "0.2.0"))
   (interactive)
-  (let
-      ((all-pages (moinrpc-xmlrpc-get-all-pages moinrpc-current-wiki)))
-    (helm :sources
-          '(((name . "All wiki pages")
-	     (candidates . all-pages)
-	     (action . (("Open" . moinrpc-open-page))))
-	    ((name . "fallback")
-	     (dummy)
-	     (action . (("Create" . moinrpc-open-page)))))
-	  :prompt "Find Page: "
-	  :buffer "*helm-moinrpc-find-pages*"
-	  )))
+  (moinrpc-find-page))
 
-
+;;;###autoload
 (defun moinrpc-insert-wikilink ()
   (interactive)
-  (let
-      ((all-pages (moinrpc-xmlrpc-get-all-pages moinrpc-current-wiki)))
-    (helm :sources
-          '(((name . "All wiki pages")
-             (candidates . all-pages)
-             (action . (("Insert" . moinrpc-render-insert-link))))
-            ((name . "fallback")
-             (dummy)
-             (action . (("Insert" . moinrpc-render-insert-link)))))
-          :prompt "Select Page: "
-          :buffer "*helm-moinrpc-find-pages*")))
-
+  (let ((wiki (moinrpc--get-current-wiki-conf)))
+    (unless wiki (error "No wiki configuration found"))
+    (let* ((all-pages (moinrpc-xmlrpc-get-all-pages wiki))
+           (meta-data (moinrpc--get-page-metadata wiki))
+           (meta-cache (car meta-data))
+           (recent-names (cadr meta-data))
+           (sorted-pages (append recent-names (seq-difference all-pages recent-names)))
+           (completion-extra-properties
+            `(:annotation-function ,(moinrpc--annotate-page meta-cache)))
+           (pagename (completing-read "Select Page: " sorted-pages)))
+      (when (and pagename (not (string-empty-p pagename)))
+        (moinrpc-render-insert-link pagename)))))
 
 (defun moinrpc-table-find-edge (&optional backward)
   (let ((m (point-marker))
@@ -237,14 +337,14 @@
   (let* ((range (moinrpc-table-range))
          (start (car range))
          (end (cdr range)))
-    (map 'list
+    (cl-map 'list
          #'moinrpc-table-parse-line
          (split-string (buffer-substring-no-properties start end)
                        "\n"))))
 
 
 (defun moinrpc-table-parse-line (line)
-  (mapcar #'string-trim
+  (cl-mapcar #'string-trim
           (butlast (cdr (split-string line "||")))))
 
 
@@ -295,11 +395,99 @@
       (moinrpc-table-render table))))
 
 
+;;;###autoload
 (defun moinrpc-cycle ()
   (interactive)
   (if (moinrpc-table-p)
       (moinrpc-table-format)
     (indent-for-tab-command)))
+
+
+(defun moinrpc-get-clipboard-image-target ()
+  (let* ((targets (gui-get-selection 'CLIPBOARD 'TARGETS))
+         (image-targets (seq-filter '(lambda (x)
+                                       (or (equal x 'image/png)
+					   (equal x 'image/tiff)
+                                           (equal x 'PNG)))
+                                    targets)))
+    (cond (image-targets
+           (first image-targets))
+          ((and (not targets) (eq system-type 'darwin)) t))))
+
+
+(defun moinrpc-clipboard-image-p ()
+  "Let me know OS clipboard has image data or not."
+  (not (equal (moinrpc-get-clipboard-image-target) nil)))
+
+
+(defvar powershell-cmd "powershell")
+
+(defvar powershell-cmd "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe")
+
+;;;###autoload
+;;;###autoload
+(defun moinrpc-save-clipboard-image-to-file ()
+  "Save the image content in the clipboard to a temporary file and return the file path."
+  (interactive)
+  (if (moinrpc-clipboard-image-p)
+      (let* ((temp-file (make-temp-file "moinrpc-clipboard-image-" nil ".png"))
+             (shell-command nil)
+             (shell-command-string nil))
+        (cond ((eq system-type 'darwin)
+               (setq shell-command "pngpaste"
+                     shell-command-string
+                     (format "pngpaste %s" temp-file)))
+              ((eq system-type 'gnu/linux)
+               (setq shell-command "xclip"
+                     shell-command-string
+                     (format "xclip -selection clipboard -t image/png -o | convert - %s" temp-file)))
+              ((eq system-type 'windows-nt)
+               (setq shell-command powershell-cmd
+                     shell-command-string
+                     (format "%s -command \"$img = Get-Clipboard -Format Image; $img.save(\\\"%s\\\");\"" powershell-cmd temp-file)))
+              (t
+               (message "Unsupported system type: %s" system-type)
+               nil))
+        (when shell-command-string
+          (unless (executable-find shell-command)
+            (error (format "Can not find screenshot executable. Please install it first: %s" shell-command)))
+          (message (format "Execute clipboard save command: %s" shell-command-string))
+          (shell-command shell-command-string
+                         "*moinrpc-clipboard-shell-output*"
+                         "*moinrpc-clipboard-shell-error*")
+          (message "Saved clipboard image to %s" temp-file)
+          temp-file))
+    (message "No image in clipboard")
+    nil))
+
+
+;;;###autoload
+;;;###autoload
+(defun moinrpc-yank ()
+  "Paste clipboard to moinmoin.  Upload clipboard to an attachment if clipboard item is an image and embed its link, or just paste clipboard text."
+  (interactive)
+  (if (moinrpc-clipboard-image-p)
+      (let* ((filename (moinrpc-save-clipboard-image-to-file))
+             (basename (file-name-nondirectory filename)))
+        (moinrpc-upload-attachment filename nil)
+        (insert (format "{{attachment:%s}}" basename))
+        (when filename
+          (delete-file filename)))
+    (yank)))
+
+
+(defun moinrpc-get-today-diary-name ()
+  (let* ((current-username (moinrpc-get-wiki-conf moinrpc-current-wiki 'username))
+         (today (datetime-format "%Y-%m-%d"))
+         (args (append (list current-username moinrpc-diary-page-prefix) (list today))))
+    (apply 'format "%s/%s/%s" args)))
+
+
+;;;###autoload
+;;;###autoload
+(defun moinrpc-open-diary ()
+  (interactive)
+  (moinrpc-open-page (moinrpc-get-today-diary-name)))
 
 
 (provide 'moinrpc-buffer)
