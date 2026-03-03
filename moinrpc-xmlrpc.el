@@ -1,7 +1,11 @@
-;;; package --- moinmoin xml-rpc client
-;;; Commentary: 
+;;; moinrpc-xmlrpc.el --- XML-RPC interface for moinrpc
+;; -*- lexical-binding: t -*-
+;; Package-Requires: ((xml-rpc "1.0"))
 
-;;; Code: 
+;;; Commentary:
+;; XML-RPC wrapper functions
+
+;;; Code:
 
 (require 'moinrpc-conf)
 

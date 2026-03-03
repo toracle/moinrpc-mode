@@ -1,4 +1,14 @@
-;;; package --- moinmoin xml-rpc client
+;; -*- lexical-binding: t -*-
+;; Copyright (c) 2024 Jeongsoo Park <toracle@gmail.com>
+;; Author: Jeongsoo Park <toracle@gmail.com>
+;; URL: https://github.com/toracle/moinrpc-mode
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "27.1") (xml-rpc "1.0") (s "1.12.0") (thingatpt "1.0"))
+;; Keywords: convenience xml moinmoin
+;; SPDX-License-Identifier: MIT
+
+;;; moinrpc-common.el --- Common utilities for moinrpc
+
 ;;; Commentary:
 
 ;;; Code:

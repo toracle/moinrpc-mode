@@ -1,4 +1,9 @@
+;;; moinrpc-render.el --- Rendering utilities for moinrpc
+;; -*- lexical-binding: t -*-
+
 (require 'moinrpc-common)
+(require 'button)
+(require 'subr-x)
 
 
 (defmacro moinrpc-insert-decorated-button (prefix label postfix &rest params)
@@ -13,6 +18,7 @@
        (insert ,postfix))))
 
 
+;;;###autoload
 (defun moinrpc-render-main-page (buffer content)
   (with-current-buffer
       buffer
@@ -33,6 +39,7 @@
     (read-only-mode)))
 
 
+;;;###autoload
 (defun moinrpc-render-wiki-front (buffer wiki)
   (with-current-buffer
       buffer
@@ -63,6 +70,8 @@
     (read-only-mode)))
 
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-render-add-recent-changes-entry (name author version last-modified)
   (moinrpc-insert-decorated-button
       " * " name nil
@@ -81,6 +90,7 @@
   (time-subtract (current-time) (* 3600 24 days)))
 
 
+;;;###autoload
 (defun moinrpc-render-recent-changes (buffer content wiki)
   (with-current-buffer
       buffer
@@ -194,26 +204,36 @@
     (goto-char 1)))
 
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-wrap-title-level-1 ()
   (interactive)
   (moinrpc-wrap-title-level-n 1))
 
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-wrap-title-level-2 ()
   (interactive)
   (moinrpc-wrap-title-level-n 2))
 
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-wrap-title-level-3 ()
   (interactive)
   (moinrpc-wrap-title-level-n 3))
 
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-wrap-title-level-4 ()
   (interactive)
   (moinrpc-wrap-title-level-n 4))
 
 
+;;;###autoload
+;;;###autoload
 (defun moinrpc-wrap-title-level-5 ()
   (interactive)
   (moinrpc-wrap-title-level-n 5))
@@ -242,3 +262,5 @@
 
 
 (provide 'moinrpc-render)
+;;; moinrpc-render.el ends here
+

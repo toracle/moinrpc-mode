@@ -1,3 +1,12 @@
+;; -*- lexical-binding: t -*-
+;; Copyright (c) 2024 Jeongsoo Park <toracle@gmail.com>
+;; Author: Jeongsoo Park <toracle@gmail.com>
+;; URL: https://github.com/toracle/moinrpc-mode
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "27.1") (xml-rpc "1.0") (s "1.12.0") (thingatpt "1.0"))
+;; Keywords: convenience xml moinmoin
+;; SPDX-License-Identifier: MIT
+
 ;; Variables
 
 (defvar *moinrpc-wiki-settings* nil)
@@ -19,6 +28,7 @@
     t))
 
 
+;;;###autoload
 (defun moinrpc-new-wiki-setting ()
   "Add a new wiki settings."
   (interactive)
@@ -68,7 +78,7 @@
     (when (not (eq *moinrpc-wiki-settings* nil))
       (progn (setq wiki-settings (assq-delete-all wiki-alias *moinrpc-wiki-settings*))
              (message (format "%S" wiki-settings))))
-    (add-to-list 'wiki-settings (cons wiki-alias wiki-setting))
+    (push (cons wiki-alias wiki-setting) wiki-settings)
     (setq *moinrpc-wiki-settings* wiki-settings)
     (setq *moinrpc-current-wiki* wiki-alias)
     (moinrpc-save-wiki-settings)))
